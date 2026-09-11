@@ -1,8 +1,8 @@
 # CLAUDE.md — Manual Operativo del Agente IA
 ## PinturaPittsburgh_LaPazBCS | Distribuidor Autorizado The Pittsburgh Paints Company — La Paz, B.C.S.
-**Versión:** 3.0 (Hito 3 cerrado) | **Fecha:** 2026-09-11 | **Arquitecto:** [NOMBRE_ARQUITECTO — pendiente de confirmar]
+**Versión:** 5.0 (Hito 5 cerrado) | **Fecha:** 2026-09-11 | **Arquitecto:** [NOMBRE_ARQUITECTO — pendiente de confirmar]
 
-**Estado del proyecto:** Backend público (catálogo + validador postal) y panel administrativo completo (login, catálogo/precios, publicador social, asistente IA) implementados y verificados estructuralmente (`php -l`, `node --check`, pruebas HTTP en vivo). Entorno de staging asignado (§6): `.env` local ya conecta hasta la capa PDO real. **Bloqueante para pruebas end-to-end completas:** falta la contraseña real de la BD y del SMTP (nunca se recibieron ni se inventaron) y ejecutar `database/001_schema_inicial.sql` contra el servidor de staging.
+**Estado del proyecto:** Sitio público completo (landing, catálogo, PDP, checkout) y panel administrativo completo (login, catálogo/precios, publicador social, asistente IA) implementados y verificados estructuralmente (`php -l`, `node --check`, pruebas HTTP en vivo). Toggle Día/Noche y botón "Volver Arriba" en las 7 pantallas. Entorno de staging asignado (§6): `.env` local ya conecta hasta la capa PDO real. **Bloqueante para pruebas end-to-end completas:** falta la contraseña real de la BD y del SMTP (nunca se recibieron ni se inventaron), conectividad remota a MySQL sin confirmar, y ejecutar `database/001_schema_inicial.sql` contra el servidor de staging.
 
 ---
 
@@ -32,6 +32,8 @@
 ```
 PinturaPittsburgh_LaPazBCS/
 ├── index.html                       ← Punto de entrada principal (landing hiperlocal)
+├── producto.html                    ← Ficha de Producto Individual (PDP)
+├── checkout.html                    ← Checkout transaccional
 ├── .htaccess                        ← Blindaje Apache Nivel Militar
 ├── .env                             ← Credenciales REALES (NUNCA en Git) — creado 2026-09-11, faltan DB_PASS/SMTP_PASS
 ├── .env.example                     ← Plantilla pública (sí en Git)
@@ -48,6 +50,8 @@ PinturaPittsburgh_LaPazBCS/
 │   ├── status_check.php             ← Triple Handshake (filesystem/BD/SMTP)
 │   ├── validar_cp.php               ← Contrato 4 — cobertura postal (público)
 │   ├── catalogo_listar.php          ← Contrato 3 — catálogo (público)
+│   ├── catalogo_detalle.php         ← Contrato 3b — ficha de producto (público)
+│   ├── pedido_crear.php             ← Contrato 5 — checkout atómico (público)
 │   ├── social_publicar.php          ← Contrato 6 — Publicador Social (admin)
 │   ├── asistente_ia.php             ← Contrato 7 — Asistente de Contenido IA (admin)
 │   └── admin/
@@ -73,11 +77,13 @@ PinturaPittsburgh_LaPazBCS/
 │   ├── css/main.css                 ← ARF-Grid + tokens de marca PinturaPittsburgh (sitio público + base admin)
 │   ├── css/admin.css                ← Estilos exclusivos del backoffice (depende de main.css)
 │   ├── js/main.js, postal-coverage.js, catalog-render.js, paint-calculator.js
+│   ├── js/cart.js, producto-page.js, checkout-page.js
+│   ├── js/theme-init.js (sin defer, anti-parpadeo), theme-toggle.js, back-to-top.js
 │   ├── js/admin-auth.js, admin-login.js, admin-catalogo*.js, admin-social*.js, admin-asistente*.js
 │   └── img/logo.svg
 │
 ├── logs/                            ← Logs del sistema (bloqueados en .htaccess)
-├── scripts/                         ← bootstrap_project.sh, generate_env.php, generate_jwt_keys.php
+├── scripts/                         ← bootstrap_project.sh, generate_env.php, generate_jwt_keys.php, seed_admin.php
 ├── modulos/                         ← Blueprints genéricos reutilizables del holding DCD LABS (agnósticos — no editar con datos de PinturaPittsburgh)
 │
 ├── .github/workflows/deploy.yml     ← Pipeline CI/CD automático
@@ -206,8 +212,9 @@ Referencia completa: `knowledge/01_LEY_Y_PROTOCOLOS_DE_VUELO.md`
 | `api/auth_login.php` | POST | Público | 1 | ✅ |
 | `api/auth_refresh.php` | POST | Refresh token | 2 | ✅ |
 | `api/catalogo_listar.php` | GET | Público | 3 | ✅ |
+| `api/catalogo_detalle.php` | GET | Público | 3b | ✅ |
 | `api/validar_cp.php` | GET | Público | 4 | ✅ |
-| `api/pedido_crear.php` | POST | Público | 5 | ⬜ Propuesto |
+| `api/pedido_crear.php` | POST | Público | 5 | ✅ (atómico, con decremento de stock) |
 | `api/social_publicar.php` | POST | Bearer JWT + admin | 6 | ✅ (Instagram solo fase 1) |
 | `api/asistente_ia.php` | POST | Bearer JWT + admin | 7 | ✅ |
 | `api/admin/catalogo_admin.php` | GET/PUT | Bearer JWT + admin | 8 | ✅ |
@@ -275,4 +282,6 @@ Referencia completa: `knowledge/01_LEY_Y_PROTOCOLOS_DE_VUELO.md`
 | v1.0 | (plantilla) | Bóveda Madre genérica DCD LABS / VECTOR_CERO |
 | v2.0 | 2026-09-11 | Instanciación completa: rebranding a PinturaPittsburgh, eliminación de `core/.env` contaminado, `git init`, corrección de referencias a `knowledge/` |
 | v2.1 | 2026-09-11 | Hito 2: schema materializado (`database/001_schema_inicial.sql`), frontend ARF-Grid (postal/calculadora/catálogo con datos DEMO), `helpers/crypto_helper.php` (Envelope Encryption, probado), backends de Publicador Social y Asistente IA, panel admin de login/catálogo. Commit `5b9b383`. |
-| v3.0 | 2026-09-11 | Hito 3: `api/validar_cp.php` y `api/catalogo_listar.php` públicos conectados al frontend (fin de datos DEMO/espejo cliente); `admin/social.html` y `admin/asistente.html` con previsualizador en vivo y transferencia entre módulos; `workers/instagram_worker.php` (fases 2/3, CLI/cron, bloqueado por HTTP); `api/admin/social_historial.php` (Contrato 9). Pendiente de commit/push. |
+| v3.0 | 2026-09-11 | Hito 3: `api/validar_cp.php` y `api/catalogo_listar.php` públicos conectados al frontend (fin de datos DEMO/espejo cliente); `admin/social.html` y `admin/asistente.html` con previsualizador en vivo y transferencia entre módulos; `workers/instagram_worker.php` (fases 2/3, CLI/cron, bloqueado por HTTP); `api/admin/social_historial.php` (Contrato 9). Commit `340d8d9`. |
+| v4.0 | 2026-09-11 | Hito 4: entorno de staging asignado (`pittsburgh.tourfindy.com`), `.env` local generado y conectando hasta PDO real, `deploy.yml` con ruta FTP fija, `scripts/seed_admin.php`, toggle Día/Noche + botón "Volver Arriba" en las 5 pantallas. Commits `9da28b6`, `1e4a540`, `fd617bb`, `8f52df1`. |
+| v5.0 | 2026-09-11 | Hito 5: `producto.html` (PDP) + `api/catalogo_detalle.php` (Contrato 3b); `checkout.html` + `api/pedido_crear.php` (Contrato 5, transacción atómica con decremento de stock); `assets/js/cart.js` (carrito de sesión); `REPORTE_TECNICO.md` eliminado por gobernanza (única fuente de verdad: `knowledge/` + `CLAUDE.md`). |

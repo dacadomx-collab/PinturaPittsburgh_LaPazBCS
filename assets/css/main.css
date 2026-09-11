@@ -245,6 +245,131 @@ video {
     border-radius: var(--radius);
 }
 
+/* Render de envase (can cut) en la PDP — misma regla 1:1, tope de ancho para
+   no verse gigante en escritorio (Regla ORO: max-width, nunca ancho fijo). */
+.catalog-media--pdp {
+    max-width: 420px;
+    margin-inline: auto;
+    display: block;
+}
+
+/* ── FICHA DE PRODUCTO (PDP) ────────────────────────────────────────────────── */
+.header-back-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.header-back-link:hover,
+.header-back-link:focus-visible {
+    text-decoration: underline;
+}
+
+.linea-badge {
+    display: inline-block;
+    background-color: var(--brand-navy);
+    color: #ffffff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+}
+
+.pdp-subtitulo {
+    font-size: 1rem;
+    margin-top: var(--space-md);
+    margin-bottom: var(--space-xs);
+}
+
+.propiedad-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    margin-block: var(--space-xs);
+}
+
+.propiedad-badge {
+    display: inline-block;
+    background-color: rgba(13, 148, 136, 0.12);
+    color: var(--brand-teal);
+    border: 1px solid var(--brand-teal);
+    border-radius: 999px;
+    padding: 0.2rem 0.7rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.presentacion-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.presentacion-option {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: 0.5rem 0.7rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.pdp-cantidad-input {
+    max-width: 120px;
+}
+
+.pdp-precio {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--brand-navy);
+}
+
+.pdp-fichas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+}
+
+/* ── CHECKOUT ──────────────────────────────────────────────────────────────── */
+.checkout-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.checkout-item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-xs);
+    padding: 0.6rem 0.8rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    font-size: 0.85rem;
+}
+
+.checkout-item__quitar {
+    border: none;
+    background: none;
+    color: #b91c1c;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.checkout-item__quitar:hover,
+.checkout-item__quitar:focus-visible {
+    text-decoration: underline;
+}
+
 /* ── BOTONES Y CAMPOS BASE (sin framework, resueltos desde la raíz) ───────── */
 .btn {
     display: inline-flex;
@@ -453,6 +578,19 @@ video {
     font-size: 0.75rem;
 }
 
+.product-card__link {
+    display: inline-block;
+    color: var(--brand-gold);
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.product-card__link:hover,
+.product-card__link:focus-visible {
+    text-decoration: underline;
+}
+
 /* ── CALCULADORA DE PINTURA COSTERA ────────────────────────────────────────── */
 .calculator-grid {
     display: flex;
@@ -480,6 +618,10 @@ video {
     font-size: 0.8rem;
     font-weight: 600;
     color: var(--color-text-muted);
+}
+
+.field-group--full {
+    flex-basis: 100%;
 }
 
 .calculator-result {

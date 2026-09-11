@@ -97,6 +97,13 @@
         var pVol = document.createElement('p');
         pVol.textContent = 'Presentaciones: ' + volumenes;
         quickView.appendChild(pVol);
+
+        var verFicha = document.createElement('a');
+        verFicha.href = 'producto.html?id=' + encodeURIComponent(String(product.id));
+        verFicha.className = 'product-card__link';
+        verFicha.textContent = 'Ver ficha completa →';
+        quickView.appendChild(verFicha);
+
         card.appendChild(quickView);
 
         return card;

@@ -12,10 +12,6 @@ textarea.field {
     font-family: inherit;
 }
 
-.field-group--full {
-    flex-basis: 100%;
-}
-
 .char-counter {
     margin: 0.2rem 0 0;
     font-size: 0.75rem;
