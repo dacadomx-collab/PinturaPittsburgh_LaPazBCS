@@ -1,7 +1,7 @@
 name: Deploy FTP — PinturaPittsburgh_LaPazBCS (AXON_DCD CI/CD v2)
 # Destino actual: Staging (pittsburgh.tourfindy.com). El servidor real, usuario,
 # contraseña y ruta remota viven EXCLUSIVAMENTE en GitHub Secrets (nunca en este
-# archivo) — ver knowledge/04_ARQUITECTURA_Y_BLINDAJE.md y CLAUDE.md §7 para la
+# archivo) — ver knowledge/04_ARQUITECTURA_Y_BLINDAJE.md y CLAUDE.md §8 para la
 # lista exacta de Secrets requeridos.
 
 # ── TRIGGER ────────────────────────────────────────────────────────────────────
