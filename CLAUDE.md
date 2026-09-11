@@ -2,7 +2,7 @@
 ## PinturaPittsburgh_LaPazBCS | Distribuidor Autorizado The Pittsburgh Paints Company — La Paz, B.C.S.
 **Versión:** 3.0 (Hito 3 cerrado) | **Fecha:** 2026-09-11 | **Arquitecto:** [NOMBRE_ARQUITECTO — pendiente de confirmar]
 
-**Estado del proyecto:** Backend público (catálogo + validador postal) y panel administrativo completo (login, catálogo/precios, publicador social, asistente IA) implementados y verificados estructuralmente (`php -l`, `node --check`, pruebas HTTP en vivo). **Bloqueante para pruebas end-to-end reales:** no existe todavía hosting/BD/dominio contratado — todo endpoint falla limpio y en JSON (nunca expone error crudo) mientras no exista `.env` real.
+**Estado del proyecto:** Backend público (catálogo + validador postal) y panel administrativo completo (login, catálogo/precios, publicador social, asistente IA) implementados y verificados estructuralmente (`php -l`, `node --check`, pruebas HTTP en vivo). Entorno de staging asignado (§6): `.env` local ya conecta hasta la capa PDO real. **Bloqueante para pruebas end-to-end completas:** falta la contraseña real de la BD y del SMTP (nunca se recibieron ni se inventaron) y ejecutar `database/001_schema_inicial.sql` contra el servidor de staging.
 
 ---
 
@@ -11,9 +11,10 @@
 **Proyecto:** PinturaPittsburgh_LaPazBCS
 **Cliente / Dueño:** PinturaPittsburgh — Distribuidor Autorizado en La Paz, B.C.S. Tienda física en Bulevar Agustín Olachea e Indeco.
 **Objetivo:** Plataforma de e-commerce hiperlocal que combina el respaldo técnico de The Pittsburgh Paints Company (líneas Speedhide, Manor Hall, Perma-Crete, Pitt-Glaze) con entrega a domicilio y despacho en obra restringido exclusivamente al municipio de La Paz, B.C.S. (104 códigos postales). Incluye catálogo/inventario, calculadora de recubrimiento costero, validación de cobertura postal en checkout y un asistente de IA interno para redacción de contenido técnico/SEO — sin exponer IA a terceros.
-**Dominio de producción:** `https://[DOMINIO_A_REGISTRAR].com` — **pendiente de definir con el Arquitecto.** Opciones sugeridas por el Codex de marca (`knowledge/00_ADN_Y_FILOSOFIA.md` §5): un dominio con descriptor geográfico explícito (ej. `pinturaspittsburghlapaz.com`). **Prohibido** registrar dominios genéricos tipo `pittsburghpaints.mx` que sugieran ser la sede global del fabricante (regla de marca, ver §5).
+**Dominio de producción:** `https://[DOMINIO_A_REGISTRAR].com` — **pendiente de definir con el Arquitecto.** Opciones sugeridas por el Codex de marca (`knowledge/00_ADN_Y_FILOSOFIA.md` §5): un dominio con descriptor geográfico explícito (ej. `pinturaspittsburghlapaz.com`). **Prohibido** registrar dominios genéricos tipo `pittsburghpaints.mx` que sugieran ser la sede global del fabricante (regla de marca, ver §5). El subdominio de staging (§6) **no sustituye** este requisito — es solo entorno de pruebas.
+**Entorno de Staging (desde 2026-09-11):** `https://pittsburgh.tourfindy.com` — hosting compartido de DCD LABS (cPanel `tourfindycom`, servidor `chir205.websitehostserver.net`), ruta `/home/tourfindycom/public_html/pittsburgh/`. Ver §6 para credenciales y estado.
 **Entorno local:** `C:\xampp\htdocs\PinturaPittsburgh_LaPazBCS\`
-**Repositorio:** `https://github.com/dacadomx-collab/PinturaPittsburgh_LaPazBCS.git`, rama `main`. Commits: `2d77e30` (Hito 1) y `5b9b383` (Hito 2). Auto-deploy vía GitHub Actions FTP definido en `deploy.yml` — **Secrets de FTP pendientes de configurar** (ver §6).
+**Repositorio:** `https://github.com/dacadomx-collab/PinturaPittsburgh_LaPazBCS.git`, rama `main`. Commits: `2d77e30` (Hito 1), `5b9b383` (Hito 2), `340d8d9` (Hito 3), `9da28b6` (staging FTP). Auto-deploy vía GitHub Actions FTP definido en `deploy.yml` — **Secrets de FTP pendientes de configurar** (ver §8).
 
 ### Stack Tecnológico
 - **Frontend:** HTML + CSS + JS nativo (Mobile-First, ARF-Grid). Sin framework — no se introduce Next.js/React salvo autorización explícita del Arquitecto.
@@ -32,7 +33,7 @@
 PinturaPittsburgh_LaPazBCS/
 ├── index.html                       ← Punto de entrada principal (landing hiperlocal)
 ├── .htaccess                        ← Blindaje Apache Nivel Militar
-├── .env                             ← Credenciales REALES (NUNCA en Git) — aún no creado
+├── .env                             ← Credenciales REALES (NUNCA en Git) — creado 2026-09-11, faltan DB_PASS/SMTP_PASS
 ├── .env.example                     ← Plantilla pública (sí en Git)
 ├── .gitignore                       ← Protección del repositorio
 ├── CLAUDE.md                        ← Este archivo — manual del agente
@@ -179,7 +180,26 @@ Referencia completa: `knowledge/01_LEY_Y_PROTOCOLOS_DE_VUELO.md`
 
 ---
 
-## 6. MAPA DE ENDPOINTS (verificado contra `knowledge/03_CONTRATOS_API_Y_RUTAS.md`)
+## 6. ENTORNO DE STAGING (activo desde 2026-09-11)
+
+| Concepto | Valor |
+| :--- | :--- |
+| URL | `https://pittsburgh.tourfindy.com` |
+| Ruta en servidor | `/home/tourfindycom/public_html/pittsburgh/` |
+| DB Host | `chir205.websitehostserver.net` |
+| DB Name | `tourfindycom_pittsburgh_DB` |
+| DB User | `tourfindycom_pittsburgh_user` |
+| DB Pass | **Pendiente** — no se recibió; `.env` local tiene un placeholder explícito, nunca inventado |
+| SMTP | `pittsburgh.tourfindy.com:465` (SSL implícito), usuario `hola@pittsburgh.tourfindy.com`, password pendiente |
+| `.env` local | ✅ Generado con `scripts/generate_env.php` + `scripts/generate_jwt_keys.php`, completado con estos datos. Verificado: la cadena de conexión llega hasta PDO (falla solo por password pendiente — confirmado con `api/status_check.php`). |
+| `.env` del servidor | ⬜ **Pendiente de crear manualmente en el servidor** (nunca se despliega por FTP/Git — Mandamiento 12). Mismo contenido que el local, pero con `APP_ENV="staging"` y `APP_URL`/`FRONTEND_URL` apuntando a `https://pittsburgh.tourfindy.com`. |
+| Remote MySQL (cPanel) | ⬜ **Pendiente de confirmar** que el host remoto acepta conexiones desde la IP dinámica de este equipo de desarrollo (comodín `%` temporal, Regla Cero — ver `knowledge/00_ADN_Y_FILOSOFIA.md` §5.1). |
+
+> **Aclaración sobre el hallazgo `core/.env` del Hito 1:** aquel directorio no era de un proyecto ajeno filtrado — era la misma cuenta de hosting compartida de DCD LABS (`tourfindy.com`/`chir205.websitehostserver.net`) que ahora se usa, de forma explícita y autorizada, como staging de este proyecto. Se eliminó correctamente en su momento por ser un archivo huérfano sin autorización ni uso real — la eliminación fue la decisión correcta independientemente de este hallazgo posterior.
+
+---
+
+## 7. MAPA DE ENDPOINTS (verificado contra `knowledge/03_CONTRATOS_API_Y_RUTAS.md`)
 
 | Endpoint | Método | Auth | Contrato | Estado |
 | :--- | :--- | :--- | :--- | :--- |
@@ -199,7 +219,7 @@ Referencia completa: `knowledge/01_LEY_Y_PROTOCOLOS_DE_VUELO.md`
 
 ---
 
-## 7. PIPELINE CI/CD (GitHub Actions → FTP)
+## 8. PIPELINE CI/CD (GitHub Actions → FTP)
 
 **Archivo:** `.github/workflows/deploy.yml`
 **Trigger:** Push a rama `main`/`master`
@@ -217,7 +237,7 @@ Referencia completa: `knowledge/01_LEY_Y_PROTOCOLOS_DE_VUELO.md`
 
 ---
 
-## 8. ARCHIVOS QUE NUNCA SE MODIFICAN SIN AUTORIZACIÓN
+## 9. ARCHIVOS QUE NUNCA SE MODIFICAN SIN AUTORIZACIÓN
 
 - `knowledge/01_LEY_Y_PROTOCOLOS_DE_VUELO.md` — Los Mandamientos son ley.
 - `.htaccess` — Blindaje crítico de seguridad.
@@ -225,7 +245,7 @@ Referencia completa: `knowledge/01_LEY_Y_PROTOCOLOS_DE_VUELO.md`
 - Schema de BD — Inmutabilidad del sistema.
 - `modulos/*.md` — Blueprints agnósticos del holding DCD LABS; no se les inyectan datos de PinturaPittsburgh.
 
-## 9. ARCHIVOS QUE NUNCA SE SUBEN A GIT
+## 10. ARCHIVOS QUE NUNCA SE SUBEN A GIT
 
 - `.env` (cualquier variante real)
 - `info.txt`
@@ -235,7 +255,7 @@ Referencia completa: `knowledge/01_LEY_Y_PROTOCOLOS_DE_VUELO.md`
 
 ---
 
-## 10. PROTOCOLO DE ENJAMBRE: SINC-LEDGER INTER-AGENTE (Vigencia Permanente)
+## 11. PROTOCOLO DE ENJAMBRE: SINC-LEDGER INTER-AGENTE (Vigencia Permanente)
 
 - Se establece un archivo ledger único (`knowledge/LEDGER_SINCRONIZACION.md` — crear al activar un segundo agente IA en el ecosistema) como el Message Bus, Estado Compartido y canal oficial de comunicación entre los agentes IA del proyecto (IA Ejecutora de código, IA Consultora externa, IA Orquestadora central, si aplican).
 - Antes de iniciar cualquier hito o fase de desarrollo, la IA Ejecutora tiene la OBLIGACIÓN ABSOLUTA de leer la sección de tareas pendientes del ledger (`[TO-DO AUDITORÍA ...]`) para extraer instrucciones y anomalías detectadas en el filesystem local.
@@ -248,7 +268,7 @@ Referencia completa: `knowledge/01_LEY_Y_PROTOCOLOS_DE_VUELO.md`
 
 ---
 
-## 11. HISTORIAL DE VERSIONES
+## 12. HISTORIAL DE VERSIONES
 
 | Versión | Fecha | Cambio Principal |
 | :--- | :--- | :--- |
