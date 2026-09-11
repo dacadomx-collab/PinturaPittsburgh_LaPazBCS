@@ -7,6 +7,11 @@
     <meta name="description" content="PinturaPittsburgh, Distribuidor Autorizado de The Pittsburgh Paints Company en La Paz, B.C.S. Speedhide, Manor Hall, Perma-Crete y Pitt-Glaze. Entrega a domicilio y despacho en obra exclusivo en la zona urbana de La Paz.">
     <link rel="icon" href="favicon.ico">
 
+    <!-- Sin defer/async y ANTES del CSS: fija data-theme en <html> antes del
+         primer paint para evitar parpadeo de tema (Regla de Oro: JS en
+         assets/js/, nunca inline). -->
+    <script src="assets/js/theme-init.js"></script>
+
     <!-- CSS crítico: preload + stylesheet (Mandamiento UX #90+: carga asíncrona) -->
     <link rel="preload" href="assets/css/main.css" as="style">
     <link rel="stylesheet" href="assets/css/main.css">
@@ -17,6 +22,7 @@
             <p class="site-header__value-prop">
                 The Pittsburgh Paints Company en La Paz, B.C.S. — Entrega a Domicilio y Despacho en Obra Exclusivo en Zona Urbana de La Paz
             </p>
+            <button type="button" id="theme-toggle-btn" class="theme-toggle-btn" aria-label="Cambiar entre modo día y modo noche"></button>
         </div>
     </header>
 
@@ -115,11 +121,15 @@
         </div>
     </footer>
 
+    <button type="button" id="back-to-top-btn" class="back-to-top-btn" hidden aria-label="Volver arriba">↑</button>
+
     <!-- defer: el JS no bloquea el render; cada módulo se expone en window.PP*
          y main.js los inicializa al final, tras DOMContentLoaded. -->
     <script src="assets/js/postal-coverage.js" defer></script>
     <script src="assets/js/catalog-render.js" defer></script>
     <script src="assets/js/paint-calculator.js" defer></script>
+    <script src="assets/js/theme-toggle.js" defer></script>
+    <script src="assets/js/back-to-top.js" defer></script>
     <script src="assets/js/main.js" defer></script>
 </body>
 </html>

@@ -6,6 +6,7 @@
     <title>Publicador Social — PinturaPittsburgh Admin</title>
     <meta name="robots" content="noindex, nofollow">
     <link rel="icon" href="../favicon.ico">
+    <script src="../assets/js/theme-init.js"></script>
     <link rel="stylesheet" href="../assets/css/main.css">
     <link rel="stylesheet" href="../assets/css/admin.css">
 </head>
@@ -16,6 +17,7 @@
             <nav>
                 <a class="btn" href="catalogo.html">Catálogo</a>
                 <a class="btn" href="asistente.html">Asistente IA</a>
+                <button type="button" id="theme-toggle-btn" class="theme-toggle-btn" aria-label="Cambiar entre modo día y modo noche"></button>
                 <button type="button" id="admin-logout-btn" class="btn btn--gold">Cerrar sesión</button>
             </nav>
         </div>
@@ -112,8 +114,12 @@
         </section>
     </main>
 
+    <button type="button" id="back-to-top-btn" class="back-to-top-btn" hidden aria-label="Volver arriba">↑</button>
+
     <script src="../assets/js/admin-auth.js" defer></script>
     <script src="../assets/js/admin-social.js" defer></script>
     <script src="../assets/js/admin-social-page.js" defer></script>
+    <script src="../assets/js/theme-toggle.js" defer></script>
+    <script src="../assets/js/back-to-top.js" defer></script>
 </body>
 </html>

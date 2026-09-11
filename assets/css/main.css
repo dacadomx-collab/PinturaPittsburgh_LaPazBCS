@@ -30,8 +30,10 @@
     --container-max: 1400px;
 }
 
+/* Modo oscuro por preferencia del sistema — se ignora si el visitante eligió
+   manualmente "light" con el toggle (persistido en localStorage). */
 @media (prefers-color-scheme: dark) {
-    :root {
+    :root:not([data-theme="light"]) {
         --color-bg: #0b1120;
         --color-bg-alt: #111827;
         --color-text: #f1f5f9;
@@ -39,6 +41,17 @@
         --color-primary: #38bdf8;
         --color-border: #1e293b;
     }
+}
+
+/* Modo oscuro forzado por el toggle manual — gana siempre, sin importar el
+   sistema operativo del visitante. */
+:root[data-theme="dark"] {
+    --color-bg: #0b1120;
+    --color-bg-alt: #111827;
+    --color-text: #f1f5f9;
+    --color-text-muted: #cbd5e1;
+    --color-primary: #38bdf8;
+    --color-border: #1e293b;
 }
 
 * {
@@ -129,10 +142,16 @@ video {
 
 .site-header__bar {
     padding-block: var(--space-xs);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
 }
 
 .site-header__value-prop {
     margin: 0;
+    flex: 1 1 auto;
     font-size: 0.8rem;
     font-weight: 600;
     text-align: center;
@@ -163,6 +182,56 @@ video {
     margin: 0;
     font-size: 0.8rem;
     text-align: center;
+}
+
+/* ── TOGGLE DÍA/NOCHE ──────────────────────────────────────────────────────── */
+.theme-toggle-btn {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background-color: transparent;
+    color: #ffffff;
+    border-radius: 999px;
+    padding: 0.3rem 0.8rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.theme-toggle-btn:hover,
+.theme-toggle-btn:focus-visible {
+    border-color: var(--brand-gold);
+    color: var(--brand-gold);
+}
+
+/* ── BOTÓN FLOTANTE "VOLVER ARRIBA" — atómico, no altera el flujo del DOM ──── */
+.back-to-top-btn {
+    position: fixed;
+    right: var(--space-md);
+    bottom: var(--space-md);
+    z-index: 500;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    border: none;
+    background-color: var(--brand-navy);
+    color: #ffffff;
+    font-size: 1.3rem;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.35);
+    opacity: 0.92;
+    transition: opacity 0.2s ease, transform 0.2s ease, background-color 0.15s ease;
+}
+
+.back-to-top-btn:hover,
+.back-to-top-btn:focus-visible {
+    opacity: 1;
+    background-color: var(--brand-royal-blue);
+    transform: translateY(-2px);
+}
+
+.back-to-top-btn[hidden] {
+    display: none;
 }
 
 /* ── MEDIA DE CATÁLOGO (product cards) — cero desbordes, cero anchos fijos ─

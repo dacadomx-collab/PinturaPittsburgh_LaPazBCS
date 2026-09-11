@@ -60,7 +60,12 @@ jobs:
           server:     ${{ secrets.FTP_SERVER }}
           username:   ${{ secrets.FTP_USERNAME }}
           password:   ${{ secrets.FTP_PASSWORD }}
-          server-dir: ${{ secrets.FTP_REMOTE_DIR }}
+          # Solo 3 Secrets dados de alta (FTP_SERVER/USERNAME/PASSWORD) — no
+          # existe FTP_REMOTE_DIR. Ruta fija relativa a la raíz de la cuenta
+          # FTP de staging (/home/tourfindycom/), que apunta a
+          # /home/tourfindycom/public_html/pittsburgh/. Si el proveedor cambia
+          # el punto de montaje FTP, ajustar aquí (no requiere nuevo Secret).
+          server-dir: /public_html/pittsburgh/
           # Exclusiones de seguridad — NO desplegar secretos ni herramientas internas
           exclude: |
             **/.git/**
