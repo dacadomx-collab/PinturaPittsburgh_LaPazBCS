@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asistente de Contenido IA — PinturaPittsburgh Admin</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container site-header__bar admin-topbar">
+            <p class="site-header__value-prop">PinturaPittsburgh — Asistente de Contenido IA</p>
+            <nav>
+                <a class="btn" href="catalogo.html">Catálogo</a>
+                <a class="btn" href="social.html">Publicador Social</a>
+                <button type="button" id="admin-logout-btn" class="btn btn--gold">Cerrar sesión</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container arf-grid">
+        <section class="card arf-col-2" aria-labelledby="ia-form-titulo">
+            <h1 id="ia-form-titulo">Generador de Contenido</h1>
+            <p class="brand-tagline">Uso exclusivamente interno. El contenido generado nunca se publica automáticamente — siempre requiere tu revisión.</p>
+
+            <form id="ia-form" class="calculator-grid">
+                <div class="field-group">
+                    <label for="ia-tipo">Tipo de contenido</label>
+                    <select class="field" id="ia-tipo" name="tipo">
+                        <option value="copy_publicitario">Copy publicitario</option>
+                        <option value="metadatos_seo">Metadatos SEO</option>
+                        <option value="recomendacion_tecnica">Recomendación técnica</option>
+                    </select>
+                </div>
+
+                <div class="field-group">
+                    <label for="ia-producto">Producto</label>
+                    <select class="field" id="ia-producto" name="producto_id">
+                        <option value="">Selecciona un producto...</option>
+                    </select>
+                </div>
+
+                <div class="field-group">
+                    <label for="ia-arquetipo">Arquetipo objetivo (C+R Research)</label>
+                    <select class="field" id="ia-arquetipo" name="arquetipo_objetivo">
+                        <option value="">General</option>
+                        <option value="pequeno_contratista">Pequeño Contratista / Remodelador</option>
+                        <option value="gran_contratista">Gran Contratista General</option>
+                        <option value="administrador_fincas">Administrador de Fincas</option>
+                        <option value="arquitecto">Arquitecto / Diseñador</option>
+                        <option value="pintor">Pequeño Pintor (oficio)</option>
+                    </select>
+                </div>
+
+                <div class="field-group" id="ia-plataforma-grupo">
+                    <label for="ia-plataforma">Plataforma de destino</label>
+                    <select class="field" id="ia-plataforma" name="plataforma">
+                        <option value="facebook">Facebook (consultivo / rendimiento)</option>
+                        <option value="instagram">Instagram (conciso / visual)</option>
+                        <option value="web">Ficha web</option>
+                    </select>
+                </div>
+
+                <div class="field-group">
+                    <button type="submit" class="btn btn--gold">Generar</button>
+                </div>
+            </form>
+            <p id="ia-status" class="postal-bar__result" hidden></p>
+        </section>
+
+        <section class="card arf-col-2" aria-labelledby="ia-output-titulo">
+            <h2 id="ia-output-titulo">Contenido Generado</h2>
+            <div id="ia-output" class="ai-output" hidden>
+                <p id="ia-output-texto"></p>
+            </div>
+            <div id="ia-output-actions" class="ai-output-actions" hidden>
+                <button type="button" id="ia-copiar-btn" class="btn">Copiar</button>
+                <button type="button" id="ia-transferir-btn" class="btn btn--gold">Transferir al Publicador Social</button>
+            </div>
+        </section>
+    </main>
+
+    <script src="../assets/js/admin-auth.js" defer></script>
+    <script src="../assets/js/admin-asistente.js" defer></script>
+    <script src="../assets/js/admin-asistente-page.js" defer></script>
+</body>
+</html>

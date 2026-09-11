@@ -1,6 +1,8 @@
 # CLAUDE.md — Manual Operativo del Agente IA
 ## PinturaPittsburgh_LaPazBCS | Distribuidor Autorizado The Pittsburgh Paints Company — La Paz, B.C.S.
-**Versión:** 2.0 (Instanciado desde plantilla DCD LABS / VECTOR_CERO) | **Fecha:** 2026-09-11 | **Arquitecto:** [NOMBRE_ARQUITECTO — pendiente de confirmar]
+**Versión:** 3.0 (Hito 3 cerrado) | **Fecha:** 2026-09-11 | **Arquitecto:** [NOMBRE_ARQUITECTO — pendiente de confirmar]
+
+**Estado del proyecto:** Backend público (catálogo + validador postal) y panel administrativo completo (login, catálogo/precios, publicador social, asistente IA) implementados y verificados estructuralmente (`php -l`, `node --check`, pruebas HTTP en vivo). **Bloqueante para pruebas end-to-end reales:** no existe todavía hosting/BD/dominio contratado — todo endpoint falla limpio y en JSON (nunca expone error crudo) mientras no exista `.env` real.
 
 ---
 
@@ -11,7 +13,7 @@
 **Objetivo:** Plataforma de e-commerce hiperlocal que combina el respaldo técnico de The Pittsburgh Paints Company (líneas Speedhide, Manor Hall, Perma-Crete, Pitt-Glaze) con entrega a domicilio y despacho en obra restringido exclusivamente al municipio de La Paz, B.C.S. (104 códigos postales). Incluye catálogo/inventario, calculadora de recubrimiento costero, validación de cobertura postal en checkout y un asistente de IA interno para redacción de contenido técnico/SEO — sin exponer IA a terceros.
 **Dominio de producción:** `https://[DOMINIO_A_REGISTRAR].com` — **pendiente de definir con el Arquitecto.** Opciones sugeridas por el Codex de marca (`knowledge/00_ADN_Y_FILOSOFIA.md` §5): un dominio con descriptor geográfico explícito (ej. `pinturaspittsburghlapaz.com`). **Prohibido** registrar dominios genéricos tipo `pittsburghpaints.mx` que sugieran ser la sede global del fabricante (regla de marca, ver §5).
 **Entorno local:** `C:\xampp\htdocs\PinturaPittsburgh_LaPazBCS\`
-**Repositorio:** Git inicializado localmente (`git init` ejecutado 2026-09-11). Remoto GitHub y rama `main` con auto-deploy vía GitHub Actions FTP — **pendiente de configurar** (ver §6).
+**Repositorio:** `https://github.com/dacadomx-collab/PinturaPittsburgh_LaPazBCS.git`, rama `main`. Commits: `2d77e30` (Hito 1) y `5b9b383` (Hito 2). Auto-deploy vía GitHub Actions FTP definido en `deploy.yml` — **Secrets de FTP pendientes de configurar** (ver §6).
 
 ### Stack Tecnológico
 - **Frontend:** HTML + CSS + JS nativo (Mobile-First, ARF-Grid). Sin framework — no se introduce Next.js/React salvo autorización explícita del Arquitecto.
@@ -36,20 +38,41 @@ PinturaPittsburgh_LaPazBCS/
 ├── CLAUDE.md                        ← Este archivo — manual del agente
 ├── FUENTEDEVERDAD_CONSOLIDADA.md     ← Bitácora de instanciación del scaffold
 │
-├── api/                             ← Endpoints PHP (todos blindados, única puerta HTTP)
+├── api/                             ← Endpoints PHP públicos (todos blindados, única puerta HTTP)
 │   ├── conexion.php                 ← Conexión PDO centralizada (lee .env de raíz)
 │   ├── cors.php                     ← Gestor CORS centralizado
 │   ├── jwt.php                      ← Utilidad JWT HS256 sin dependencias
 │   ├── auth_middleware.php          ← Validación Bearer JWT + RBAC
 │   ├── auth_login.php / auth_refresh.php
-│   └── status_check.php             ← Triple Handshake (filesystem/BD/SMTP)
+│   ├── status_check.php             ← Triple Handshake (filesystem/BD/SMTP)
+│   ├── validar_cp.php               ← Contrato 4 — cobertura postal (público)
+│   ├── catalogo_listar.php          ← Contrato 3 — catálogo (público)
+│   ├── social_publicar.php          ← Contrato 6 — Publicador Social (admin)
+│   ├── asistente_ia.php             ← Contrato 7 — Asistente de Contenido IA (admin)
+│   └── admin/
+│       ├── catalogo_admin.php       ← Contrato 8 — precio/stock (admin)
+│       └── social_historial.php     ← Contrato 9 — historial de publicaciones (admin)
 │
-├── helpers/                         ← input_sanitizer, response, asfl_logger, ai_runtime_factory
+├── admin/                           ← Frontend del backoffice (Bearer JWT, sin cookies)
+│   ├── login.html
+│   ├── catalogo.html
+│   ├── social.html
+│   └── asistente.html
+│
+├── workers/                         ← Scripts CLI/cron (bloqueados por HTTP en .htaccess)
+│   └── instagram_worker.php         ← Fases 2/3 del pipeline de Instagram
+│
+├── database/                        ← Migraciones SQL versionadas (bloqueado por HTTP en .htaccess)
+│   └── 001_schema_inicial.sql       ← Las 8 tablas aprobadas + seed de 99 CP
+│
+├── helpers/                         ← input_sanitizer, response, asfl_logger, ai_runtime_factory, crypto_helper
 ├── validators/                      ← validator.php, proxy_tunnel_validator.php (capa opcional, inactiva)
 │
 ├── assets/                          ← CSS, JS, imágenes estáticas
-│   ├── css/main.css                 ← ARF-Grid + tokens de marca PinturaPittsburgh
-│   ├── js/main.js
+│   ├── css/main.css                 ← ARF-Grid + tokens de marca PinturaPittsburgh (sitio público + base admin)
+│   ├── css/admin.css                ← Estilos exclusivos del backoffice (depende de main.css)
+│   ├── js/main.js, postal-coverage.js, catalog-render.js, paint-calculator.js
+│   ├── js/admin-auth.js, admin-login.js, admin-catalogo*.js, admin-social*.js, admin-asistente*.js
 │   └── img/logo.svg
 │
 ├── logs/                            ← Logs del sistema (bloqueados en .htaccess)
@@ -156,11 +179,31 @@ Referencia completa: `knowledge/01_LEY_Y_PROTOCOLOS_DE_VUELO.md`
 
 ---
 
-## 6. PIPELINE CI/CD (GitHub Actions → FTP)
+## 6. MAPA DE ENDPOINTS (verificado contra `knowledge/03_CONTRATOS_API_Y_RUTAS.md`)
+
+| Endpoint | Método | Auth | Contrato | Estado |
+| :--- | :--- | :--- | :--- | :--- |
+| `api/auth_login.php` | POST | Público | 1 | ✅ |
+| `api/auth_refresh.php` | POST | Refresh token | 2 | ✅ |
+| `api/catalogo_listar.php` | GET | Público | 3 | ✅ |
+| `api/validar_cp.php` | GET | Público | 4 | ✅ |
+| `api/pedido_crear.php` | POST | Público | 5 | ⬜ Propuesto |
+| `api/social_publicar.php` | POST | Bearer JWT + admin | 6 | ✅ (Instagram solo fase 1) |
+| `api/asistente_ia.php` | POST | Bearer JWT + admin | 7 | ✅ |
+| `api/admin/catalogo_admin.php` | GET/PUT | Bearer JWT + admin | 8 | ✅ |
+| `api/admin/social_historial.php` | GET | Bearer JWT + admin | 9 | ✅ |
+| `api/status_check.php` | GET | Público | — | ✅ (Triple Handshake) |
+| `workers/instagram_worker.php` | CLI/cron únicamente | N/A | — | ✅ (fases 2/3 del pipeline de Instagram) |
+
+**Herramientas operativas activas:** `php -l` (lint), `node --check` (sintaxis JS), pruebas HTTP con `curl` contra el entorno local XAMPP — todas ejecutadas antes de cerrar cada hito.
+
+---
+
+## 7. PIPELINE CI/CD (GitHub Actions → FTP)
 
 **Archivo:** `.github/workflows/deploy.yml`
 **Trigger:** Push a rama `main`/`master`
-**Estado:** Repositorio Git local inicializado (2026-09-11). **Pendiente:** crear repositorio remoto en GitHub, configurar `git remote add origin`, y dar de alta los Secrets.
+**Estado:** Repositorio remoto activo en GitHub (`main`), 2 commits enviados. **Pendiente:** dar de alta los Secrets de FTP (el pipeline no se ha disparado — no hay hosting de producción contratado todavía).
 
 **GitHub Secrets requeridos** (Settings → Secrets → Actions):
 | Secret | Contenido |
@@ -174,7 +217,7 @@ Referencia completa: `knowledge/01_LEY_Y_PROTOCOLOS_DE_VUELO.md`
 
 ---
 
-## 7. ARCHIVOS QUE NUNCA SE MODIFICAN SIN AUTORIZACIÓN
+## 8. ARCHIVOS QUE NUNCA SE MODIFICAN SIN AUTORIZACIÓN
 
 - `knowledge/01_LEY_Y_PROTOCOLOS_DE_VUELO.md` — Los Mandamientos son ley.
 - `.htaccess` — Blindaje crítico de seguridad.
@@ -182,7 +225,7 @@ Referencia completa: `knowledge/01_LEY_Y_PROTOCOLOS_DE_VUELO.md`
 - Schema de BD — Inmutabilidad del sistema.
 - `modulos/*.md` — Blueprints agnósticos del holding DCD LABS; no se les inyectan datos de PinturaPittsburgh.
 
-## 8. ARCHIVOS QUE NUNCA SE SUBEN A GIT
+## 9. ARCHIVOS QUE NUNCA SE SUBEN A GIT
 
 - `.env` (cualquier variante real)
 - `info.txt`
@@ -192,7 +235,7 @@ Referencia completa: `knowledge/01_LEY_Y_PROTOCOLOS_DE_VUELO.md`
 
 ---
 
-## 9. PROTOCOLO DE ENJAMBRE: SINC-LEDGER INTER-AGENTE (Vigencia Permanente)
+## 10. PROTOCOLO DE ENJAMBRE: SINC-LEDGER INTER-AGENTE (Vigencia Permanente)
 
 - Se establece un archivo ledger único (`knowledge/LEDGER_SINCRONIZACION.md` — crear al activar un segundo agente IA en el ecosistema) como el Message Bus, Estado Compartido y canal oficial de comunicación entre los agentes IA del proyecto (IA Ejecutora de código, IA Consultora externa, IA Orquestadora central, si aplican).
 - Antes de iniciar cualquier hito o fase de desarrollo, la IA Ejecutora tiene la OBLIGACIÓN ABSOLUTA de leer la sección de tareas pendientes del ledger (`[TO-DO AUDITORÍA ...]`) para extraer instrucciones y anomalías detectadas en el filesystem local.
@@ -205,9 +248,11 @@ Referencia completa: `knowledge/01_LEY_Y_PROTOCOLOS_DE_VUELO.md`
 
 ---
 
-## 10. HISTORIAL DE VERSIONES
+## 11. HISTORIAL DE VERSIONES
 
 | Versión | Fecha | Cambio Principal |
 | :--- | :--- | :--- |
 | v1.0 | (plantilla) | Bóveda Madre genérica DCD LABS / VECTOR_CERO |
 | v2.0 | 2026-09-11 | Instanciación completa: rebranding a PinturaPittsburgh, eliminación de `core/.env` contaminado, `git init`, corrección de referencias a `knowledge/` |
+| v2.1 | 2026-09-11 | Hito 2: schema materializado (`database/001_schema_inicial.sql`), frontend ARF-Grid (postal/calculadora/catálogo con datos DEMO), `helpers/crypto_helper.php` (Envelope Encryption, probado), backends de Publicador Social y Asistente IA, panel admin de login/catálogo. Commit `5b9b383`. |
+| v3.0 | 2026-09-11 | Hito 3: `api/validar_cp.php` y `api/catalogo_listar.php` públicos conectados al frontend (fin de datos DEMO/espejo cliente); `admin/social.html` y `admin/asistente.html` con previsualizador en vivo y transferencia entre módulos; `workers/instagram_worker.php` (fases 2/3, CLI/cron, bloqueado por HTTP); `api/admin/social_historial.php` (Contrato 9). Pendiente de commit/push. |

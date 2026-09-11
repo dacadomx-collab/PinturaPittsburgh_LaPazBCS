@@ -1,7 +1,7 @@
 // assets/js/catalog-render.js — PinturaPittsburgh_LaPazBCS
-// Renderiza el catálogo facetado (ARF-Grid) a partir de PPCatalogData.
-// Cuando exista api/catalogo_listar.php, sustituir PPCatalogData.products por
-// el resultado de fetch('api/catalogo_listar.php').then(r => r.json()).
+// Renderiza el catálogo facetado (ARF-Grid) consumiendo api/catalogo_listar.php
+// (Contrato 3). El filtrado ocurre en el servidor: cada click en un facet
+// vuelve a pedir la página con el filtro aplicado como query string.
 (function (global, document) {
     'use strict';
 
@@ -35,6 +35,15 @@
         }
     };
 
+    // Universo fijo de facets — coincide con los ENUM de `productos` en
+    // database/001_schema_inicial.sql. Se muestran todas las opciones aunque
+    // la página actual no tenga productos en alguna de ellas (las categorías
+    // son taxonomía del negocio, no un derivado de los resultados en pantalla).
+    var FACET_VALUES = {
+        sustrato: ['concreto_costero', 'enjarre_yeso', 'tabla_roca', 'madera_marina', 'herreria', 'piso_alto_transito'],
+        grado_brillo: ['mate', 'eggshell', 'satinado', 'semibrillante', 'brillante']
+    };
+
     var activeFilters = { sustrato: null, grado_brillo: null };
 
     function formatMoney(value) {
@@ -42,20 +51,13 @@
     }
 
     function precioRango(presentaciones) {
+        if (!presentaciones || presentaciones.length === 0) {
+            return 'Consultar disponibilidad';
+        }
         var precios = presentaciones.map(function (p) { return p.precio; });
         var min = Math.min.apply(null, precios);
         var max = Math.max.apply(null, precios);
         return min === max ? formatMoney(min) : formatMoney(min) + ' – ' + formatMoney(max);
-    }
-
-    function productMatchesFilters(product) {
-        if (activeFilters.sustrato && product.sustrato !== activeFilters.sustrato) {
-            return false;
-        }
-        if (activeFilters.grado_brillo && product.grado_brillo !== activeFilters.grado_brillo) {
-            return false;
-        }
-        return true;
     }
 
     function buildCard(product) {
@@ -89,15 +91,26 @@
 
         var quickView = document.createElement('div');
         quickView.className = 'product-card__quick-view';
-        var volumenes = product.presentaciones.map(function (p) {
+        var volumenes = (product.presentaciones || []).map(function (p) {
             return LABELS.volumen[p.volumen] || p.volumen;
-        }).join(' · ');
+        }).join(' · ') || 'Sin presentaciones registradas';
         var pVol = document.createElement('p');
         pVol.textContent = 'Presentaciones: ' + volumenes;
         quickView.appendChild(pVol);
         card.appendChild(quickView);
 
         return card;
+    }
+
+    function buildQueryString() {
+        var params = [];
+        if (activeFilters.sustrato) {
+            params.push('sustrato=' + encodeURIComponent(activeFilters.sustrato));
+        }
+        if (activeFilters.grado_brillo) {
+            params.push('grado_brillo=' + encodeURIComponent(activeFilters.grado_brillo));
+        }
+        return params.length ? '?' + params.join('&') : '';
     }
 
     function render() {
@@ -107,20 +120,45 @@
         }
 
         grid.innerHTML = '';
-        var products = (global.PPCatalogData && global.PPCatalogData.products) || [];
-        var visibles = products.filter(productMatchesFilters);
+        var loading = document.createElement('p');
+        loading.className = 'arf-col-4';
+        loading.textContent = 'Cargando catálogo...';
+        grid.appendChild(loading);
 
-        if (visibles.length === 0) {
-            var empty = document.createElement('p');
-            empty.className = 'arf-col-4';
-            empty.textContent = 'No hay productos con esa combinación de filtros por ahora.';
-            grid.appendChild(empty);
-            return;
-        }
+        fetch('api/catalogo_listar.php' + buildQueryString())
+            .then(function (res) { return res.json(); })
+            .then(function (body) {
+                grid.innerHTML = '';
 
-        visibles.forEach(function (product) {
-            grid.appendChild(buildCard(product));
-        });
+                if (body.status !== 'success') {
+                    var errorMsg = document.createElement('p');
+                    errorMsg.className = 'arf-col-4';
+                    errorMsg.textContent = body.message || 'No fue posible cargar el catálogo.';
+                    grid.appendChild(errorMsg);
+                    return;
+                }
+
+                var productos = body.data.productos || [];
+
+                if (productos.length === 0) {
+                    var empty = document.createElement('p');
+                    empty.className = 'arf-col-4';
+                    empty.textContent = 'No hay productos con esa combinación de filtros por ahora.';
+                    grid.appendChild(empty);
+                    return;
+                }
+
+                productos.forEach(function (producto) {
+                    grid.appendChild(buildCard(producto));
+                });
+            })
+            .catch(function () {
+                grid.innerHTML = '';
+                var offline = document.createElement('p');
+                offline.className = 'arf-col-4';
+                offline.textContent = 'No fue posible conectar con el catálogo. Intenta de nuevo más tarde.';
+                grid.appendChild(offline);
+            });
     }
 
     function buildFacetGroup(containerId, facetKey) {
@@ -129,10 +167,7 @@
             return;
         }
 
-        var products = (global.PPCatalogData && global.PPCatalogData.products) || [];
-        var values = Array.from(new Set(products.map(function (p) { return p[facetKey]; }).filter(Boolean)));
-
-        values.forEach(function (value) {
+        FACET_VALUES[facetKey].forEach(function (value) {
             var chip = document.createElement('button');
             chip.type = 'button';
             chip.className = 'facet-chip';

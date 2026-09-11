@@ -1,64 +1,40 @@
 // assets/js/postal-coverage.js — PinturaPittsburgh_LaPazBCS
 //
-// Espejo de solo lectura de `codigos_postales_cobertura` (database/001_schema_inicial.sql).
-// TEMPORAL: valida en el cliente mientras no exista api/validar_cp.php. El
-// backend SIEMPRE debe revalidar en el servidor antes de aceptar un pedido
-// (ver knowledge/03_CONTRATOS_API_Y_RUTAS.md Contrato 4) — este archivo nunca
-// es la fuente de verdad final, solo feedback inmediato en el checkout.
+// Valida la cobertura postal contra api/validar_cp.php (Contrato 4). Ya NO es
+// un espejo en memoria — consulta la tabla real `codigos_postales_cobertura`.
 //
-// Si el seed de la tabla cambia, actualizar estos mismos rangos aquí.
+// Fail-safe: si el formato es inválido o el servidor no responde, se trata
+// como NO cubierto — nunca se habilita una entrega a domicilio por defecto.
 (function (global) {
     'use strict';
 
-    var RANGOS = [
-        { min: 23000, max: 23000, zona: 'Zona Central, Love, Puerta de Hierro', modalidad: 'despacho_local', ventana: 'Menos de 2 a 4 Horas' },
-        { min: 23010, max: 23019, zona: 'Colina del Sol, Ciudad del Cielo, Palmira, Pedregal', modalidad: 'ruta_programada', ventana: 'Mismo Día' },
-        { min: 23020, max: 23026, zona: 'El Esterito, Ladrillera, Guerrero, Antonio Navarro Rubio', modalidad: 'ruta_programada', ventana: 'Mismo Día' },
-        { min: 23040, max: 23050, zona: 'Los Olivos, Bella Vista, Roma, Tecnológico, Indeco', modalidad: 'despacho_inmediato', ventana: 'Menos de 2 Horas' },
-        { min: 23070, max: 23075, zona: 'Balandra, Las Garzas, Privadas, Agustín Arriola', modalidad: 'despacho_inmediato', ventana: 'Menos de 2 Horas' },
-        { min: 23080, max: 23085, zona: '8 de Octubre, Altamira Residencial, Camino Real', modalidad: 'ruta_programada', ventana: 'Mismo Día' },
-        { min: 23090, max: 23098, zona: 'Miramar, Arcos del Sol, Atardeceres, Bahía de la Paz', modalidad: 'ruta_periferica', ventana: 'Mismo Día / Hasta 24 Horas' }
-    ];
-
-    var COBERTURA_MIN = 23000;
-    var COBERTURA_MAX = 23098;
-
     /**
      * @param {string} codigoPostal
-     * @returns {{cubierto: boolean, zona_colonia?: string, modalidad_logistica?: string, ventana_entrega?: string}}
+     * @returns {Promise<{cubierto: boolean, zona_colonia?: string, modalidad_logistica?: string, ventana_entrega?: string, error?: string}>}
      */
     function checkCoverage(codigoPostal) {
-        var cp = parseInt(String(codigoPostal).trim(), 10);
+        var cp = String(codigoPostal).trim();
 
-        if (!/^\d{5}$/.test(String(codigoPostal).trim()) || isNaN(cp)) {
-            return { cubierto: false, error: 'formato_invalido' };
+        if (!/^\d{5}$/.test(cp)) {
+            return Promise.resolve({ cubierto: false, error: 'formato_invalido' });
         }
 
-        if (cp < COBERTURA_MIN || cp > COBERTURA_MAX) {
-            return { cubierto: false };
-        }
-
-        for (var i = 0; i < RANGOS.length; i++) {
-            var r = RANGOS[i];
-            if (cp >= r.min && cp <= r.max) {
-                return {
-                    cubierto: true,
-                    zona_colonia: r.zona,
-                    modalidad_logistica: r.modalidad,
-                    ventana_entrega: r.ventana
-                };
-            }
-        }
-
-        // Dentro del rango urbano 23000-23098 pero sin colonia confirmada en
-        // la fuente (ver database/001_schema_inicial.sql — filas "pendiente
-        // de verificar"). Se cubre con ventana genérica hasta cargar SEPOMEX.
-        return {
-            cubierto: true,
-            zona_colonia: 'Zona Urbana La Paz (colonia por confirmar)',
-            modalidad_logistica: 'ruta_programada',
-            ventana_entrega: 'Mismo Día'
-        };
+        return fetch('api/validar_cp.php?cp=' + encodeURIComponent(cp))
+            .then(function (res) {
+                return res.json().then(function (body) {
+                    return { res: res, body: body };
+                });
+            })
+            .then(function (r) {
+                if (!r.res.ok || r.body.status !== 'success') {
+                    throw new Error(r.body.message || 'No fue posible validar la cobertura.');
+                }
+                return r.body.data;
+            })
+            .catch(function () {
+                // Fail-safe: servidor no disponible -> se bloquea, nunca se abre.
+                return { cubierto: false, error: 'servicio_no_disponible' };
+            });
     }
 
     global.PPPostalCoverage = { check: checkCoverage };

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Publicador Social — PinturaPittsburgh Admin</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container site-header__bar admin-topbar">
+            <p class="site-header__value-prop">PinturaPittsburgh — Publicador Social Omnicanal</p>
+            <nav>
+                <a class="btn" href="catalogo.html">Catálogo</a>
+                <a class="btn" href="asistente.html">Asistente IA</a>
+                <button type="button" id="admin-logout-btn" class="btn btn--gold">Cerrar sesión</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1>Publicador Social Omnicanal</h1>
+        <p class="brand-tagline">Redacta, previsualiza y publica en Facebook e Instagram desde un solo lugar. Instagram solo confirma la publicación final mediante un proceso asíncrono (fase 1 completada aquí).</p>
+
+        <div class="arf-grid">
+            <section class="card arf-col-2" aria-labelledby="social-form-titulo">
+                <h2 id="social-form-titulo">Nueva Publicación</h2>
+                <form id="social-form" class="calculator-grid">
+                    <div class="field-group">
+                        <label for="social-plataforma">Plataforma</label>
+                        <select class="field" id="social-plataforma" name="plataforma">
+                            <option value="facebook">Facebook</option>
+                            <option value="instagram">Instagram</option>
+                            <option value="ambas">Ambas</option>
+                        </select>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="social-producto">Producto vinculado (opcional)</label>
+                        <select class="field" id="social-producto" name="producto_id">
+                            <option value="">Sin producto vinculado</option>
+                        </select>
+                    </div>
+
+                    <div class="field-group field-group--full">
+                        <label for="social-texto">Texto / Caption</label>
+                        <textarea class="field" id="social-texto" name="texto" required placeholder="Escribe el copy de la publicación. Incluye hashtags locales para Instagram (#LaPazBCS, #PinturaPittsburgh)."></textarea>
+                    </div>
+
+                    <div class="field-group field-group--full">
+                        <label for="social-media-url">URL de la imagen (HTTPS)</label>
+                        <input class="field" type="url" id="social-media-url" name="media_url" required placeholder="https://...">
+                    </div>
+
+                    <div class="field-group">
+                        <label>
+                            <input type="checkbox" id="social-publicar-ahora" checked>
+                            Publicar ahora
+                        </label>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="social-programado">Programar para (si no es "ahora")</label>
+                        <input class="field" type="datetime-local" id="social-programado" name="programado_para" disabled>
+                    </div>
+
+                    <div class="field-group">
+                        <button type="submit" class="btn btn--gold">Publicar</button>
+                    </div>
+                </form>
+                <p id="social-status" class="postal-bar__result" hidden></p>
+            </section>
+
+            <section class="card arf-col-2" aria-labelledby="social-preview-titulo">
+                <h2 id="social-preview-titulo">Previsualización en Vivo</h2>
+                <div class="preview-panels">
+                    <div class="preview-card preview-card--facebook">
+                        <p class="preview-card__header">PinturaPittsburgh — Facebook</p>
+                        <img id="preview-fb-media" class="preview-card__media" alt="Vista previa de imagen para Facebook" hidden>
+                        <p id="preview-fb-caption" class="preview-card__caption"></p>
+                        <p id="preview-fb-counter" class="char-counter"></p>
+                    </div>
+                    <div class="preview-card preview-card--instagram">
+                        <p class="preview-card__header">PinturaPittsburgh — Instagram</p>
+                        <img id="preview-ig-media" class="preview-card__media" alt="Vista previa de imagen para Instagram" hidden>
+                        <p id="preview-ig-caption" class="preview-card__caption"></p>
+                        <p id="preview-ig-counter" class="char-counter"></p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <section class="card" aria-labelledby="social-historial-titulo">
+            <h2 id="social-historial-titulo">Historial de Publicaciones</h2>
+            <div class="table-scroll">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Plataforma</th>
+                            <th>Texto</th>
+                            <th>Estado</th>
+                            <th>Programado para</th>
+                            <th>Creado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="social-historial-tbody"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script src="../assets/js/admin-auth.js" defer></script>
+    <script src="../assets/js/admin-social.js" defer></script>
+    <script src="../assets/js/admin-social-page.js" defer></script>
+</body>
+</html>

@@ -31,23 +31,32 @@ function initPostalBar() {
     form.addEventListener('submit', (event) => {
         event.preventDefault();
 
-        const resultado = window.PPPostalCoverage.check(input.value);
         resultEl.hidden = false;
+        resultEl.className = 'postal-bar__result';
+        resultEl.textContent = 'Verificando cobertura...';
 
-        if (resultado.error === 'formato_invalido') {
-            resultEl.className = 'postal-bar__result postal-bar__result--blocked';
-            resultEl.textContent = 'Ingresa un código postal válido de 5 dígitos.';
-            return;
-        }
+        window.PPPostalCoverage.check(input.value).then((resultado) => {
+            if (resultado.error === 'formato_invalido') {
+                resultEl.className = 'postal-bar__result postal-bar__result--blocked';
+                resultEl.textContent = 'Ingresa un código postal válido de 5 dígitos.';
+                return;
+            }
 
-        if (!resultado.cubierto) {
-            resultEl.className = 'postal-bar__result postal-bar__result--blocked';
-            resultEl.textContent = 'La entrega a domicilio solo aplica dentro del municipio de La Paz, B.C.S. Puedes recoger tu pedido en tienda (Blvd. Agustín Olachea e Indeco) o llamarnos para cotizaciones de mayoreo.';
-            return;
-        }
+            if (resultado.error === 'servicio_no_disponible') {
+                resultEl.className = 'postal-bar__result postal-bar__result--blocked';
+                resultEl.textContent = 'No pudimos verificar la cobertura en este momento. Intenta de nuevo o llama a la tienda.';
+                return;
+            }
 
-        resultEl.className = 'postal-bar__result postal-bar__result--ok';
-        resultEl.textContent = 'Cobertura confirmada — ' + resultado.zona_colonia + '. Ventana de entrega: ' + resultado.ventana_entrega + '.';
+            if (!resultado.cubierto) {
+                resultEl.className = 'postal-bar__result postal-bar__result--blocked';
+                resultEl.textContent = 'La entrega a domicilio solo aplica dentro del municipio de La Paz, B.C.S. Puedes recoger tu pedido en tienda (Blvd. Agustín Olachea e Indeco) o llamarnos para cotizaciones de mayoreo.';
+                return;
+            }
+
+            resultEl.className = 'postal-bar__result postal-bar__result--ok';
+            resultEl.textContent = 'Cobertura confirmada — ' + resultado.zona_colonia + '. Ventana de entrega: ' + resultado.ventana_entrega + '.';
+        });
     });
 }
 

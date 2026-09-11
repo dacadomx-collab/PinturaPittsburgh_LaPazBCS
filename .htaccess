@@ -109,6 +109,7 @@ ServerSignature Off
     RewriteRule (^|/)scripts(/|$)            - [F,L,NC]
     RewriteRule (^|/)helpers(/|$)             - [F,L,NC]
     RewriteRule (^|/)validators(/|$)          - [F,L,NC]
+    RewriteRule (^|/)workers(/|$)             - [F,L,NC]
 
     # ── NIVEL 4: RUTAS FÍSICAS (assets, api) pasan sin reescritura ────────────
     RewriteCond %{REQUEST_FILENAME} -f [OR]
