@@ -19,7 +19,7 @@
 | **LAYER_2 — Observability** | `helpers/asfl_logger.php` (solo `APP_ENV=local`) | ✅ Activo |
 | **LAYER_3 — UX** | `assets/css/main.css` (ARF-Grid + paleta "Ocean Breeze & Pittsburgh Gold"), `assets/js/main.js`, `index.html` | ✅ Rebrandeado 2026-09-11 |
 | Knowledge Base (`knowledge/00`–`07`) | ✅ Pilares 00, 01, 03, 04, 07 instanciados con datos reales del negocio. Pilares 05/06 marcados N/A donde no aplica el modelo SaaS de la plantilla. |
-| Schema de Base de Datos | ⬜ **Propuesto, no creado.** Ver `knowledge/02_CODEX_Y_SCHEMA_MAESTRO.md` — pendiente de aprobación tabla por tabla del Arquitecto (Mandamiento #9). |
+| Schema de Base de Datos | ✅ **Aprobado y materializado** en [`database/001_schema_inicial.sql`](database/001_schema_inicial.sql) (Directiva 1, 2026-09-11). Pendiente solo de ejecutarse contra un servidor MySQL/MariaDB real al contratar hosting. |
 | Scripts de arranque (`scripts/*`) | ✅ Sin cambios — genéricos, no requieren datos del proyecto. |
 | Túnel Proxy Seguro para ChatBot IA (`validators/proxy_tunnel_validator.php`, `helpers/ai_runtime_factory.php`) | ⬜ **Inactivo por diseño.** PinturaPittsburgh no revende IA a terceros; el asistente de IA es de uso administrativo interno (ver `knowledge/06_NUCLEO_COGNITIVO_Y_PROMPTS.md`). No activar sin autorización explícita. |
 
@@ -35,9 +35,10 @@ activos, pero sí de nombres de host/usuario de un cliente distinto.
 
 ## 3. PENDIENTE DE AUTORIZACIÓN EXPLÍCITA (Mandamiento #9)
 
-- Schema completo de catálogo/inventario, cobertura postal, pedidos y tokens
-  sociales cifrados — propuesta en `knowledge/02_CODEX_Y_SCHEMA_MAESTRO.md`,
-  **sin ejecutar** en ninguna base de datos hasta aprobación del Arquitecto.
+- Schema de catálogo/inventario, cobertura postal, pedidos y tokens sociales
+  cifrados: **aprobado 2026-09-11 (Directiva 1)** y materializado en
+  `database/001_schema_inicial.sql`. Pendiente únicamente ejecutarlo contra un
+  servidor real al contratar hosting.
 - Dominio de producción — aún no registrado (ver `CLAUDE.md` §1).
 - Contratación de hosting/proveedor de producción — aún no definido.
 
@@ -47,7 +48,7 @@ activos, pero sí de nombres de host/usuario de un cliente distinto.
 2. ✅ `CLAUDE.md` §1 completado con identidad real.
 3. ⬜ `.env` real — **pendiente**, se crea al contratar hosting/BD.
 4. ✅ Repositorio Git inicializado localmente (`git init`, sin remoto aún).
-5. ⬜ Schema real en `knowledge/02_CODEX_Y_SCHEMA_MAESTRO.md` — propuesto, pendiente de aprobación.
+5. ✅ Schema real aprobado y materializado en `database/001_schema_inicial.sql` (Directiva 1, 2026-09-11).
 6. ⬜ `api/status_check.php` — pendiente de ejecutar una vez exista `.env` real con BD activa.
 7. ⬜ Scanner perimetral AXON DCD — pendiente, se ejecuta antes de producción (Mandamiento #18).
 

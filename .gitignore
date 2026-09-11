@@ -51,6 +51,7 @@ php_errors.log
 
 # ── BASE DE DATOS (archivos de volcado — pueden contener datos sensibles) ────
 *.sql
+!database/*.sql
 *.sqlite
 *.db
 

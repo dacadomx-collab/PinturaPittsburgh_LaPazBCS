@@ -22,7 +22,12 @@ declare(strict_types=1);
  */
 function asfl_log(string $direction, array $context = []): void
 {
-    $env = parse_ini_file(dirname(__DIR__) . '/.env', false, INI_SCANNER_RAW) ?: [];
+    $envPath = dirname(__DIR__) . '/.env';
+    if (!is_readable($envPath)) {
+        return;
+    }
+
+    $env = parse_ini_file($envPath, false, INI_SCANNER_RAW) ?: [];
     $appEnv = (string) ($env['APP_ENV'] ?? '');
 
     if ($appEnv !== 'local') {
