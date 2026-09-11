@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PinturaPittsburgh — Distribuidor Autorizado en La Paz, B.C.S.</title>
+    <meta name="description" content="PinturaPittsburgh, Distribuidor Autorizado de The Pittsburgh Paints Company en La Paz, B.C.S. Speedhide, Manor Hall, Perma-Crete y Pitt-Glaze. Entrega a domicilio y despacho en obra exclusivo en la zona urbana de La Paz.">
+    <link rel="icon" href="favicon.ico">
+
+    <!-- CSS crítico: preload + stylesheet (Mandamiento UX #90+: carga asíncrona) -->
+    <link rel="preload" href="assets/css/main.css" as="style">
+    <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container site-header__bar">
+            <p class="site-header__value-prop">
+                The Pittsburgh Paints Company en La Paz, B.C.S. — Entrega a Domicilio y Despacho en Obra Exclusivo en Zona Urbana de La Paz
+            </p>
+        </div>
+    </header>
+
+    <main class="container arf-grid">
+        <section class="card arf-col-2">
+            <picture>
+                <source srcset="assets/img/logo.avif" type="image/avif">
+                <source srcset="assets/img/logo.webp" type="image/webp">
+                <img src="assets/img/logo.svg" alt="PinturaPittsburgh - Distribuidor Autorizado en La Paz" loading="lazy" width="200" height="60">
+            </picture>
+            <h1>PinturaPittsburgh <span class="brand-accent">La Paz</span></h1>
+            <p class="brand-tagline">Distribuidor Autorizado de The Pittsburgh Paints Company — 150 años de respaldo técnico, entrega el mismo día en la ciudad de La Paz.</p>
+            <p class="brand-lines">Líneas disponibles: <strong>Speedhide</strong> · <strong>Manor Hall</strong> · <strong>Perma-Crete</strong> · <strong>Pitt-Glaze</strong></p>
+        </section>
+
+        <section class="card arf-col-2">
+            <h2>Cobertura de Entrega</h2>
+            <p>Venta transaccional con entrega a domicilio disponible exclusivamente dentro de los 104 códigos postales del municipio de La Paz, B.C.S.</p>
+            <p id="status-check">Verificando estado del sistema...</p>
+        </section>
+
+        <section class="card arf-col-3">
+            <h2>Tienda Física</h2>
+            <p>Bulevar Agustín Olachea e Indeco, La Paz, B.C.S.</p>
+        </section>
+        <section class="card arf-col-3">
+            <h2>Despacho Local</h2>
+            <p>Entregas en menos de 2 a 4 horas según zona, dentro de la mancha urbana de La Paz.</p>
+        </section>
+        <section class="card arf-col-3">
+            <h2>Asesoría Técnica</h2>
+            <p>Especialistas en protección contra salitre, radiación UV y corrosión marina para el microclima paceño.</p>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>PinturaPittsburgh - Distribuidor Autorizado La Paz · Bulevar Agustín Olachea e Indeco, La Paz, B.C.S.</p>
+        </div>
+    </footer>
+
+    <!-- defer: el JS no bloquea el render, se ejecuta tras parsear el DOM -->
+    <script src="assets/js/main.js" defer></script>
+</body>
+</html>

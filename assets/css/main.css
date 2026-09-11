@@ -1,0 +1,160 @@
+/* =============================================================================
+   assets/css/main.css — PinturaPittsburgh_LaPazBCS
+   Paleta de marca: "Ocean Breeze & Pittsburgh Gold"
+   Mobile-First | ARF-Grid (Adaptive Responsive Flex) | Modo Oscuro fluido
+   Mandamiento #1: nacer para celular, sin anchos fijos en contenedores.
+   Mandamiento #3: contraste mínimo WCAG 4.5:1.
+   Prohibido: !important, estilos inline.
+   ============================================================================= */
+
+:root {
+    --color-bg: #ffffff;
+    --color-bg-alt: #f8fafc;
+    --color-text: #0f172a;
+    --color-text-muted: #475569;
+    --color-primary: #0f172a;
+    --color-border: #e2e8f0;
+
+    /* Ocean Breeze & Pittsburgh Gold — tokens de marca */
+    --brand-navy: #0f172a;
+    --brand-royal-blue: #1e40af;
+    --brand-vibrant-blue: #0284c7;
+    --brand-teal: #0d9488;
+    --brand-gold: #d97706;
+
+    --space-xs: 0.5rem;
+    --space-sm: 1rem;
+    --space-md: 1.5rem;
+    --space-lg: 2.5rem;
+    --radius: 0.5rem;
+    --container-max: 1400px;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-bg: #0b1120;
+        --color-bg-alt: #111827;
+        --color-text: #f1f5f9;
+        --color-text-muted: #cbd5e1;
+        --color-primary: #38bdf8;
+        --color-border: #1e293b;
+    }
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    line-height: 1.5;
+}
+
+img,
+video {
+    max-width: 100%;
+    height: auto;
+}
+
+/* ── CONTENEDOR MAESTRO: ancho fluido con tope vía variable nativa ───────── */
+.container {
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--space-md);
+}
+
+/* ── ARF-GRID (Adaptive Responsive Foundation): 100% responsivo, cero px fijos */
+.arf-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
+    gap: var(--space-md);
+    width: 100%;
+    padding: var(--space-md);
+}
+
+.arf-grid > * {
+    flex: 1 1 100%;
+}
+
+@media (min-width: 640px) {
+    .arf-grid > .arf-col-2 {
+        flex: 1 1 calc(50% - var(--space-md));
+    }
+}
+
+@media (min-width: 960px) {
+    .arf-grid > .arf-col-3 {
+        flex: 1 1 calc(33.333% - var(--space-md));
+    }
+    .arf-grid > .arf-col-4 {
+        flex: 1 1 calc(25% - var(--space-md));
+    }
+}
+
+.card {
+    background-color: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: var(--space-md);
+}
+
+/* ── ENCABEZADO INSTITUCIONAL (barra de propuesta de valor) ──────────────── */
+.site-header {
+    background-color: var(--brand-navy);
+    color: #ffffff;
+}
+
+.site-header__bar {
+    padding-block: var(--space-xs);
+}
+
+.site-header__value-prop {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* ── IDENTIDAD DE MARCA ───────────────────────────────────────────────────── */
+.brand-accent {
+    color: var(--brand-gold);
+}
+
+.brand-tagline {
+    color: var(--color-text-muted);
+}
+
+.brand-lines {
+    font-size: 0.9rem;
+}
+
+/* ── PIE DE PÁGINA ─────────────────────────────────────────────────────────── */
+.site-footer {
+    background-color: var(--brand-navy);
+    color: var(--color-text-muted);
+    padding-block: var(--space-md);
+    margin-top: var(--space-lg);
+}
+
+.site-footer p {
+    margin: 0;
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+/* ── MEDIA DE CATÁLOGO (product cards) — cero desbordes, cero anchos fijos ─
+   Regla ARF-Grid: contenedor padre flex/wrap, hijos responsivos con
+   aspect-ratio en vez de alto fijo en px. Usar en fichas de producto. */
+.catalog-media {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+    background-color: #ffffff;
+    border-radius: var(--radius);
+}

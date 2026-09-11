@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PinturaPittsburgh La Paz | Propuesta Estratégica Digital</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0A2540;
+      --primary-dark: #061727;
+      --accent: #E63946;
+      --secondary: #1D3557;
+      --gold: #E5A93C;
+      --bg-light: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --text-dark: #1E293B;
+      --text-muted: #64748B;
+      --border-color: #E2E8F0;
+      --radius: 16px;
+      --shadow: 0 10px 30px -5px rgba(10, 37, 64, 0.08);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-light);
+      color: var(--text-dark);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+      padding: 1.25rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .brand-badge {
+      background: var(--accent);
+      color: white;
+      font-weight: 800;
+      font-size: 0.75rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 50px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .brand-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .brand-subtitle {
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.75);
+    }
+
+    .nav-controls {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .nav-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .nav-btn:hover, .nav-btn.active {
+      background: white;
+      color: var(--primary);
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 2.5rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .slide {
+      display: none;
+      animation: fadeIn 0.4s ease forwards;
+    }
+
+    .slide.active-slide {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-banner {
+      background: linear-gradient(rgba(10, 37, 64, 0.88), rgba(10, 37, 64, 0.94)), url('https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=1200&auto=format&fit=crop') center/cover;
+      color: white;
+      padding: 4rem 3rem;
+      border-radius: var(--radius);
+      text-align: center;
+      margin-bottom: 2.5rem;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-banner h1 {
+      font-size: 2.75rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+    }
+
+    .hero-banner p {
+      font-size: 1.15rem;
+      max-width: 780px;
+      margin: 0 auto 2rem;
+      color: #E2E8F0;
+    }
+
+    .stats-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      padding: 1.25rem 2rem;
+      min-width: 180px;
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--gold);
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: #CBD5E1;
+    }
+
+    .section-header {
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .section-header h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .section-header p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 650px;
+      margin: 0.5rem auto 0;
+    }
+
+    .grid-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+    }
+
+    .grid-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 2rem;
+      flex: 1 1 320px;
+      max-width: 380px;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .grid-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(10, 37, 64, 0.12);
+    }
+
+    .card-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      background: #EFF6FF;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.75rem;
+    }
+
+    .card-text {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      flex-grow: 1;
+    }
+
+    .foda-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .foda-box {
+      background: white;
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      border-top: 5px solid;
+      box-shadow: var(--shadow);
+    }
+
+    .foda-box.f { border-color: #10B981; }
+    .foda-box.o { border-color: #3B82F6; }
+    .foda-box.d { border-color: #F59E0B; }
+    .foda-box.a { border-color: #EF4444; }
+
+    .foda-tag {
+      font-weight: 800;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 0.75rem;
+    }
+
+    .f .foda-tag { color: #10B981; }
+    .o .foda-tag { color: #3B82F6; }
+    .d .foda-tag { color: #F59E0B; }
+    .a .foda-tag { color: #EF4444; }
+
+    .foda-list {
+      list-style: none;
+    }
+
+    .foda-list li {
+      position: relative;
+      padding-left: 1.25rem;
+      margin-bottom: 0.65rem;
+      font-size: 0.9rem;
+      color: var(--text-dark);
+    }
+
+    .foda-list li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--text-muted);
+      font-weight: bold;
+    }
+
+    .pipeline-container {
+      background: white;
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border-color);
+    }
+
+    .pipeline-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+
+    .pipeline-step:last-child {
+      margin-bottom: 0;
+    }
+
+    .step-number {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .step-content h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .step-content p {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+    }
+
+    .footer-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .action-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.75rem;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .action-btn:hover {
+      background: var(--secondary);
+    }
+
+    .action-btn.secondary {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--border-color);
+    }
+
+    .action-btn.secondary:hover {
+      background: #F1F5F9;
+      color: var(--text-dark);
+    }
+
+    .store-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #FEF3C7;
+      color: #92400E;
+      padding: 0.4rem 0.9rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand-group">
+      <span class="brand-badge">PROYECTO OFICIAL</span>
+      <div>
+        <div class="brand-title">PinturaPittsburgh La Paz</div>
+        <div class="brand-subtitle">Plataforma Web & Sistema Omnicanal con IA</div>
+      </div>
+    </div>
+    <div class="nav-controls">
+      <button class="nav-btn active" onclick="showSlide(0)">1. Visión & Alcance</button>
+      <button class="nav-btn" onclick="showSlide(1)">2. Estudio & FODA</button>
+      <button class="nav-btn" onclick="showSlide(2)">3. Tienda Web</button>
+      <button class="nav-btn" onclick="showSlide(3)">4. Sistema & Redes</button>
+      <button class="nav-btn" onclick="showSlide(4)">5. Asistente con IA</button>
+      <button class="nav-btn" onclick="showSlide(5)">6. Plan Orgánico</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- SLIDE 1: INTRO & ALCANCE -->
+    <section class="slide active-slide" id="slide-0">
+      <div class="hero-banner">
+        <div class="store-badge">📍 Bulevar Agustín Olachea e Indeco | La Paz, B.C.S.</div>
+        <h1>El Poder Global con Entrega Inmediata Local</h1>
+        <p>Transformamos a PinturaPittsburgh en la plataforma de recubrimientos más moderna de La Paz: venta en línea estilo retail, entregas el mismo día y automatización total con Inteligencia Artificial.</p>
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-number">150</div>
+            <div class="stat-label">Años de Calidad Pittsburgh</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">104</div>
+            <div class="stat-label">Códigos Postales Atendidos</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">&lt; 4 hrs</div>
+            <div class="stat-label">Entrega Local a Obra</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">$0</div>
+            <div class="stat-label">Gasto en Pauta Pagada</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header">
+        <h2>Pilares del Proyecto</h2>
+        <p>Una solución integral pensada para hacer crecer el negocio de forma segura y sin complicaciones operativas.</p>
+      </div>
+
+      <div class="grid-container">
+        <div class="grid-card">
+          <div class="card-icon">🎨</div>
+          <div class="card-title">Sitio Web Estilo Retail</div>
+          <div class="card-text">Catálogo claro y profesional como las grandes cadenas. El cliente selecciona su colonia, calcula los litros necesarios y pide en minutos.</div>
+        </div>
+        <div class="grid-card">
+          <div class="card-icon">⚡</div>
+          <div class="card-title">Panel Administrador Fácil</div>
+          <div class="card-text">Un solo lugar para cambiar precios, inventario y promociones. Al crear un anuncio, se publica al mismo tiempo en Facebook, Instagram y la web.</div>
+        </div>
+        <div class="grid-card">
+          <div class="card-icon">🛡️</div>
+          <div class="card-title">Seguridad Total</div>
+          <div class="card-text">Protegemos todas las contraseñas y accesos con tecnología de grado bancario para que el negocio esté siempre a salvo de ciberataques.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: FODA & MERCADO -->
+    <section class="slide" id="slide-1">
+      <div class="section-header">
+        <h2>Estudio de Mercado & Diagnóstico Local</h2>
+        <p>El clima de La Paz (radiación solar intensa y salitre costero) exige pinturas de alto rendimiento que la competencia genérica no ofrece adecuadamente.</p>
+      </div>
+
+      <div class="foda-grid">
+        <div class="foda-box f">
+          <div class="foda-tag">Fortalezas</div>
+          <ul class="foda-list">
+            <li>Líneas especializadas (Speedhide, Manor Hall, Perma-Crete) con respaldo de The Pittsburgh Paints Company.</li>
+            <li>Conocimiento exacto del daño por salitre y calor en Baja California Sur.</li>
+            <li>Sucursal física consolidada en Blvd. Agustín Olachea y reparto propio ágil.</li>
+          </ul>
+        </div>
+        <div class="foda-box o">
+          <div class="foda-tag">Oportunidades</div>
+          <ul class="foda-list">
+            <li>Dominar el reparto el mismo día en colonias de La Paz frente a envíos tardados.</li>
+            <li>Atender el crecimiento inmobiliario y hotelero que busca pinturas anti-salitre.</li>
+            <li>Capturar clientes en Google Maps sin tener que pagar anuncios caros.</li>
+          </ul>
+        </div>
+        <div class="foda-box d">
+          <div class="foda-tag">Retos Internos</div>
+          <ul class="foda-list">
+            <li>Falta previa de un catálogo en línea interactivo que atienda las 24 horas.</li>
+            <li>Necesidad de capacitar al equipo de tienda para coordinar pedidos web con el mostrador.</li>
+            <li>Respetar las reglas de marca oficial sin perder la identidad local.</li>
+          </ul>
+        </div>
+        <div class="foda-box a">
+          <div class="foda-tag">Factores Externos</div>
+          <ul class="foda-list">
+            <li>Competidores como The Home Depot con presupuestos masivos.</li>
+            <li>Demoras marítimas del ferry en Pichilingue que exigen excelente control de stock.</li>
+            <li>Cadenas con muchas tiendas físicas de paso como Comex o Berel.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: TIENDA WEB -->
+    <section class="slide" id="slide-2">
+      <div class="section-header">
+        <h2>Experiencia Digital para el Cliente</h2>
+        <p>Diseñada para que comprar pintura sea tan rápido y confiable como pedir en las mejores tiendas del mundo, pero con atención 100% paceña.</p>
+      </div>
+
+      <div class="grid-container">
+        <div class="grid-card">
+          <div class="card-icon">📍</div>
+          <div class="card-title">Validación por Código Postal</div>
+          <div class="card-text">El sistema verifica de inmediato que el comprador esté dentro de los 104 códigos postales de La Paz para garantizar envíos inmediatos y sin cancelaciones.</div>
+        </div>
+        <div class="grid-card">
+          <div class="card-icon">📐</div>
+          <div class="card-title">Calculadora de Metros y Litros</div>
+          <div class="card-text">Ayuda al cliente o contratista a saber cuántos galones o cubetas necesita según el tamaño de su pared y si tiene enjarre fino o rústico.</div>
+        </div>
+        <div class="grid-card">
+          <div class="card-icon">🏷️</div>
+          <div class="card-title">Catálogo con Imágenes Oficiales</div>
+          <div class="card-text">Envases en alta calidad 3D, fichas técnicas descargables y buscador por problema: contra salitre, lavable, para metal o sin olor.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: SISTEMA Y REDES -->
+    <section class="slide" id="slide-3">
+      <div class="section-header">
+        <h2>Dashboard Inteligente: Un Clic, Todo Sincronizado</h2>
+        <p>Se acabó publicar manualmente en cada red social o tener precios desactualizados en la página web.</p>
+      </div>
+
+      <div class="pipeline-container">
+        <div class="pipeline-step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h3>Escribes o cambias en un solo panel</h3>
+            <p>Ingresas al administrador protegido, escribes tu oferta de fin de semana o actualizas el precio de una cubeta Speedhide.</p>
+          </div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h3>Actualización instantánea en tu sitio web</h3>
+            <p>La tienda en línea actualiza de inmediato el producto, la fotografía y el precio para que ningún cliente vea datos viejos.</p>
+          </div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h3>Publicación automática en Facebook e Instagram</h3>
+            <p>El sistema se conecta de forma segura a tus redes sociales oficiales y publica el arte y el texto con las etiquetas correctas de La Paz.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: IA ASISTENTE -->
+    <section class="slide" id="slide-4">
+      <div class="section-header">
+        <h2>Inteligencia Artificial a Tu Servicio</h2>
+        <p>Tu equipo no necesita ser experto en marketing; la IA integrada se encarga del trabajo pesado de redacción y posicionamiento.</p>
+      </div>
+
+      <div class="grid-container">
+        <div class="grid-card">
+          <div class="card-icon">✍️</div>
+          <div class="card-title">Redactor de Anuncios</div>
+          <div class="card-text">La IA genera textos atractivos para contratistas o para familias que quieren pintar su casa, listos para publicar en Instagram y Facebook.</div>
+        </div>
+        <div class="grid-card">
+          <div class="card-icon">🔍</div>
+          <div class="card-title">Optimización para Google</div>
+          <div class="card-text">Crea títulos y descripciones web automáticas para que cuando alguien busque "pintura contra salitre en La Paz", PinturaPittsburgh aparezca primero.</div>
+        </div>
+        <div class="grid-card">
+          <div class="card-icon">💡</div>
+          <div class="card-title">Consejos Técnicos Locales</div>
+          <div class="card-text">Sugiere recomendaciones de aplicación adaptadas al sol de La Paz, sellado previo y horas ideales para pintar en el verano de BCS.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 6: MARKETING ORGÁNICO -->
+    <section class="slide" id="slide-5">
+      <div class="section-header">
+        <h2>Estrategia Orgánica: Crecer sin Pagar Publicidad</h2>
+        <p>Aprovechamos la autoridad local y el trato cercano para dominar las búsquedas y fidelizar a pintores y contratistas.</p>
+      </div>
+
+      <div class="grid-container">
+        <div class="grid-card">
+          <div class="card-icon">📍</div>
+          <div class="card-title">Perfil de Google al 100%</div>
+          <div class="card-text">Mostrador, tintometría, fotos de obras en colonias paceñas y reseñas automáticas de clientes satisfechos para liderar el mapa de La Paz.</div>
+        </div>
+        <div class="grid-card">
+          <div class="card-icon">🤝</div>
+          <div class="card-title">Red de Contratistas Pro</div>
+          <div class="card-text">Canal rápido de cotización por WhatsApp, visitas técnicas a obras sin costo y guardado del historial de color de cada proyecto para recompras fáciles.</div>
+        </div>
+        <div class="grid-card">
+          <div class="card-icon">🏆</div>
+          <div class="card-title">Contenido Anti-Salitre</div>
+          <div class="card-text">Guías y videos cortos demostrando cómo las pinturas Pittsburgh duran más frente al mar, resolviendo las dudas reales de los propietarios.</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer-actions">
+      <button class="action-btn secondary" id="prevBtn" onclick="changeSlide(-1)">← Anterior</button>
+      <span id="slideIndicator" style="font-weight: 700; color: var(--text-muted); font-size: 0.9rem;">Página 1 de 6</span>
+      <button class="action-btn" id="nextBtn" onclick="changeSlide(1)">Siguiente →</button>
+    </div>
+  </main>
+
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const navButtons = document.querySelectorAll('.nav-btn');
+    const slideIndicator = document.getElementById('slideIndicator');
+
+    function updateView() {
+      slides.forEach((slide, idx) => {
+        slide.classList.toggle('active-slide', idx === currentSlide);
+      });
+      navButtons.forEach((btn, idx) => {
+        btn.classList.toggle('active', idx === currentSlide);
+      });
+      slideIndicator.textContent = `Página ${currentSlide + 1} de ${slides.length}`;
+      document.getElementById('prevBtn').style.visibility = currentSlide === 0 ? 'hidden' : 'visible';
+      document.getElementById('nextBtn').textContent = currentSlide === slides.length - 1 ? 'Finalizar' : 'Siguiente →';
+    }
+
+    function showSlide(index) {
+      currentSlide = index;
+      updateView();
+    }
+
+    function changeSlide(direction) {
+      const target = currentSlide + direction;
+      if (target >= 0 && target < slides.length) {
+        currentSlide = target;
+        updateView();
+      }
+    }
+
+    updateView();
+  </script>
+</body>
+</html>
