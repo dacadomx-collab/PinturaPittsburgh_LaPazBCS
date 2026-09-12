@@ -128,4 +128,4 @@ if ($passwordGenerada) {
     echo "  Password:   (la que proporcionaste por argumento — no se re-imprime)\n";
 }
 echo "==============================================================\n";
-echo "Ingresa en: admin/login.html\n";
+echo "Ingresa en: admin/login.php\n";

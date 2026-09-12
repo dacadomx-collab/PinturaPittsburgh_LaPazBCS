@@ -1,5 +1,5 @@
 // assets/js/admin-login.js — PinturaPittsburgh_LaPazBCS
-// Wiring del formulario de admin/login.html. Requiere admin-auth.js cargado antes.
+// Wiring del formulario de admin/login.php. Requiere admin-auth.js cargado antes.
 document.addEventListener('DOMContentLoaded', function () {
     var form = document.getElementById('admin-login-form');
     var statusEl = document.getElementById('login-status');

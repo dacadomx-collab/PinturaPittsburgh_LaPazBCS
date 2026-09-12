@@ -6,8 +6,24 @@
 
 # ── NIVEL 0: SEGURIDAD GLOBAL ─────────────────────────────────────────────────
 Options -Indexes
-DirectoryIndex index.html index.php
+DirectoryIndex index.php index.html
 ServerSignature Off
+
+# Acceso explícito a la raíz pública y rutas web — el bloqueo real de
+# carpetas sensibles vive en NIVEL 1 (archivos) y NIVEL 3 (carpetas por
+# nombre: knowledge/, logs/, helpers/, validators/, scripts/, database/,
+# etc.), nunca en un "deny" implícito a nivel de raíz (Hito 14: diagnóstico
+# 403 en pittsburgh.tourfindy.com — ver knowledge/00_ADN_Y_FILOSOFIA.md y
+# CLAUDE.md §6/§15 para el detalle completo de por qué esta línea, por sí
+# sola, no debería ser la causa de ese 403 si la causa real es de permisos
+# de archivo/Document Root en el hosting).
+<IfModule mod_authz_core.c>
+    Require all granted
+</IfModule>
+<IfModule !mod_authz_core.c>
+    Order allow,deny
+    Allow from all
+</IfModule>
 
 # Forzar HTTPS — desactivar en entorno local (XAMPP sin certificado).
 # En producción (APP_ENV=production) este bloque debe estar activo siempre.

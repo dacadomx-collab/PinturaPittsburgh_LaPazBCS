@@ -1,6 +1,6 @@
 // assets/js/admin-auth.js — PinturaPittsburgh_LaPazBCS
 // Autenticación del backoffice: Bearer JWT (no cookies), Access+Refresh.
-// Uso exclusivo de /admin/*.html — nunca cargar en el sitio público.
+// Uso exclusivo de /admin/*.php — nunca cargar en el sitio público.
 (function (global) {
     'use strict';
 
@@ -49,7 +49,7 @@
 
     function logout() {
         clearSession();
-        window.location.href = 'login.html';
+        window.location.href = 'login.php';
     }
 
     function refresh() {
@@ -77,13 +77,13 @@
     /**
      * fetch autenticado: agrega Authorization: Bearer <access_token>. Si el
      * backend responde 401, intenta refrescar UNA vez y reintenta; si vuelve
-     * a fallar, cierra sesión y redirige a login.html.
+     * a fallar, cierra sesión y redirige a login.php.
      */
     function authFetch(url, options) {
         options = options || {};
         var session = getSession();
         if (!session) {
-            window.location.href = 'login.html';
+            window.location.href = 'login.php';
             return Promise.reject(new Error('Sin sesión activa.'));
         }
 
@@ -102,20 +102,20 @@
             return refresh().then(function (nueva) { return doFetch(nueva.access_token); });
         }).catch(function (err) {
             clearSession();
-            window.location.href = 'login.html';
+            window.location.href = 'login.php';
             throw err;
         });
     }
 
     /**
-     * @param {string} [loginUrl] Ruta relativa a login.html desde la página
+     * @param {string} [loginUrl] Ruta relativa a login.php desde la página
      * que llama — por defecto asume que se llama desde dentro de admin/
      * (mismo directorio). Páginas fuera de admin/ (ej. Colaboradores/) deben
-     * pasar la ruta correcta, ej. requireSession('../admin/login.html').
+     * pasar la ruta correcta, ej. requireSession('../admin/login.php').
      */
     function requireSession(loginUrl) {
         if (!getSession()) {
-            window.location.href = loginUrl || 'login.html';
+            window.location.href = loginUrl || 'login.php';
         }
     }
 

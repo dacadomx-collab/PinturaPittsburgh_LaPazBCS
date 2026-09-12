@@ -49,6 +49,17 @@ jobs:
       # - name: Instalar dependencias PHP
       #   run: composer install --no-dev --optimize-autoloader
 
+      # ── NOTA (Hito 14) — Permisos de archivo en el servidor vía FTP ──────────
+      # SamKirkland/FTP-Deploy-Action (protocolo FTP estándar) NO expone un
+      # comando CHMOD post-subida — el protocolo FTP en sí no lo garantiza de
+      # forma portable. Este pipeline NO PUEDE forzar 755/644 en el servidor.
+      # Si el 403 diagnosticado en pittsburgh.tourfindy.com resulta ser un
+      # problema de permisos (ver CLAUDE.md §6), la corrección debe hacerse
+      # directamente en el hosting (cPanel → Administrador de Archivos →
+      # Permisos, o `chmod -R 755` por SSH sobre directorios y `644` sobre
+      # archivos — ver modulos/MODULO_03_CONEXION_SSH_HOSTING.md). Añadir un
+      # paso SSH a este pipeline requeriría Secrets nuevos (host/usuario/llave)
+      # que hoy no existen — no se inventan aquí sin autorización explícita.
       # ── PASO 4: Sincronización FTP (solo archivos cambiados, diff incremental) ─
       # NOTA: admin/, api/, workers/ y assets/ SÍ se despliegan — en particular
       # workers/instagram_worker.php debe llegar al servidor para que el cron

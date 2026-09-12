@@ -82,6 +82,7 @@
             dataKey: 'banners',
             campos: ['eyebrow', 'titulo', 'descripcion', 'imagen_url', 'cta_texto'],
             posProceso: function (raiz, item) {
+                raiz.setAttribute('data-banner-item', String(item.id));
                 var cta = raiz.querySelector('[data-cta-link]');
                 if (cta) {
                     cta.href = item.cta_url || '#';

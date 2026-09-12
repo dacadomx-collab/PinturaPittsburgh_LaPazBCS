@@ -18,7 +18,7 @@
 // valida tokens JWT. Verificar "sesión válida" contra un endpoint que no
 // sabe qué es un JWT sería seguridad de utilería, no seguridad real.
 document.addEventListener('DOMContentLoaded', function () {
-    var LOGIN_URL = '../admin/login.html';
+    var LOGIN_URL = '../admin/login.php';
 
     if (!window.PPAdminAuth) {
         window.location.href = LOGIN_URL;

@@ -21,7 +21,7 @@
 
     root.classList.add('admin-auth-pending');
 
-    if (/\/admin\/login\.html$/.test(window.location.pathname)) {
+    if (/\/admin\/login\.php$/.test(window.location.pathname)) {
         root.classList.remove('admin-auth-pending');
         return;
     }
@@ -34,7 +34,7 @@
     }
 
     if (!session || !session.access_token) {
-        window.location.replace('login.html');
+        window.location.replace('login.php');
         return;
     }
 

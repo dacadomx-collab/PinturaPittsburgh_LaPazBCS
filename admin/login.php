@@ -1,3 +1,23 @@
+<?php
+
+declare(strict_types=1);
+
+// =============================================================================
+// admin/login.php — Acceso Administrativo (Hito 14)
+// Migrado desde admin/login.html a PHP por consistencia con admin/layout/*.php,
+// pero SIN el shell autenticado (sidebar/topbar no aplican antes de iniciar
+// sesión) — solo comparte los mismos tokens de CSS y el mismo mecanismo de
+// tema que el resto del backoffice.
+//
+// "Validación server-side de sesión ya existente" (Hito 14, Directiva 1):
+// este proyecto usa Bearer JWT en sessionStorage (Hito 2), no cookies/sesión
+// PHP — PHP no puede leer sessionStorage. El equivalente honesto es un guard
+// de cliente que se ejecuta ANTES del primer paint (assets/js/admin-login-guard.js,
+// mismo patrón anti-parpadeo que theme-init.js/admin-guard.js): si ya hay una
+// sesión local, redirige de inmediato por rol sin llegar a mostrar el
+// formulario. Ver razonamiento completo en CLAUDE.md §14.
+// =============================================================================
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -7,6 +27,7 @@
     <meta name="robots" content="noindex, nofollow">
     <link rel="icon" href="../favicon.ico">
     <script src="../assets/js/theme-init.js"></script>
+    <script src="../assets/js/admin-login-guard.js"></script>
     <link rel="stylesheet" href="../assets/css/main.css">
 </head>
 <body>
