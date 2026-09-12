@@ -28,6 +28,7 @@ class Database
     private const DEFAULT_REMOTE_DB_HOST = '[HOST_BD_REMOTO_DEL_HOSTING]';
 
     private string $host;
+    private string $port;
     private string $db_name;
     private string $username;
     private string $password;
@@ -40,6 +41,13 @@ class Database
         $env = $this->loadEnv(__DIR__ . '/../.env');
 
         $this->host            = (string) ($env['DB_HOST'] ?? self::DEFAULT_REMOTE_DB_HOST);
+        // DB_PORT es opcional — vacío en todos los .env reales del proyecto
+        // (server y local apuntando al host remoto usan el 3306 estándar).
+        // Solo se usa para el túnel SSH local de desarrollo (Hito 18): el
+        // .env de la RAÍZ de este repo puede fijar DB_PORT a un puerto local
+        // reenviado por un `ssh -L` hacia el MySQL real del servidor. Nunca
+        // se define en el .env del propio servidor.
+        $this->port             = (string) ($env['DB_PORT'] ?? '');
         $this->db_name         = (string) ($env['DB_NAME'] ?? '');
         $this->username        = (string) ($env['DB_USER'] ?? '');
         $this->password        = (string) ($env['DB_PASS'] ?? '');
@@ -134,7 +142,12 @@ class Database
 
         foreach ($hosts as $host) {
             try {
-                $dsn        = "mysql:host={$host};dbname={$this->db_name};charset=utf8mb4";
+                // DB_PORT solo aplica al host PRIMARIO configurado (el túnel
+                // SSH de desarrollo, Hito 18) — los hosts de fallback
+                // (localhost/127.0.0.1 en staging) siempre usan el 3306
+                // estándar del propio servidor, nunca el puerto del túnel.
+                $puerto = ($host === $this->host && $this->port !== '') ? ";port={$this->port}" : '';
+                $dsn    = "mysql:host={$host}{$puerto};dbname={$this->db_name};charset=utf8mb4";
                 $this->conn = new PDO($dsn, $this->username, $this->password, [
                     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
                     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
