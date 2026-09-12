@@ -75,6 +75,8 @@ jobs:
             !.env.example
             knowledge/**
             database/**
+            modulos/**
+            Colaboradores/**
             scripts/**
             .claude/**
             logs/**

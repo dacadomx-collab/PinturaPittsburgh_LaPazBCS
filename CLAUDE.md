@@ -285,3 +285,36 @@ Referencia completa: `knowledge/01_LEY_Y_PROTOCOLOS_DE_VUELO.md`
 | v3.0 | 2026-09-11 | Hito 3: `api/validar_cp.php` y `api/catalogo_listar.php` públicos conectados al frontend (fin de datos DEMO/espejo cliente); `admin/social.html` y `admin/asistente.html` con previsualizador en vivo y transferencia entre módulos; `workers/instagram_worker.php` (fases 2/3, CLI/cron, bloqueado por HTTP); `api/admin/social_historial.php` (Contrato 9). Commit `340d8d9`. |
 | v4.0 | 2026-09-11 | Hito 4: entorno de staging asignado (`pittsburgh.tourfindy.com`), `.env` local generado y conectando hasta PDO real, `deploy.yml` con ruta FTP fija, `scripts/seed_admin.php`, toggle Día/Noche + botón "Volver Arriba" en las 5 pantallas. Commits `9da28b6`, `1e4a540`, `fd617bb`, `8f52df1`. |
 | v5.0 | 2026-09-11 | Hito 5: `producto.html` (PDP) + `api/catalogo_detalle.php` (Contrato 3b); `checkout.html` + `api/pedido_crear.php` (Contrato 5, transacción atómica con decremento de stock); `assets/js/cart.js` (carrito de sesión); `REPORTE_TECNICO.md` eliminado por gobernanza (única fuente de verdad: `knowledge/` + `CLAUDE.md`). |
+| v6.0 | 2026-09-12 | Onboarding Zero-Trust para colaboradores externos (Rafael): `/gitignore` blindado con `/modulos/` y `/Colaboradores/` (hallazgo crítico: `Colaboradores/onboarding_colaborador.html` tenía una credencial real de terceros — Marketing Hub PPG — expuesta en texto plano, a un `git add` de llegar a GitHub; contenido, no la estructura de git). `deploy.yml` excluye también `modulos/**` y `Colaboradores/**`. Se registra el protocolo `/auditar-pr [rama]` (§13). |
+
+---
+
+## 13. PROTOCOLO OPERATIVO — `/auditar-pr [rama]`
+
+> Cuando el Arquitecto escriba `/auditar-pr [rama]` o pida revisar el trabajo de un colaborador externo, la IA Ejecutora sigue esta secuencia completa antes de emitir un dictamen. Ningún paso se omite ni se resume.
+
+### Paso 1 — Scope Check (aislamiento de IP)
+```bash
+git diff --name-only main...[rama]
+```
+Todo archivo tocado debe vivir exclusivamente dentro de `assets/` o ser `index.html` (y, si aplica, otras páginas públicas explícitamente asignadas al colaborador — nunca `api/`, `helpers/`, `database/`, `.env`, `knowledge/` o `modulos/`). **Cualquier archivo fuera de ese alcance = rechazo inmediato**, sin pasar a los siguientes pasos.
+
+### Paso 2 — Escaneo de violaciones a las Reglas de Oro
+Sobre cada archivo dentro del alcance, buscar:
+- `!important` — prohibido sin excepción.
+- Anchos/altos fijos en contenedores: patrón `width:\s*[0-9]+px` (o `height:`) fuera de casos justificados (ej. iconos puntuales).
+- Estilos en línea: `style="` en cualquier `.html`.
+- `console.log` (u otros restos de depuración) en cualquier `.js`.
+
+### Paso 3 — Integridad de ARF-Grid
+Verificar que todo catálogo, galería o grid repetitivo tenga su contenedor padre con `display: flex; flex-wrap: wrap; justify-content: center;` y que los hijos no usen anchos fijos (deben depender de `flex-basis`/`max-width` relativos, igual que `.product-card` en `assets/css/main.css`).
+
+### Paso 4 — Desacoplamiento de datos dinámicos
+Revisar que los contenedores de **Banners**, **Cupones/Promociones** y **Publicaciones** (Facebook/Instagram) incluyan los atributos semánticos `data-*` necesarios para que el backend los pueble después (ej. `data-banner-track`, `data-promo-id`, contenedor iterable para el feed de publicaciones) — sin que el colaborador haya escrito PHP ni PDO.
+
+### Paso 5 — Dictamen ejecutivo
+Cerrar siempre con uno de dos veredictos, citando archivo y línea exacta de cada hallazgo:
+- **`[APROBADO PARA MERGE]`** — pasó los 4 pasos anteriores sin excepciones.
+- **`[CAMBIOS REQUERIDOS]`** — lista puntual de qué corregir, con ubicación exacta.
+
+La decisión final de fusionar (`Merge`) o solicitar cambios (`Request Changes`) en GitHub la toma siempre el Arquitecto — este protocolo produce el dictamen técnico, no ejecuta el merge.

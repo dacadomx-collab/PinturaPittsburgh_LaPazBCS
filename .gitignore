@@ -128,6 +128,20 @@ composer.phar
 # info.txt ya bloqueados arriba. Las instrucciones de IA permanecen 100% locales.
 /knowledge/
 
+# ── ZERO-TRUST COLABORACIÓN EXTERNA (2026-09-12) ──────────────────────────────
+# modulos/ contiene blueprints de arquitectura interna del holding (Aislamiento
+# de IP — MOD_PROTOCOLO_COLABORACION_EXTERNA.md §1.1). Nunca se comparte con
+# colaboradores externos ni sube a GitHub. /logs/ reforzado explícito (ya
+# cubierto de forma no anclada más arriba, se deja también la forma exacta).
+/modulos/
+/logs/
+
+# Colaboradores/ contiene material de onboarding para freelancers con
+# credenciales reales de portales de terceros (ej. Marketing Hub) en texto
+# plano — jamás debe llegar a Git ni al servidor. Se comparte con el
+# colaborador por un canal separado (correo, mensajería), nunca vía el repo.
+/Colaboradores/
+
 # ── DIRECTIVA 0 (2026-09-11): Blindaje adicional — solo código fuente y ───────
 # estructura en GitHub. Ningún binario pesado se rastrea; se aloja en
 # servidor/CDN de producción y se referencia por URL (ver *_url en el schema).
