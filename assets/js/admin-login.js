@@ -14,8 +14,16 @@ document.addEventListener('DOMContentLoaded', function () {
         var password = document.getElementById('login-password').value;
 
         window.PPAdminAuth.login(email, password)
-            .then(function () {
-                window.location.href = 'catalogo.html';
+            .then(function (sesion) {
+                // Blindaje de Login por Rol (Directiva Zero-Trust): el rol
+                // viene del JWT ya emitido por api/auth_login.php — nunca se
+                // decide en el cliente, solo se enruta según lo que el
+                // servidor ya autenticó.
+                if (sesion.role === 'colaborador') {
+                    window.location.href = '../Colaboradores/onboarding_colaborador.html';
+                } else {
+                    window.location.href = 'catalogo.html';
+                }
             })
             .catch(function (err) {
                 statusEl.hidden = false;

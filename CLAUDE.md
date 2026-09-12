@@ -1,8 +1,8 @@
 # CLAUDE.md — Manual Operativo del Agente IA
 ## PinturaPittsburgh_LaPazBCS | Distribuidor Autorizado The Pittsburgh Paints Company — La Paz, B.C.S.
-**Versión:** 5.0 (Hito 5 cerrado) | **Fecha:** 2026-09-11 | **Arquitecto:** [NOMBRE_ARQUITECTO — pendiente de confirmar]
+**Versión:** 7.0 | **Fecha:** 2026-09-12 | **Arquitecto:** [NOMBRE_ARQUITECTO — pendiente de confirmar]
 
-**Estado del proyecto:** Sitio público completo (landing, catálogo, PDP, checkout) y panel administrativo completo (login, catálogo/precios, publicador social, asistente IA) implementados y verificados estructuralmente (`php -l`, `node --check`, pruebas HTTP en vivo). Toggle Día/Noche y botón "Volver Arriba" en las 7 pantallas. Entorno de staging asignado (§6): `.env` local ya conecta hasta la capa PDO real. **Bloqueante para pruebas end-to-end completas:** falta la contraseña real de la BD y del SMTP (nunca se recibieron ni se inventaron), conectividad remota a MySQL sin confirmar, y ejecutar `database/001_schema_inicial.sql` contra el servidor de staging.
+**Estado del proyecto:** Sitio público completo (landing, catálogo, PDP, checkout, banners, promociones, feed de publicaciones) y panel administrativo completo (login con redirección por rol, catálogo/precios, publicador social, asistente IA) implementados y verificados estructuralmente (`php -l`, `node --check`, pruebas HTTP en vivo). Colaboración externa Zero-Trust activa (rol `colaborador`, guarda de sesión real). Toggle Día/Noche y botón "Volver Arriba" en las 7 pantallas públicas/admin. Entorno de staging asignado (§6): `.env` local ya conecta hasta la capa PDO real. **Bloqueante para pruebas end-to-end completas:** falta la contraseña real de la BD y del SMTP (nunca se recibieron ni se inventaron), conectividad remota a MySQL sin confirmar, y ejecutar `database/001_schema_inicial.sql` + `database/002_banners_cupones_colaborador.sql` (en ese orden) contra el servidor de staging.
 
 ---
 
@@ -219,6 +219,9 @@ Referencia completa: `knowledge/01_LEY_Y_PROTOCOLOS_DE_VUELO.md`
 | `api/asistente_ia.php` | POST | Bearer JWT + admin | 7 | ✅ |
 | `api/admin/catalogo_admin.php` | GET/PUT | Bearer JWT + admin | 8 | ✅ |
 | `api/admin/social_historial.php` | GET | Bearer JWT + admin | 9 | ✅ |
+| `api/publicaciones_listar.php` | GET | Público | 10 | ✅ |
+| `api/banners_listar.php` | GET | Público | 11 | ✅ |
+| `api/promociones_listar.php` | GET | Público | 12 | ✅ |
 | `api/status_check.php` | GET | Público | — | ✅ (Triple Handshake) |
 | `workers/instagram_worker.php` | CLI/cron únicamente | N/A | — | ✅ (fases 2/3 del pipeline de Instagram) |
 
@@ -286,6 +289,7 @@ Referencia completa: `knowledge/01_LEY_Y_PROTOCOLOS_DE_VUELO.md`
 | v4.0 | 2026-09-11 | Hito 4: entorno de staging asignado (`pittsburgh.tourfindy.com`), `.env` local generado y conectando hasta PDO real, `deploy.yml` con ruta FTP fija, `scripts/seed_admin.php`, toggle Día/Noche + botón "Volver Arriba" en las 5 pantallas. Commits `9da28b6`, `1e4a540`, `fd617bb`, `8f52df1`. |
 | v5.0 | 2026-09-11 | Hito 5: `producto.html` (PDP) + `api/catalogo_detalle.php` (Contrato 3b); `checkout.html` + `api/pedido_crear.php` (Contrato 5, transacción atómica con decremento de stock); `assets/js/cart.js` (carrito de sesión); `REPORTE_TECNICO.md` eliminado por gobernanza (única fuente de verdad: `knowledge/` + `CLAUDE.md`). |
 | v6.0 | 2026-09-12 | Onboarding Zero-Trust para colaboradores externos (Rafael): `/gitignore` blindado con `/modulos/` y `/Colaboradores/` (hallazgo crítico: `Colaboradores/onboarding_colaborador.html` tenía una credencial real de terceros — Marketing Hub PPG — expuesta en texto plano, a un `git add` de llegar a GitHub; contenido, no la estructura de git). `deploy.yml` excluye también `modulos/**` y `Colaboradores/**`. Se registra el protocolo `/auditar-pr [rama]` (§13). |
+| v7.0 | 2026-09-12 | Rol `colaborador` (`database/002_banners_cupones_colaborador.sql`: `users.role` ampliado, tablas `banners`/`cupones` autorizadas y materializadas); endpoints públicos `api/publicaciones_listar.php`, `api/banners_listar.php`, `api/promociones_listar.php` (Contratos 10/11/12); redirección por rol en `assets/js/admin-login.js`; modal de contraseña falso de `Colaboradores/onboarding_colaborador.html` reemplazado por guarda de sesión JWT real (`assets/js/colaborador-gate.js`); `scripts/seed_admin.php` extendido para aceptar rol. |
 
 ---
 

@@ -107,9 +107,15 @@
         });
     }
 
-    function requireSession() {
+    /**
+     * @param {string} [loginUrl] Ruta relativa a login.html desde la página
+     * que llama — por defecto asume que se llama desde dentro de admin/
+     * (mismo directorio). Páginas fuera de admin/ (ej. Colaboradores/) deben
+     * pasar la ruta correcta, ej. requireSession('../admin/login.html').
+     */
+    function requireSession(loginUrl) {
         if (!getSession()) {
-            window.location.href = 'login.html';
+            window.location.href = loginUrl || 'login.html';
         }
     }
 
