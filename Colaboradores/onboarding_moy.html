@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PinturaPittsburgh — Command Center de Onboarding Frontend</title>
+  <title>PinturaPittsburgh — Command Center de Prácticas Profesionales</title>
   <style>
     :root {
       --bg: #0f172a;
@@ -129,15 +129,24 @@
       border-radius: 0.35rem; color: var(--text); font-size: 0.9rem;
     }
     code { background: rgba(255,255,255,0.1); padding: 0.15rem 0.35rem; border-radius: 0.25rem; font-size: 0.85rem; }
+
+    /* Métricas de Evaluación de Prácticas Profesionales (exclusivo de esta página) */
+    .metric-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-top: 0.75rem; }
+    .metric-card {
+      flex: 1 1 200px; max-width: 240px; background: var(--bg); border: 1px solid var(--border);
+      border-radius: 0.6rem; padding: 1rem; text-align: center;
+    }
+    .metric-card__label { font-size: 0.8rem; color: var(--text-muted); }
+    .metric-card__value { font-size: 1.05rem; font-weight: 700; color: var(--sky); margin-top: 0.3rem; }
   </style>
 </head>
-<body data-owner-email="armandocastillejos086@gmail.com" data-collaborator-name="Rafael" data-collaborator-id="rafa">
+<body data-owner-email="mescobar_22@alu.uabcs.mx" data-collaborator-name="Moisés" data-collaborator-id="moy">
 
   <div class="container">
     <!-- Saludo Cálido y Dinámico -->
     <div class="greeting-card">
-      <h1 class="greeting-title" id="greeting-text">Hola, Rafael</h1>
-      <div class="greeting-meta" id="greeting-meta">La Paz, Baja California Sur | Zona Horaria Local</div>
+      <h1 class="greeting-title" id="greeting-text">Hola, Moisés</h1>
+      <div class="greeting-meta" id="greeting-meta">La Paz, Baja California Sur | Prácticas Profesionales — UABCS / ACADEP</div>
       <div class="quote-box" id="quote-text">"La excelencia no es un acto, es un hábito de cada línea de código."</div>
     </div>
 
@@ -150,6 +159,20 @@
       <div class="progress-bar-track">
         <div class="progress-bar-fill" id="progress-fill"></div>
       </div>
+    </div>
+
+    <!-- CONTEXTO DE PRÁCTICAS -->
+    <div class="step">
+      <div class="step-header">
+        <h2 class="step-title">0. Bienvenida — Prácticas Profesionales</h2>
+      </div>
+      <p class="step-desc">
+        Bienvenido, Moisés. Este es tu espacio de trabajo dentro de PinturaPittsburgh_LaPazBCS como parte de tus
+        prácticas profesionales de la UABCS gestionadas por ACADEP. Trabajarás en paralelo con Rafael (otro
+        colaborador externo) en el mismo frontend — cada quien en su propia rama de Git, sin interferir entre sí.
+        Tu entregable se evalúa con las mismas <strong>Reglas de Oro</strong> técnicas del proyecto y con las
+        métricas de prácticas profesionales del Paso 4.
+      </p>
     </div>
 
     <!-- PASO 1: FUENTES DE VERDAD OBLIGATORIAS -->
@@ -237,15 +260,15 @@
         </li>
         <li class="todo-item">
           <input type="checkbox" id="c7">
-          <label for="c7"><strong>Banners (Data → Template → Render):</strong> Contenedor padre <code>&lt;section data-banner-slider&gt;</code> + <code>&lt;template data-banner-template&gt;</code> con hijos <code>&lt;div class="banner-slide" data-banner-item&gt;</code> (título, imagen WebP, botón, enlace). Ver implementación de referencia funcionando más abajo.</label>
+          <label for="c7"><strong>Banners (Data → Template → Render):</strong> Contenedor padre <code>&lt;section data-banner-slider&gt;</code> + <code>&lt;template data-banner-template&gt;</code> con hijos <code>&lt;div class="banner-slide" data-banner-item&gt;</code> (título, imagen WebP, botón, enlace). Consume <code>api/banners_listar.php</code> (Contrato 11). Ver implementación de referencia funcionando más abajo.</label>
         </li>
         <li class="todo-item">
           <input type="checkbox" id="c8">
-          <label for="c8"><strong>Promociones y Cupones:</strong> Contenedor <code>&lt;section data-promo-section&gt;</code> con rejilla ARF-Grid + <code>&lt;template data-promo-template&gt;</code> generando tarjetas <code>&lt;article class="promo-card" data-promo-code="..."&gt;</code> con badge de descuento y vigencia visible.</label>
+          <label for="c8"><strong>Promociones y Cupones:</strong> Contenedor <code>&lt;section data-promo-section&gt;</code> con rejilla ARF-Grid + <code>&lt;template data-promo-template&gt;</code> generando tarjetas <code>&lt;article class="promo-card" data-promo-code="..."&gt;</code> con badge de descuento y vigencia visible. Consume <code>api/promociones_listar.php</code> (Contrato 12).</label>
         </li>
         <li class="todo-item">
           <input type="checkbox" id="c9">
-          <label for="c9"><strong>Feed de Publicaciones:</strong> Sección <code>&lt;div data-social-feed&gt;</code> + <code>&lt;template data-social-template&gt;</code> con imagen, texto y fecha por publicación.</label>
+          <label for="c9"><strong>Feed de Publicaciones:</strong> Sección <code>&lt;div data-social-feed&gt;</code> + <code>&lt;template data-social-template&gt;</code> con imagen, texto y fecha por publicación. Consume <code>api/publicaciones_listar.php</code> (Contrato 10).</label>
         </li>
         <li class="todo-item">
           <input type="checkbox" id="c10">
@@ -259,16 +282,20 @@
           <input type="checkbox" id="c12">
           <label for="c12"><strong>SEO Local La Paz:</strong> Microdatos semánticos y encabezados geolocalizados ("La Paz, B.C.S.").</label>
         </li>
+        <li class="todo-item">
+          <input type="checkbox" id="c16">
+          <label for="c16"><strong>Paleta corporativa "Ocean Breeze & Pittsburgh Gold":</strong> usa únicamente los tokens de color ya definidos en <code>assets/css/main.css</code> (<code>--brand-navy</code>, <code>--brand-royal-blue</code>, <code>--brand-vibrant-blue</code>, <code>--brand-teal</code>, <code>--brand-gold</code>) — con soporte nativo para el toggle Día/Noche ya existente (<code>data-theme</code>), nunca colores nuevos hardcodeados.</label>
+        </li>
       </ul>
     </div>
 
     <!-- DEMO EN VIVO: Data → Template → Render -->
     <section class="step" data-banner-slider aria-labelledby="demo-banners-titulo">
       <div class="step-header"><h2 class="step-title" id="demo-banners-titulo">Referencia Viva — Banners de Cabecera</h2></div>
-      <p class="step-desc">Consume <code>api/banners_listar.php</code> (Contrato 11) en tiempo real. Ahora mismo debería verse el estado <strong>Error</strong> — la BD de staging aún no tiene conexión confirmada; eso es correcto.</p>
+      <p class="step-desc">Consume <code>api/banners_listar.php</code> (Contrato 11) en tiempo real.</p>
       <p data-state="loading" class="demo-state">Cargando banners...</p>
       <p data-state="empty" class="demo-state" hidden>No hay banners activos por ahora.</p>
-      <p data-state="error" class="demo-state demo-state--error" hidden>No fue posible cargar los banners (esperado sin BD de staging conectada).</p>
+      <p data-state="error" class="demo-state demo-state--error" hidden>No fue posible cargar los banners.</p>
       <div data-state="success" class="banner-track" hidden></div>
       <template data-banner-template>
         <div class="banner-slide" data-banner-item>
@@ -286,7 +313,7 @@
       <p class="step-desc">Consume <code>api/promociones_listar.php</code> (Contrato 12). Rejilla ARF-Grid real: <code>display:flex; flex-wrap:wrap; justify-content:center;</code> en <code>.promo-grid</code>.</p>
       <p data-state="loading" class="demo-state">Cargando promociones...</p>
       <p data-state="empty" class="demo-state" hidden>No hay promociones vigentes.</p>
-      <p data-state="error" class="demo-state demo-state--error" hidden>No fue posible cargar las promociones (esperado sin BD de staging conectada).</p>
+      <p data-state="error" class="demo-state demo-state--error" hidden>No fue posible cargar las promociones.</p>
       <div data-state="success" class="promo-grid" hidden></div>
       <template data-promo-template>
         <article class="promo-card" data-promo-code="">
@@ -304,7 +331,7 @@
       <p class="step-desc">Consume <code>api/publicaciones_listar.php</code> (Contrato 10, solo <code>estado='publicada'</code>, límite 6).</p>
       <p data-state="loading" class="demo-state">Cargando publicaciones...</p>
       <p data-state="empty" class="demo-state" hidden>Sin publicaciones recientes.</p>
-      <p data-state="error" class="demo-state demo-state--error" hidden>No fue posible cargar el feed (esperado sin BD de staging conectada).</p>
+      <p data-state="error" class="demo-state demo-state--error" hidden>No fue posible cargar el feed.</p>
       <div data-state="success" class="social-grid" hidden></div>
       <template data-social-template>
         <article class="social-card">
@@ -315,20 +342,34 @@
       </template>
     </section>
 
-    <!-- PASO 4: SUITE DE HERRAMIENTAS DE CALIDAD -->
+    <!-- PASO 4: MÉTRICAS DE EVALUACIÓN DE PRÁCTICAS PROFESIONALES -->
     <div class="step">
       <div class="step-header">
-        <h2 class="step-title">4. Herramientas Obligatorias de Calificación (100/100)</h2>
+        <h2 class="step-title">4. Métricas de Evaluación de tus Prácticas Profesionales</h2>
       </div>
-      <p class="step-desc">El Pull Request solo será evaluado si pasa las siguientes pruebas externas:</p>
+      <p class="step-desc">Tu entrega se califica con estos 4 criterios concretos — cada uno con una herramienta gratuita para auto-evaluarte antes de entregar:</p>
+      <div class="metric-grid">
+        <div class="metric-card">
+          <p class="metric-card__label">Originalidad</p>
+          <p class="metric-card__value">Propuesta visual propia de la tienda web</p>
+        </div>
+        <div class="metric-card">
+          <p class="metric-card__label">Velocidad de carga</p>
+          <p class="metric-card__value">Lighthouse ≥ 90</p>
+        </div>
+        <div class="metric-card">
+          <p class="metric-card__label">Limpieza de código</p>
+          <p class="metric-card__value">Cero <code>!important</code>, cero inline</p>
+        </div>
+        <div class="metric-card">
+          <p class="metric-card__label">Experiencia móvil</p>
+          <p class="metric-card__value">Mobile-first real, sin scroll horizontal</p>
+        </div>
+      </div>
       <div class="grid-links">
         <a href="https://pagespeed.web.dev/" target="_blank" rel="noopener" class="card-link">
           <strong>Google PageSpeed / Lighthouse</strong>
-          <span>Exigido: 100/100 en Performance, A11y, Best Practices y SEO móvil/desktop.</span>
-        </a>
-        <a href="https://github.com/GoogleChrome/lighthouse-ci" target="_blank" rel="noopener" class="card-link">
-          <strong>Lighthouse CI</strong>
-          <span>Automatiza la auditoría en cada push — adjunta el reporte generado al PR.</span>
+          <span>Exigido: 90+ en Performance, A11y, Best Practices y SEO móvil/desktop.</span>
         </a>
         <a href="https://validator.w3.org/" target="_blank" rel="noopener" class="card-link">
           <strong>W3C HTML Validator</strong>

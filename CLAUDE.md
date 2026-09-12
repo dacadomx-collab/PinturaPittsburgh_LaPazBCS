@@ -1,8 +1,8 @@
 # CLAUDE.md — Manual Operativo del Agente IA
 ## PinturaPittsburgh_LaPazBCS | Distribuidor Autorizado The Pittsburgh Paints Company — La Paz, B.C.S.
-**Versión:** 14.0 | **Fecha:** 2026-09-12 | **Arquitecto:** [NOMBRE_ARQUITECTO — pendiente de confirmar]
+**Versión:** 15.0 | **Fecha:** 2026-09-12 | **Arquitecto:** [NOMBRE_ARQUITECTO — pendiente de confirmar]
 
-**Estado del proyecto:** Staging (`https://pittsburgh.tourfindy.com`) **completamente operativo y verificado en vivo** desde el Hito 17: sitio público, dashboard admin, conexión a BD (10 tablas, 2 usuarios activos), filesystem y SMTP todos confirmados sanos por `api/status_check.php`. Desde el Hito 18, **el entorno LOCAL (XAMPP) también conecta a esa misma BD real** vía un túnel SSH (`scripts/tunnel_bd_local.bat`, `.env` local con `DB_HOST=127.0.0.1`/`DB_PORT=3307`, ver `knowledge/04` §5.5) — sin afectar nunca al servidor ni al deploy, ya que `DB_PORT` es opcional y el `.env` real del servidor no lo define. El acceso SSH del Arquitecto (Hito 17) permitió pasar de "hipótesis remotas" a diagnóstico y corrección directa sobre el servidor real — ver §6 para el detalle completo de cada hallazgo. Sitio público (landing, catálogo, PDP, checkout) y panel administrativo completo — dashboard PHP unificado (`admin/index.php` + `admin/layout/*.php`) — implementados y verificados, ahora probables end-to-end también en local con datos reales. Endpoints públicos de banners/promociones/feed de publicaciones (Contratos 10/11/12) implementados y probados, pero **`index.html` todavía no incluye su marcado real** — el "Data Contract Frontend" ya está documentado (`knowledge/07` §3) junto con `mock-data/mock-data.json`, trabajo de frontend dentro del alcance del colaborador externo (§13), cuyo onboarding (`Colaboradores/`) **ya se despliega a staging** desde el Hito 17. `modulos/` adoptado formalmente como hoja de ruta de características (§14). **Bloqueantes activos:** ninguno de infraestructura — quedan solo tareas de producto (construir el marcado de banners/promos en `index.html`, verificar el envío real de un correo de prueba).
+**Estado del proyecto:** Staging (`https://pittsburgh.tourfindy.com`) **completamente operativo y verificado en vivo** desde el Hito 17: sitio público, dashboard admin, conexión a BD (10 tablas, 3 usuarios activos), filesystem y SMTP todos confirmados sanos por `api/status_check.php`. Desde el Hito 18, **el entorno LOCAL (XAMPP) también conecta a esa misma BD real** vía un túnel SSH (`scripts/tunnel_bd_local.bat`, `.env` local con `DB_HOST=127.0.0.1`/`DB_PORT=3307`, ver `knowledge/04` §5.5) — sin afectar nunca al servidor ni al deploy. Desde el Hito 19, **dos colaboradores externos trabajan en paralelo y aislados** en el frontend: Rafael (rama `collab/rafa` → `https://pittsburgh.tourfindy.com/preview-rafa/`) y Moy, practicante UABCS/ACADEP (rama `collab/moy` → `https://pittsburgh.tourfindy.com/preview-moy/`) — multi-stage deploy por rama documentado en §8, onboardings independientes en `Colaboradores/` que se enrutan y se aíslan entre sí por email del JWT (`assets/js/admin-login.js` + `colaborador-gate.js`). El acceso SSH del Arquitecto (Hito 17) permitió pasar de "hipótesis remotas" a diagnóstico y corrección directa sobre el servidor real — ver §6 para el detalle completo de cada hallazgo. Endpoints públicos de banners/promociones/feed de publicaciones (Contratos 10/11/12) implementados y probados, pero **`index.html` todavía no incluye su marcado real** — el "Data Contract Frontend" ya está documentado (`knowledge/07` §3) junto con `mock-data/mock-data.json`, y es justamente lo que Rafael y Moy están construyendo cada uno en su rama. `modulos/` adoptado formalmente como hoja de ruta de características (§14). **Bloqueantes activos:** ninguno de infraestructura — quedan solo tareas de producto (evaluar las 2 propuestas de frontend cuando lleguen los PR, verificar el envío real de un correo de prueba).
 
 ---
 
@@ -100,7 +100,9 @@ PinturaPittsburgh_LaPazBCS/
 │                                       tunnel_bd_local.bat ← Hito 18, túnel SSH para desarrollo local contra la BD real
 ├── mock-data/                       ← mock-data.json (Hito 13) — misma forma que Contratos 10/11/12, para que el colaborador externo desarrolle sin BD
 ├── modulos/                         ← Hoja de ruta oficial de características (ver §14) — blueprints del holding DCD LABS, agnósticos, NUNCA editados con datos de PinturaPittsburgh ni subidos a Git
-├── Colaboradores/                   ← Onboarding de Rafael. Desde el Hito 17 SÍ se sube a Git y se despliega (antes excluida — ver §9/§10 y v6.0/v17.0 en el historial)
+├── Colaboradores/                   ← Onboarding de Rafael y Moy. Desde el Hito 17 SÍ se sube a Git y se despliega (antes excluida — ver §9/§10 y v6.0/v17.0 en el historial)
+│   ├── onboarding_colaborador.html  ← Rafael (armandocastillejos086@gmail.com), rama collab/rafa
+│   └── onboarding_moy.html          ← Moy — UABCS/ACADEP (mescobar_22@alu.uabcs.mx), rama collab/moy — Hito 19
 │
 ├── .github/workflows/deploy.yml     ← Pipeline CI/CD automático
 │
@@ -254,10 +256,20 @@ Referencia completa: `knowledge/01_LEY_Y_PROTOCOLOS_DE_VUELO.md`
 ## 8. PIPELINE CI/CD (GitHub Actions → FTP)
 
 **Archivo:** `.github/workflows/deploy.yml`
-**Trigger:** Push a rama `main`/`master`
+**Trigger:** Push a `main`/`master` (versión oficial) **y a `collab/rafa`/`collab/moy`** (previsualizaciones de colaboradores externos, Hito 19).
 **Estado:** ✅ Activo y funcional — los Secrets de FTP ya están dados de alta y el pipeline entrega correctamente a staging (`pittsburgh.tourfindy.com`).
 
-**Causa raíz REAL del 403, confirmada (Hito 16, 2026-09-12):** no era permisos ni Document Root (esa fue la mejor hipótesis disponible sin acceso al servidor, Hitos 12/14) — el Arquitecto inspeccionó cPanel File Manager directamente y encontró que la cuenta FTP de este subdominio ya aterriza en `/home/tourfindycom/public_html/pittsburgh/` al iniciar sesión. `server-dir: /public_html/pittsburgh/` (valor usado desde el Hito 4) asumía que la raíz FTP era la cuenta completa (`/home/tourfindycom/`), así que cada deploy escribía en una carpeta anidada `pittsburgh/public_html/pittsburgh/...` en vez de la raíz real — Apache nunca encontraba `index.html`/`.htaccess` donde correspondía. **Corregido:** `server-dir: ./`. **Pendiente manual:** la carpeta `public_html/` anidada que quedó de los deploys anteriores sigue en el servidor (este pipeline no borra archivos huérfanos — no tiene `dangerous-clean-slate` activado, y no se activa sin autorización explícita por ser una operación destructiva); bórrala manualmente vía cPanel → Administrador de Archivos si quieres dejar la carpeta limpia (no bloquea el funcionamiento, solo es clutter).
+**Causa raíz REAL del 403, confirmada (Hito 16, 2026-09-12):** no era permisos ni Document Root (esa fue la mejor hipótesis disponible sin acceso al servidor, Hitos 12/14) — el Arquitecto inspeccionó cPanel File Manager directamente y encontró que la cuenta FTP de este subdominio ya aterriza en `/home/tourfindycom/public_html/pittsburgh/` al iniciar sesión. `server-dir: /public_html/pittsburgh/` (valor usado desde el Hito 4) asumía que la raíz FTP era la cuenta completa (`/home/tourfindycom/`), así que cada deploy escribía en una carpeta anidada `pittsburgh/public_html/pittsburgh/...` en vez de la raíz real — Apache nunca encontraba `index.html`/`.htaccess` donde correspondía. **Corregido:** `server-dir: ./`. La carpeta `public_html/` anidada huérfana **ya se eliminó por SSH** (Hito 17, confirmado que era una copia desactualizada sin datos únicos).
+
+**Multi-Stage Deploy por rama (Hito 19, 2026-09-12):** `server-dir` ahora es una expresión condicional de GitHub Actions según `github.ref_name`:
+
+| Rama | `server-dir` | URL pública | Contenido |
+| :--- | :--- | :--- | :--- |
+| `main` / `master` | `./` | `https://pittsburgh.tourfindy.com/` | Versión oficial del cliente |
+| `collab/rafa` | `./preview-rafa/` | `https://pittsburgh.tourfindy.com/preview-rafa/` | Previsualización de Rafael |
+| `collab/moy` | `./preview-moy/` | `https://pittsburgh.tourfindy.com/preview-moy/` | Previsualización de Moy |
+
+Las 3 subcarpetas comparten exactamente las mismas exclusiones de seguridad (`.env`, `knowledge/`, `database/`, `scripts/`, etc. — ver más abajo); ninguna rama de colaborador puede desplegar secretos ni herramientas internas. Las carpetas `preview-rafa/`/`preview-moy/` ya existen en el servidor (creadas por SSH como respaldo — `FTP-Deploy-Action` también las crea sola si hicieran falta). **Importante:** dentro de esas subcarpetas, `api/conexion.php` no encontrará un `.env` propio (no se despliega y no se crea uno por separado) — las previsualizaciones son para evaluar el **frontend estático** (maquetación, ARF-Grid, responsive, Lighthouse), cualquier fetch a `api/*.php` mostrará el estado "Error" del patrón de 4 estados, que es exactamente lo que ese patrón está diseñado para manejar con elegancia — no es un bug a perseguir.
 
 **GitHub Secrets dados de alta** (Settings → Secrets → Actions) — solo 3, no existe `FTP_REMOTE_DIR`:
 | Secret | Contenido |
@@ -266,9 +278,27 @@ Referencia completa: `knowledge/01_LEY_Y_PROTOCOLOS_DE_VUELO.md`
 | `FTP_USERNAME` | Usuario FTP de la cuenta `tourfindycom` |
 | `FTP_PASSWORD` | Contraseña FTP (NUNCA en código) |
 
-`server-dir` queda fijo en el propio `deploy.yml` (`./`, Hito 16) en vez de venir de un Secret — ver comentario en el archivo.
+**Excluido del deploy (las 3 ramas):** `.env`, `knowledge/`, `scripts/`, `database/`, `modulos/`, `.claude/`, `logs/`, `backups*/`, `*.sql`, `*.log`, `*.md` (excepto `README.md`), `node_modules/`, `vendor/`, `CLAUDE.md`, `AGENTS.md`.
 
-**Excluido del deploy:** `.env`, `knowledge/`, `scripts/`, `.claude/`, `logs/`, `backups*/`, `*.sql`, `*.md` (excepto `README.md`), `node_modules/`, `vendor/`, `CLAUDE.md`.
+### Comandos Git para que cada colaborador trabaje en su rama aislada
+
+```bash
+# Clonar el repositorio (una sola vez)
+git clone https://github.com/dacadomx-collab/PinturaPittsburgh_LaPazBCS.git
+cd PinturaPittsburgh_LaPazBCS
+
+# Rafael:
+git checkout collab/rafa
+
+# Moy:
+git checkout collab/moy
+
+# Flujo normal de trabajo (ambos, en su propia rama):
+git add assets/ index.html          # su alcance es SOLO estos — ver §13
+git commit -m "descripción del cambio"
+git push origin collab/rafa          # o collab/moy — nunca "git push origin main"
+```
+Cada `git push` a su rama dispara automáticamente su propio deploy a su subcarpeta de previsualización (tabla de arriba) — nunca toca `main` ni la carpeta del otro colaborador. La entrega final a producción es un Pull Request de su rama hacia `main`, revisado con el protocolo `/auditar-pr [rama]` (§13) antes de fusionar.
 
 ---
 
@@ -323,6 +353,7 @@ Referencia completa: `knowledge/01_LEY_Y_PROTOCOLOS_DE_VUELO.md`
 | v13.0 | 2026-09-12 | **Hito 17 (acceso SSH autorizado por el Arquitecto — diagnóstico y corrección directa sobre el servidor real, protocolo `modulos/MODULO_03_CONEXION_SSH_HOSTING.md`):** (1) Conexión SSH confirmada (`tourfindycom@chir205.websitehostserver.net`, llave ya autorizada en cPanel) — de las 5 credenciales que el Arquitecto compartió, se usó ÚNICAMENTE la de este proyecto; las otras 4 (servidores de otros clientes/proyectos: ACADEP, GreenGeeks/brokers, ENSBCS, CaboVision) quedaron fuera de alcance a propósito, nunca se probaron. (2) Reconocimiento de solo lectura (Fase 4 del protocolo) antes de cualquier cambio: confirmó que el `.env` YA EXISTÍA en el servidor con `DB_HOST=localhost` correcto, pero con `APP_ENV="local"`, `APP_URL` de XAMPP y `APP_DEBUG="true"` heredados de la plantilla — corregidos a `staging`/`https://pittsburgh.tourfindy.com`/`false` (con backup del original). (3) **Conexión a BD confirmada funcionando de extremo a extremo** — probada por SSH con PHP directo (10 tablas, 2 usuarios activos) y confirmada además por `api/status_check.php` en vivo (`database.ok: true`). (4) 403 verificado resuelto en vivo (`curl` a `/` y `/admin/login.php` → HTTP 200) y limpieza de la carpeta `public_html/` anidada huérfana (`rm -rf` por SSH, confirmado que era una copia desactualizada sin datos únicos). (5) `logs/` creado en el servidor (no existía porque `deploy.yml` lo excluye a propósito) — resolvió el check `filesystem` de `status_check.php`. (6) Bug real encontrado y corregido en `api/status_check.php::checkSmtp()`: `fsockopen()` sin envoltura `ssl://` nunca completaba el handshake TLS implícito del puerto 465, así que el banner SMTP nunca llegaba — confirmado con `openssl s_client` que el servidor de correo sí estaba sano — era un falso negativo del propio chequeo. (7) `Colaboradores/onboarding_colaborador.html` ya NO está excluido de Git/deploy (`.gitignore`, `deploy.yml`) — se removió la credencial real de Marketing Hub que tenía en texto plano (reemplazada por instrucción de solicitarla al Arquitecto por canal seguro), resolviendo el 404 que Rafael reportaba. (8) `api/setup_diagnostico.php`, `test_db.php`, `test_db_directo.php` y la variable `SETUP_TOKEN` eliminados por completo — local, en el servidor (vía SSH) y de `.env`/`.env.example` — ya cumplieron su propósito. |
 | v13.1 | 2026-09-12 | Ajustes de contenido menores en `Colaboradores/onboarding_colaborador.html`: sugiere usar IA para resumir el documento maestro de Estrategia Omnicanal en vez de pedir lectura completa; simplifica la instrucción de credenciales de Marketing Hub a "pídeselos a David Cabrera"; actualiza cronograma (arranque 12 sep, entrega de maquetación 15 sep, revisión técnica 17 sep 2026). |
 | v14.0 | 2026-09-12 | **Hito 18 (desarrollo local contra la BD real de staging, sin afectar el servidor ni el deploy):** (1) Túnel SSH de reenvío de puerto (`ssh -L 3307:localhost:3306 ...`, reutilizando la llave del Hito 17) — `scripts/tunnel_bd_local.bat` nuevo para que el Arquitecto lo levante cuando quiera. Puerto `3307` elegido a propósito para no chocar con el MySQL propio de XAMPP en `3306`. (2) `api/conexion.php` — soporte opcional de `DB_PORT` en `.env`, 100% retrocompatible (el `.env` del servidor no la define, así que su comportamiento no cambia en absoluto); solo aplica al host primario, nunca a los hosts de fallback de `hostsDeFallback()`. (3) `.env` LOCAL actualizado a `DB_HOST=127.0.0.1`/`DB_PORT=3307` con la alternativa sin túnel comentada al lado — documentado por qué esto no viola la Regla Cero (el riesgo que la regla previene es conectar en silencio a una BD *distinta*, no el string literal "127.0.0.1"; aquí es la misma BD real de staging vista por un túnel cifrado). (4) Verificado end-to-end: `api/status_check.php` y un login real (`api/auth_login.php`) contra `http://localhost/PinturaPittsburgh_LaPazBCS` funcionando con los datos reales de staging. (5) Detalle completo en `knowledge/04_ARQUITECTURA_Y_BLINDAJE.md` §5.5. |
+| v15.0 | 2026-09-12 | **Hito 19 (segundo colaborador externo — Moy, practicante UABCS/ACADEP — y multi-stage deploy por rama):** (1) `deploy.yml` — trigger ampliado a `collab/rafa`/`collab/moy`, `server-dir` condicional por `github.ref_name` (`main`→`./`, `collab/rafa`→`./preview-rafa/`, `collab/moy`→`./preview-moy/`), mismas exclusiones de seguridad en las 3 ramas. Carpetas destino creadas por SSH como respaldo. (2) Ramas `collab/rafa` y `collab/moy` creadas desde `876d16d` y publicadas a GitHub. (3) `Colaboradores/onboarding_moy.html` nuevo — mismo Data Contract/Reglas de Oro que Rafael, más una sección propia de métricas de evaluación de prácticas profesionales. (4) Enrutamiento por colaborador: `assets/js/admin-login.js` ya no manda a todo `role='colaborador'` al mismo onboarding — decodifica el email del JWT (`PPAdminAuth.decodeJwtPayload()`, nueva función centralizada en `admin-auth.js`, Mandamiento #10 — ya no se duplica en `admin-topbar.js`) y enruta según un mapa email→onboarding. `assets/js/colaborador-gate.js` gana una tercera verificación opcional (`<body data-owner-email="...">`) para que ninguno abra por URL directa el onboarding del otro. `assets/js/onboarding-ui.js` — el saludo y las claves de `localStorage` ya no están hardcodeados a "Rafael", se parametrizan por `data-collaborator-name`/`data-collaborator-id`. (5) Documentado en `knowledge/00`, `02`, `07` y aquí — cuentas activas, ramas, URLs de previsualización. |
 
 ---
 

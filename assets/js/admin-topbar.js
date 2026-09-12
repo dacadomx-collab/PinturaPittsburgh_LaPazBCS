@@ -42,19 +42,11 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    function decodificarClaims(accessToken) {
-        try {
-            var partes = accessToken.split('.');
-            var payload = partes[1].replace(/-/g, '+').replace(/_/g, '/');
-            return JSON.parse(window.atob(payload));
-        } catch (e) {
-            return null;
-        }
-    }
-
     if (profileChip && window.PPAdminAuth) {
         var session = window.PPAdminAuth.getSession();
-        var claims = session && session.access_token ? decodificarClaims(session.access_token) : null;
+        // decodeJwtPayload centralizado en admin-auth.js desde el Hito 19
+        // (antes había una copia de esta misma función en cada archivo).
+        var claims = session && session.access_token ? window.PPAdminAuth.decodeJwtPayload(session.access_token) : null;
 
         if (claims && claims.email) {
             profileChip.textContent = claims.email + ' · ' + (session.role || claims.role || '');

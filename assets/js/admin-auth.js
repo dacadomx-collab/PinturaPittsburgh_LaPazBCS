@@ -119,11 +119,32 @@
         }
     }
 
+    /**
+     * Decodifica el payload de un JWT (Bearer access/refresh token) SOLO para
+     * lectura de claims en el cliente (ej. email, role, para mostrar perfil o
+     * enrutar por colaborador) — el JWT no está cifrado, solo firmado, así
+     * que decodificarlo aquí no expone nada que el navegador no tuviera ya.
+     * La validación real de la firma/expiración siempre ocurre en el
+     * servidor (api/auth_middleware.php); esto nunca sustituye eso.
+     * Centralizado aquí (Hito 19) para no duplicar la misma función en
+     * admin-topbar.js, admin-login.js y colaborador-gate.js (Mandamiento #10).
+     */
+    function decodeJwtPayload(token) {
+        try {
+            var partes = String(token).split('.');
+            var payload = partes[1].replace(/-/g, '+').replace(/_/g, '/');
+            return JSON.parse(window.atob(payload));
+        } catch (e) {
+            return null;
+        }
+    }
+
     global.PPAdminAuth = {
         login: login,
         logout: logout,
         authFetch: authFetch,
         requireSession: requireSession,
-        getSession: getSession
+        getSession: getSession,
+        decodeJwtPayload: decodeJwtPayload
     };
 })(window);

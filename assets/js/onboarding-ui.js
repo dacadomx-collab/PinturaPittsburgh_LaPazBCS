@@ -1,10 +1,27 @@
 // assets/js/onboarding-ui.js — PinturaPittsburgh_LaPazBCS
-// Saludo dinámico, barra de cumplimiento y firma digital de
-// Colaboradores/onboarding_colaborador.html. Antes vivía inline en el HTML
-// (violaba la propia Regla de Oro que el documento le exige a Rafael) —
-// migrado aquí en la reescritura "Command Center".
+// Saludo dinámico, barra de cumplimiento y firma digital — compartido por
+// TODOS los onboardings de colaboradores (Rafael, Moy, y los que se sumen).
+// Antes vivía inline en el HTML (violaba la propia Regla de Oro que el
+// documento le exige al colaborador) — migrado aquí en la reescritura
+// "Command Center". Parametrizado por colaborador (Hito 19) vía
+// <body data-collaborator-name="..."> y <body data-collaborator-id="...">
+// — antes tenía "Rafael" y las claves de localStorage hardcodeadas, lo que
+// habría mezclado el progreso de dos colaboradores distintos en el mismo
+// navegador (ej. el Arquitecto revisando ambos onboardings).
 (function (document) {
     'use strict';
+
+    function idColaborador() {
+        return document.body.getAttribute('data-collaborator-id') || 'default';
+    }
+
+    function claveEstado() {
+        return 'pittsburgh_onboarding_state_' + idColaborador();
+    }
+
+    function claveFirma() {
+        return 'pittsburgh_signature_' + idColaborador();
+    }
 
     function initHeader() {
         var h = new Date().getHours();
@@ -12,8 +29,10 @@
         if (h >= 5 && h < 12) saludo = 'Buenos días';
         else if (h >= 12 && h < 19) saludo = 'Buenas tardes';
 
+        var nombre = document.body.getAttribute('data-collaborator-name') || '';
+
         var greetingEl = document.getElementById('greeting-text');
-        if (greetingEl) greetingEl.textContent = saludo + ', Rafael';
+        if (greetingEl) greetingEl.textContent = nombre ? (saludo + ', ' + nombre) : saludo;
 
         var quotes = [
             '"La excelencia en el frontend no es casualidad; es la suma de disciplina y atención al detalle."',
@@ -38,7 +57,7 @@
         var state = {};
         Array.prototype.forEach.call(all, function (c) { state[c.id] = c.checked; });
         try {
-            localStorage.setItem('pittsburgh_onboarding_state', JSON.stringify(state));
+            localStorage.setItem(claveEstado(), JSON.stringify(state));
         } catch (e) {
             // localStorage no disponible — el progreso simplemente no persiste.
         }
@@ -48,7 +67,7 @@
         var sigEl = document.getElementById('sig-name');
         if (!sigEl) return;
         try {
-            localStorage.setItem('pittsburgh_signature', sigEl.value);
+            localStorage.setItem(claveFirma(), sigEl.value);
         } catch (e) {
             // localStorage no disponible.
         }
@@ -56,7 +75,7 @@
 
     function restoreState() {
         try {
-            var raw = localStorage.getItem('pittsburgh_onboarding_state');
+            var raw = localStorage.getItem(claveEstado());
             if (raw) {
                 var state = JSON.parse(raw);
                 Object.keys(state).forEach(function (id) {
@@ -64,7 +83,7 @@
                     if (el) el.checked = state[id];
                 });
             }
-            var sig = localStorage.getItem('pittsburgh_signature');
+            var sig = localStorage.getItem(claveFirma());
             if (sig) {
                 var sigEl = document.getElementById('sig-name');
                 if (sigEl) sigEl.value = sig;

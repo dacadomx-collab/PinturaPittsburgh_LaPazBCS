@@ -8,6 +8,16 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
     }
 
+    // Ruta de onboarding por colaborador (Hito 19 — Moy se suma a Rafael).
+    // El email viene del JWT ya emitido por el servidor (claim, no se decide
+    // en el cliente) — solo se usa para escoger A CUÁL onboarding enrutar,
+    // nunca para decidir si la sesión es válida (eso ya lo validó el server).
+    var RUTA_ONBOARDING_POR_EMAIL = {
+        'armandocastillejos086@gmail.com': '../Colaboradores/onboarding_colaborador.html',
+        'mescobar_22@alu.uabcs.mx': '../Colaboradores/onboarding_moy.html'
+    };
+    var RUTA_ONBOARDING_DEFECTO = '../Colaboradores/onboarding_colaborador.html';
+
     form.addEventListener('submit', function (event) {
         event.preventDefault();
         var email = document.getElementById('login-email').value;
@@ -20,7 +30,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 // decide en el cliente, solo se enruta según lo que el
                 // servidor ya autenticó.
                 if (sesion.role === 'colaborador') {
-                    window.location.href = '../Colaboradores/onboarding_colaborador.html';
+                    var claims = window.PPAdminAuth.decodeJwtPayload(sesion.access_token);
+                    var emailToken = claims && claims.email;
+                    window.location.href = RUTA_ONBOARDING_POR_EMAIL[emailToken] || RUTA_ONBOARDING_DEFECTO;
                 } else {
                     window.location.href = 'index.php';
                 }

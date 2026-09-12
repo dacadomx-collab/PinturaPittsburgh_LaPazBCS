@@ -17,6 +17,13 @@
 // endpoint es un chequeo de salud del servidor (filesystem/BD/SMTP), no
 // valida tokens JWT. Verificar "sesión válida" contra un endpoint que no
 // sabe qué es un JWT sería seguridad de utilería, no seguridad real.
+//
+// TERCERA condición (Hito 19 — Moy se suma a Rafael como colaborador):
+// si la página declara <body data-owner-email="..."> se exige además que
+// el email del JWT coincida — evita que un colaborador abra por URL directa
+// el onboarding del OTRO (ambos comparten rol 'colaborador', pero cada
+// onboarding es de una sola persona). Si la página no declara ese atributo,
+// esta tercera condición simplemente no aplica (compatibilidad hacia atrás).
 document.addEventListener('DOMContentLoaded', function () {
     var LOGIN_URL = '../admin/login.php';
 
@@ -34,5 +41,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (session.role !== 'colaborador') {
         window.location.href = LOGIN_URL;
+        return;
+    }
+
+    var ownerEmail = document.body.getAttribute('data-owner-email');
+    if (ownerEmail) {
+        var claims = window.PPAdminAuth.decodeJwtPayload(session.access_token);
+        if (!claims || claims.email !== ownerEmail) {
+            window.location.href = LOGIN_URL;
+        }
     }
 });

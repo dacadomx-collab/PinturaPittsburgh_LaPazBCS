@@ -5,12 +5,17 @@ name: Deploy FTP — PinturaPittsburgh_LaPazBCS (AXON_DCD CI/CD v2)
 # lista exacta de Secrets requeridos.
 
 # ── TRIGGER ────────────────────────────────────────────────────────────────────
-# Se activa SOLO en push a la rama principal. Nunca en ramas de feature.
+# Se activa en push a la rama principal Y a las 2 ramas de previsualización de
+# colaboradores externos (Hito 19) — nunca en cualquier otra rama de feature.
+# `collab/rafa` y `collab/moy` despliegan a subcarpetas aisladas (ver
+# server-dir más abajo), nunca a la raíz pública del cliente.
 on:
   push:
     branches:
       - main
       - master
+      - collab/rafa
+      - collab/moy
 
 # ── JOB PRINCIPAL ─────────────────────────────────────────────────────────────
 jobs:
@@ -86,7 +91,17 @@ jobs:
           # donde sea que el login FTP ya aterriza, sin asumir una ruta
           # absoluta. Si el proveedor cambia el punto de montaje FTP, ajustar
           # aquí (no requiere nuevo Secret).
-          server-dir: ./
+          #
+          # MULTI-STAGE (Hito 19): `main`/`master` siguen desplegando en la
+          # raíz real del subdominio (versión oficial del cliente). Las 2
+          # ramas de colaboradores externos despliegan en su propia
+          # subcarpeta aislada — nunca pisan la raíz ni entre ellas:
+          #   collab/rafa -> ./preview-rafa/  -> https://pittsburgh.tourfindy.com/preview-rafa/
+          #   collab/moy  -> ./preview-moy/   -> https://pittsburgh.tourfindy.com/preview-moy/
+          # Las subcarpetas ya existen en el servidor (creadas por SSH,
+          # Hito 19) — FTP-Deploy-Action también las crea solo si hicieran
+          # falta, así que esto funciona igual aunque se borren a mano.
+          server-dir: ${{ github.ref_name == 'collab/rafa' && './preview-rafa/' || github.ref_name == 'collab/moy' && './preview-moy/' || './' }}
           # Exclusiones de seguridad — NO desplegar secretos ni herramientas internas
           exclude: |
             **/.git/**
