@@ -1,439 +1,320 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PinturaPittsburgh — Command Center de Prácticas Profesionales</title>
-  <style>
-    :root {
-      --bg: #0f172a;
-      --card: #1e293b;
-      --border: #334155;
-      --text: #f8fafc;
-      --text-muted: #94a3b8;
-      --sky: #38bdf8;
-      --gold: #d97706;
-      --gold-light: #f59e0b;
-      --green: #10b981;
-      --red: #ef4444;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
-    body { background-color: var(--bg); color: var(--text); padding: 2rem 1rem; line-height: 1.5; }
-    .container { max-width: 960px; margin: 0 auto; }
-
-    /* Header Contextual */
-    .greeting-card {
-      background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
-      border: 1px solid var(--border); border-radius: 1rem; padding: 1.5rem; margin-bottom: 1.5rem;
-    }
-    .greeting-title { font-size: 1.5rem; color: var(--text); margin-bottom: 0.25rem; }
-    .greeting-meta { font-size: 0.85rem; color: var(--sky); margin-bottom: 0.75rem; }
-    .quote-box {
-      border-left: 3px solid var(--gold-light); padding-left: 0.85rem; font-style: italic;
-      color: var(--text-muted); font-size: 0.88rem;
-    }
-
-    /* Barra de Progreso */
-    .progress-container {
-      background: var(--card); border: 1px solid var(--border); border-radius: 0.75rem;
-      padding: 1rem 1.5rem; margin-bottom: 2rem;
-    }
-    .progress-labels { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.5rem; }
-    .progress-label-text { font-weight: 600; }
-    .progress-percent-text { font-weight: 700; color: var(--sky); }
-    .progress-bar-track { background: var(--bg); height: 10px; border-radius: 9999px; overflow: hidden; }
-    .progress-bar-fill { background: linear-gradient(90deg, var(--sky), var(--green)); height: 100%; width: 0%; transition: width 0.3s ease; }
-
-    /* Secciones y Pasos */
-    .step { background: var(--card); border: 1px solid var(--border); border-radius: 0.85rem; padding: 1.5rem; margin-bottom: 1.5rem; }
-    .step-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
-    .step-title { font-size: 1.15rem; font-weight: 700; color: var(--sky); }
-    .step-desc { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem; }
-
-    .todo-list { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem; }
-    .todo-item { display: flex; align-items: flex-start; gap: 0.75rem; font-size: 0.9rem; }
-    .todo-item input[type="checkbox"] { margin-top: 0.2rem; width: 1.1rem; height: 1.1rem; accent-color: var(--sky); cursor: pointer; flex-shrink: 0; }
-    .todo-item label { cursor: pointer; }
-    .todo-item input:checked + label { text-decoration: line-through; color: var(--text-muted); }
-
-    /* Paneles de Enlaces y Credenciales */
-    .creds-box {
-      background: rgba(15, 23, 42, 0.75); border-left: 3px solid var(--gold-light);
-      padding: 1rem; margin: 0.75rem 0; border-radius: 0.35rem; font-family: monospace; font-size: 0.85rem;
-    }
-    .grid-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0.75rem; margin-top: 0.75rem; }
-    .card-link {
-      background: var(--bg); border: 1px solid var(--border); padding: 0.85rem; border-radius: 0.5rem;
-      text-decoration: none; color: var(--text); display: block; font-size: 0.85rem; transition: border-color 0.2s;
-    }
-    .card-link:hover { border-color: var(--sky); }
-    .card-link strong { display: block; color: var(--sky); margin-bottom: 0.2rem; font-size: 0.9rem; }
-    .card-link span { color: var(--text-muted); font-size: 0.75rem; }
-
-    /* Demo Data → Template → Render (4 estados obligatorios) */
-    .demo-state {
-      background: var(--bg); border: 1px dashed var(--border); border-radius: 0.5rem;
-      padding: 1rem; font-size: 0.85rem; color: var(--text-muted); text-align: center;
-    }
-    .demo-state--error { border-color: var(--red); color: var(--red); }
-    .demo-state[hidden] { display: none; }
-
-    /* ARF-Grid de referencia: flex/wrap/center, cero anchos fijos en hijos */
-    .banner-track, .promo-grid, .social-grid {
-      display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem;
-    }
-    .banner-track[hidden], .promo-grid[hidden], .social-grid[hidden] { display: none; }
-
-    .banner-slide {
-      flex: 1 1 260px; max-width: 320px; background: var(--bg); border: 1px solid var(--border);
-      border-radius: 0.6rem; padding: 1rem; display: flex; flex-direction: column; gap: 0.4rem;
-    }
-    .banner-slide__eyebrow { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--gold-light); }
-    .banner-slide__titulo { font-size: 1rem; color: var(--text); }
-    .banner-slide__descripcion { font-size: 0.8rem; color: var(--text-muted); }
-    .banner-slide__imagen { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 0.4rem; background: var(--card); }
-    .banner-slide__cta { color: var(--sky); font-size: 0.8rem; font-weight: 700; text-decoration: none; }
-
-    .promo-card {
-      flex: 1 1 220px; max-width: 260px; background: var(--bg); border: 1px solid var(--border);
-      border-radius: 0.6rem; padding: 1rem; display: flex; flex-direction: column; gap: 0.4rem;
-    }
-    .promo-card__badge {
-      align-self: flex-start; background: var(--gold-light); color: #0f172a; font-weight: 800;
-      font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 999px;
-    }
-    .promo-card__descripcion { font-size: 0.85rem; color: var(--text); }
-    .promo-card__vigencia { font-size: 0.75rem; color: var(--text-muted); }
-
-    .social-card {
-      flex: 1 1 220px; max-width: 260px; background: var(--bg); border: 1px solid var(--border);
-      border-radius: 0.6rem; padding: 0.75rem; display: flex; flex-direction: column; gap: 0.4rem;
-    }
-    .social-card__imagen { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 0.4rem; background: var(--card); }
-    .social-card__texto { font-size: 0.8rem; color: var(--text); }
-    .social-card__fecha { font-size: 0.7rem; color: var(--text-muted); }
-
-    /* Fechas y Firma */
-    .timeline-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem; }
-    .timeline-item { background: var(--bg); border: 1px solid var(--border); padding: 0.85rem; border-radius: 0.5rem; }
-    .timeline-item span { display: block; font-size: 0.75rem; color: var(--text-muted); }
-    .timeline-item strong { color: var(--gold-light); font-size: 0.95rem; }
-
-    .signature-card {
-      background: var(--bg); border: 1px dashed var(--border); border-radius: 0.5rem;
-      padding: 1.25rem; margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem;
-    }
-    .signature-label { font-size: 0.85rem; font-weight: 600; color: var(--sky); }
-    .signature-input {
-      background: var(--card); border: 1px solid var(--border); padding: 0.6rem 0.8rem;
-      border-radius: 0.35rem; color: var(--text); font-size: 0.9rem;
-    }
-    code { background: rgba(255,255,255,0.1); padding: 0.15rem 0.35rem; border-radius: 0.25rem; font-size: 0.85rem; }
-
-    /* Métricas de Evaluación de Prácticas Profesionales (exclusivo de esta página) */
-    .metric-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-top: 0.75rem; }
-    .metric-card {
-      flex: 1 1 200px; max-width: 240px; background: var(--bg); border: 1px solid var(--border);
-      border-radius: 0.6rem; padding: 1rem; text-align: center;
-    }
-    .metric-card__label { font-size: 0.8rem; color: var(--text-muted); }
-    .metric-card__value { font-size: 1.05rem; font-weight: 700; color: var(--sky); margin-top: 0.3rem; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Command Center de Prácticas Profesionales — Moy | PinturaPittsburgh</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" href="../favicon.ico">
+    <script src="../assets/js/theme-init.js"></script>
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/admin.css">
 </head>
-<body data-owner-email="mescobar_22@alu.uabcs.mx" data-collaborator-name="Moisés" data-collaborator-id="moy">
+<body class="cc-shell" data-owner-email="mescobar_22@alu.uabcs.mx" data-collaborator-name="Moisés" data-collaborator-id="moy">
 
-  <div class="container">
-    <!-- Saludo Cálido y Dinámico -->
-    <div class="greeting-card">
-      <h1 class="greeting-title" id="greeting-text">Hola, Moisés</h1>
-      <div class="greeting-meta" id="greeting-meta">La Paz, Baja California Sur | Prácticas Profesionales — UABCS / ACADEP</div>
-      <div class="quote-box" id="quote-text">"La excelencia no es un acto, es un hábito de cada línea de código."</div>
-    </div>
-
-    <!-- Barra de Cumplimiento -->
-    <div class="progress-container">
-      <div class="progress-labels">
-        <span class="progress-label-text">Progreso de Entregables Frontend</span>
-        <span id="progress-percent" class="progress-percent-text">0%</span>
-      </div>
-      <div class="progress-bar-track">
-        <div class="progress-bar-fill" id="progress-fill"></div>
-      </div>
-    </div>
-
-    <!-- CONTEXTO DE PRÁCTICAS -->
-    <div class="step">
-      <div class="step-header">
-        <h2 class="step-title">0. Bienvenida — Prácticas Profesionales</h2>
-      </div>
-      <p class="step-desc">
-        Bienvenido, Moisés. Este es tu espacio de trabajo dentro de PinturaPittsburgh_LaPazBCS como parte de tus
-        prácticas profesionales de la UABCS gestionadas por ACADEP. Trabajarás en paralelo con Rafael (otro
-        colaborador externo) en el mismo frontend — cada quien en su propia rama de Git, sin interferir entre sí.
-        Tu entregable se evalúa con las mismas <strong>Reglas de Oro</strong> técnicas del proyecto y con las
-        métricas de prácticas profesionales del Paso 4.
-      </p>
-    </div>
-
-    <!-- PASO 1: FUENTES DE VERDAD OBLIGATORIAS -->
-    <div class="step">
-      <div class="step-header">
-        <h2 class="step-title">1. Fuentes de Verdad y Reglas de Negocio</h2>
-      </div>
-      <p class="step-desc">Toda la estructura y el contenido deben extraerse exclusivamente de estos dos documentos canónicos:</p>
-      <div class="grid-links">
-        <a href="https://docs.google.com/document/d/1-EQ0JKP06vLcs28QQGMOfmJHf45lKHq4rMWAWjuR5fo/edit?usp=sharing" target="_blank" rel="noopener" class="card-link">
-          <strong>Ficha de Levantamiento de Datos</strong>
-          <span>Datos de sucursal, teléfonos, WhatsApp, horarios, catálogo inicial de pinturas y 36 años de experiencia.</span>
-        </a>
-        <a href="https://docs.google.com/document/d/1XoORd8cc8pUcVh_fWqqtN2IwXSePJ7o32SG-aNfU-fQ/edit?usp=sharing" target="_blank" rel="noopener" class="card-link">
-          <strong>Estrategia Omnicanal & FODA</strong>
-          <span>Documento maestro. Toda funcionalidad (calculadora, validación postal, arquetipos B2B) nace de aquí.</span>
-        </a>
-      </div>
-      <ul class="todo-list">
-        <li class="todo-item">
-          <input type="checkbox" id="c1">
-          <label for="c1">Lectura completada de la Ficha de Levantamiento (extraer direcciones en Abasolo y Matamoros, teléfonos de atención).</label>
-        </li>
-        <li class="todo-item">
-          <input type="checkbox" id="c2">
-          <label for="c2">Usa un asistente de IA para resumir y entender el documento maestro de Estrategia Omnicanal (no hace falta leerlo completo) — enfócate en la delimitación territorial de 104 códigos postales y las líneas Speedhide, Manor Hall, Perma-Crete y Pitt-Glaze.</label>
-        </li>
-      </ul>
-    </div>
-
-    <!-- PASO 2: EXTRACCIÓN DE RECURSOS Y BENCHMARKS -->
-    <div class="step">
-      <div class="step-header">
-        <h2 class="step-title">2. Activos Gráficos Oficiales y Referencias</h2>
-      </div>
-      <p class="step-desc">Descarga los renders oficiales 1:1 (Can-Cuts) y fichas técnicas PDF desde el repositorio de la marca:</p>
-      <div class="creds-box">
-        Portal: <strong>Marketing Hub (The Pittsburgh Paints Co.)</strong><br>
-        URL: https://marketinghub.pittsburghpaintsco.com/LandingPages/LandingPageLayout4.aspx<br>
-        Usuario y contraseña: pídeselos a David Cabrera.
-      </div>
-      <div class="grid-links">
-        <a href="https://www.pittsburghpaintsco.com/" target="_blank" rel="noopener" class="card-link">
-          <strong>The Pittsburgh Paints Co.</strong>
-          <span>Sitio matriz global (catálogo oficial y colorimetría).</span>
-        </a>
-        <a href="https://pinturaspevi.mx/" target="_blank" rel="noopener" class="card-link">
-          <strong>Pinturas Pevi</strong>
-          <span>Distribuidor regional norte (análisis de competencia).</span>
-        </a>
-        <a href="https://www.homedepot.com.mx/" target="_blank" rel="noopener" class="card-link">
-          <strong>The Home Depot México</strong>
-          <span>Referencia de navegación facetada y filtros por departamento.</span>
-        </a>
-        <a href="https://www.facebook.com/PinturaPittsburgh" target="_blank" rel="noopener" class="card-link">
-          <strong>Facebook Oficial Sucursal</strong>
-          <span>Imágenes de tienda física, equipo y obras realizadas en La Paz.</span>
-        </a>
-      </div>
-      <ul class="todo-list">
-        <li class="todo-item">
-          <input type="checkbox" id="c3">
-          <label for="c3">Descarga de renders limpios (fondo transparente) y guardado en <code>assets/img/</code> en WebP/AVIF.</label>
-        </li>
-      </ul>
-    </div>
-
-    <!-- PASO 3: REGLAS DE ORO Y MAQUETACIÓN DESACOPLADA -->
-    <div class="step">
-      <div class="step-header">
-        <h2 class="step-title">3. Reglas de Oro Frontend y Desacoplamiento</h2>
-      </div>
-      <ul class="todo-list">
-        <li class="todo-item">
-          <input type="checkbox" id="c4">
-          <label for="c4"><strong>Prompt Maestro en IA:</strong> Inyectar <code>Colaboradores/Prompt_Maestro_Portable_Asistenes_IA_Colaboradores.txt</code> en Cursor/Copilot/ChatGPT.</label>
-        </li>
-        <li class="todo-item">
-          <input type="checkbox" id="c5">
-          <label for="c5"><strong>ARF-Grid Mobile-First:</strong> Contenedor padre con <code>display: flex; flex-wrap: wrap; justify-content: center;</code> y cero anchos fijos en px.</label>
-        </li>
-        <li class="todo-item">
-          <input type="checkbox" id="c6">
-          <label for="c6"><strong>Higiene CSS ('ORO'):</strong> Cero estilos inline (<code>style=""</code>) y cero <code>!important</code>. Todo vive en <code>assets/css/main.css</code>.</label>
-        </li>
-        <li class="todo-item">
-          <input type="checkbox" id="c7">
-          <label for="c7"><strong>Banners (Data → Template → Render):</strong> Contenedor padre <code>&lt;section data-banner-slider&gt;</code> + <code>&lt;template data-banner-template&gt;</code> con hijos <code>&lt;div class="banner-slide" data-banner-item&gt;</code> (título, imagen WebP, botón, enlace). Consume <code>api/banners_listar.php</code> (Contrato 11). Ver implementación de referencia funcionando más abajo.</label>
-        </li>
-        <li class="todo-item">
-          <input type="checkbox" id="c8">
-          <label for="c8"><strong>Promociones y Cupones:</strong> Contenedor <code>&lt;section data-promo-section&gt;</code> con rejilla ARF-Grid + <code>&lt;template data-promo-template&gt;</code> generando tarjetas <code>&lt;article class="promo-card" data-promo-code="..."&gt;</code> con badge de descuento y vigencia visible. Consume <code>api/promociones_listar.php</code> (Contrato 12).</label>
-        </li>
-        <li class="todo-item">
-          <input type="checkbox" id="c9">
-          <label for="c9"><strong>Feed de Publicaciones:</strong> Sección <code>&lt;div data-social-feed&gt;</code> + <code>&lt;template data-social-template&gt;</code> con imagen, texto y fecha por publicación. Consume <code>api/publicaciones_listar.php</code> (Contrato 10).</label>
-        </li>
-        <li class="todo-item">
-          <input type="checkbox" id="c10">
-          <label for="c10"><strong>4 Estados de UI obligatorios:</strong> Todo bloque de datos dinámicos maqueta explícitamente Loading, Empty, Success y Error — nunca asumas que la API siempre responde con datos.</label>
-        </li>
-        <li class="todo-item">
-          <input type="checkbox" id="c11">
-          <label for="c11"><strong>Favicon Responsivo:</strong> Implementado en <code>&lt;head&gt;</code> (.ico y .svg).</label>
-        </li>
-        <li class="todo-item">
-          <input type="checkbox" id="c12">
-          <label for="c12"><strong>SEO Local La Paz:</strong> Microdatos semánticos y encabezados geolocalizados ("La Paz, B.C.S.").</label>
-        </li>
-        <li class="todo-item">
-          <input type="checkbox" id="c16">
-          <label for="c16"><strong>Paleta corporativa "Ocean Breeze & Pittsburgh Gold":</strong> usa únicamente los tokens de color ya definidos en <code>assets/css/main.css</code> (<code>--brand-navy</code>, <code>--brand-royal-blue</code>, <code>--brand-vibrant-blue</code>, <code>--brand-teal</code>, <code>--brand-gold</code>) — con soporte nativo para el toggle Día/Noche ya existente (<code>data-theme</code>), nunca colores nuevos hardcodeados.</label>
-        </li>
-      </ul>
-    </div>
-
-    <!-- DEMO EN VIVO: Data → Template → Render -->
-    <section class="step" data-banner-slider aria-labelledby="demo-banners-titulo">
-      <div class="step-header"><h2 class="step-title" id="demo-banners-titulo">Referencia Viva — Banners de Cabecera</h2></div>
-      <p class="step-desc">Consume <code>api/banners_listar.php</code> (Contrato 11) en tiempo real.</p>
-      <p data-state="loading" class="demo-state">Cargando banners...</p>
-      <p data-state="empty" class="demo-state" hidden>No hay banners activos por ahora.</p>
-      <p data-state="error" class="demo-state demo-state--error" hidden>No fue posible cargar los banners.</p>
-      <div data-state="success" class="banner-track" hidden></div>
-      <template data-banner-template>
-        <div class="banner-slide" data-banner-item>
-          <p class="banner-slide__eyebrow" data-field="eyebrow"></p>
-          <h3 class="banner-slide__titulo" data-field="titulo"></h3>
-          <p class="banner-slide__descripcion" data-field="descripcion"></p>
-          <img class="banner-slide__imagen" data-field="imagen_url" alt="" loading="lazy">
-          <a class="banner-slide__cta" data-field="cta_texto" data-cta-link href="#"></a>
+    <header class="cc-header">
+        <div class="cc-header__brand">
+            <span class="cc-acadep-badge__mark" aria-hidden="true">
+                <svg viewBox="0 0 48 48" width="40" height="40" role="img" aria-label="ACADEP">
+                    <circle cx="24" cy="24" r="22" fill="none" stroke="currentColor" stroke-width="2.5"></circle>
+                    <text x="24" y="32" text-anchor="middle" font-family="system-ui, sans-serif" font-size="20" font-weight="800" fill="currentColor">A</text>
+                </svg>
+            </span>
+            <div class="cc-acadep-badge__text">
+                <span class="cc-acadep-badge__name">ACADEP</span>
+                <span class="cc-acadep-badge__subtitle">Consultoría &amp; Software · Programa de Colaboración y Prácticas Profesionales</span>
+            </div>
         </div>
-      </template>
-    </section>
+        <div class="cc-header__actions">
+            <button type="button" id="theme-toggle-btn" class="theme-toggle-btn" aria-label="Cambiar entre modo día y modo noche"></button>
+        </div>
+    </header>
 
-    <section class="step" data-promo-section aria-labelledby="demo-promos-titulo">
-      <div class="step-header"><h2 class="step-title" id="demo-promos-titulo">Referencia Viva — Promociones y Cupones</h2></div>
-      <p class="step-desc">Consume <code>api/promociones_listar.php</code> (Contrato 12). Rejilla ARF-Grid real: <code>display:flex; flex-wrap:wrap; justify-content:center;</code> en <code>.promo-grid</code>.</p>
-      <p data-state="loading" class="demo-state">Cargando promociones...</p>
-      <p data-state="empty" class="demo-state" hidden>No hay promociones vigentes.</p>
-      <p data-state="error" class="demo-state demo-state--error" hidden>No fue posible cargar las promociones.</p>
-      <div data-state="success" class="promo-grid" hidden></div>
-      <template data-promo-template>
-        <article class="promo-card" data-promo-code="">
-          <span class="promo-card__badge" data-field="badge"></span>
-          <p class="promo-card__descripcion" data-field="descripcion"></p>
-          <p class="promo-card__vigencia">
-            Vigente <span data-field="fecha_inicio"></span> – <span data-field="fecha_fin"></span>
-          </p>
-        </article>
-      </template>
-    </section>
+    <nav class="cc-nav" aria-label="Navegación de etapas">
+        <a class="cc-nav__link" href="#etapa-1">1. Contexto</a>
+        <a class="cc-nav__link" href="#etapa-2">2. Reglas de Oro</a>
+        <a class="cc-nav__link" href="#etapa-3">3. Data Contract</a>
+        <a class="cc-nav__link" href="#etapa-4">4. Laboratorio</a>
+        <a class="cc-nav__link" href="#etapa-5">5. Quality Gates</a>
+    </nav>
 
-    <section class="step" data-social-feed aria-labelledby="demo-feed-titulo">
-      <div class="step-header"><h2 class="step-title" id="demo-feed-titulo">Referencia Viva — Feed de Publicaciones</h2></div>
-      <p class="step-desc">Consume <code>api/publicaciones_listar.php</code> (Contrato 10, solo <code>estado='publicada'</code>, límite 6).</p>
-      <p data-state="loading" class="demo-state">Cargando publicaciones...</p>
-      <p data-state="empty" class="demo-state" hidden>Sin publicaciones recientes.</p>
-      <p data-state="error" class="demo-state demo-state--error" hidden>No fue posible cargar el feed.</p>
-      <div data-state="success" class="social-grid" hidden></div>
-      <template data-social-template>
-        <article class="social-card">
-          <img class="social-card__imagen" data-field="media_url" alt="" loading="lazy">
-          <p class="social-card__texto" data-field="texto"></p>
-          <p class="social-card__fecha" data-field="publicado_en"></p>
-        </article>
-      </template>
-    </section>
+    <main class="cc-main">
 
-    <!-- PASO 4: MÉTRICAS DE EVALUACIÓN DE PRÁCTICAS PROFESIONALES -->
-    <div class="step">
-      <div class="step-header">
-        <h2 class="step-title">4. Métricas de Evaluación de tus Prácticas Profesionales</h2>
-      </div>
-      <p class="step-desc">Tu entrega se califica con estos 4 criterios concretos — cada uno con una herramienta gratuita para auto-evaluarte antes de entregar:</p>
-      <div class="metric-grid">
-        <div class="metric-card">
-          <p class="metric-card__label">Originalidad</p>
-          <p class="metric-card__value">Propuesta visual propia de la tienda web</p>
+        <div class="cc-greeting">
+            <h1 class="cc-greeting__title" id="greeting-text">Hola, Moisés</h1>
+            <p class="cc-greeting__meta" id="greeting-meta">La Paz, Baja California Sur · Prácticas Profesionales UABCS, gestionadas por ACADEP</p>
+            <p class="cc-greeting__quote" id="quote-text">"La excelencia no es un acto, es un hábito de cada línea de código."</p>
         </div>
-        <div class="metric-card">
-          <p class="metric-card__label">Velocidad de carga</p>
-          <p class="metric-card__value">Lighthouse ≥ 90</p>
-        </div>
-        <div class="metric-card">
-          <p class="metric-card__label">Limpieza de código</p>
-          <p class="metric-card__value">Cero <code>!important</code>, cero inline</p>
-        </div>
-        <div class="metric-card">
-          <p class="metric-card__label">Experiencia móvil</p>
-          <p class="metric-card__value">Mobile-first real, sin scroll horizontal</p>
-        </div>
-      </div>
-      <div class="grid-links">
-        <a href="https://pagespeed.web.dev/" target="_blank" rel="noopener" class="card-link">
-          <strong>Google PageSpeed / Lighthouse</strong>
-          <span>Exigido: 90+ en Performance, A11y, Best Practices y SEO móvil/desktop.</span>
-        </a>
-        <a href="https://validator.w3.org/" target="_blank" rel="noopener" class="card-link">
-          <strong>W3C HTML Validator</strong>
-          <span>Verificar cero errores de sintaxis y estructura semántica limpia.</span>
-        </a>
-        <a href="https://jigsaw.w3.org/css-validator/" target="_blank" rel="noopener" class="card-link">
-          <strong>W3C CSS Validator</strong>
-          <span>Validación de CSS3 sin propiedades obsoletas ni errores de parseo.</span>
-        </a>
-        <a href="https://stylelint.io/" target="_blank" rel="noopener" class="card-link">
-          <strong>Stylelint</strong>
-          <span>Linter de CSS — detecta <code>!important</code>, anchos fijos y otras violaciones a la Regla de Oro antes del PR.</span>
-        </a>
-        <a href="https://webaim.org/resources/contrastchecker/" target="_blank" rel="noopener" class="card-link">
-          <strong>WebAIM Contrast Checker</strong>
-          <span>Garantizar ratio de contraste WCAG AA (mínimo 4.5:1) en textos y botones.</span>
-        </a>
-      </div>
-      <ul class="todo-list">
-        <li class="todo-item">
-          <input type="checkbox" id="c13">
-          <label for="c13">Auditoría Lighthouse corrida con capturas de pantalla de móvil y escritorio listas para adjuntar en el PR.</label>
-        </li>
-        <li class="todo-item">
-          <input type="checkbox" id="c15">
-          <label for="c15">Consola del navegador limpia: cero errores, cero advertencias de scripts.</label>
-        </li>
-      </ul>
-    </div>
 
-    <!-- PASO 5: CONTROL DE TIEMPOS Y FIRMA DE ENTREGA -->
-    <div class="step">
-      <div class="step-header">
-        <h2 class="step-title">5. Cronograma y Formalización de Entrega</h2>
-      </div>
-      <div class="timeline-grid">
-        <div class="timeline-item">
-          <span>Fecha de Arranque</span>
-          <strong>12 Septiembre 2026</strong>
+        <div class="cc-progress">
+            <div class="cc-progress__labels">
+                <span>Progreso de Entregables Frontend</span>
+                <span id="progress-percent" class="cc-progress__percent">0%</span>
+            </div>
+            <div class="cc-progress__track">
+                <div class="cc-progress__fill" id="progress-fill"></div>
+            </div>
         </div>
-        <div class="timeline-item">
-          <span>Entrega de Maquetación (PR)</span>
-          <strong id="date-deadline">15 Septiembre 2026</strong>
-        </div>
-        <div class="timeline-item">
-          <span>Revisión Técnica y QA</span>
-          <strong>17 Septiembre 2026</strong>
-        </div>
-      </div>
 
-      <div class="signature-card">
-        <span class="signature-label">Confirmación de Entrega por el Colaborador</span>
-        <div class="todo-item">
-          <input type="checkbox" id="c14">
-          <label for="c14">Declaro que el código cumple con ARF-Grid, no contiene estilos inline ni <code>!important</code>, está desacoplado para datos dinámicos (Data → Template → Render, 4 estados de UI) y alcanzó la calificación requerida.</label>
+        <div class="cc-stage">
+            <h2 class="cc-stage__title">Bienvenida — Prácticas Profesionales</h2>
+            <p class="cc-stage__desc">
+                Bienvenido, Moisés. Este es tu espacio de trabajo dentro de PinturaPittsburgh_LaPazBCS como parte de tus
+                prácticas profesionales de la UABCS gestionadas por ACADEP. Trabajarás en paralelo con Rafael (otro
+                colaborador externo) en el mismo frontend — cada quien en su propia rama de Git (<code>collab/moy</code> la
+                tuya), sin interferir entre sí. Tu entregable se evalúa con las mismas Reglas de Oro técnicas del
+                proyecto y con las métricas de prácticas profesionales de la Etapa 5.
+            </p>
         </div>
-        <input type="text" class="signature-input" id="sig-name" placeholder="Escribe tu nombre completo como firma digital">
-      </div>
-    </div>
-  </div>
 
-  <script src="../assets/js/admin-auth.js"></script>
-  <script src="../assets/js/colaborador-gate.js"></script>
-  <script src="../assets/js/onboarding-ui.js"></script>
-  <script src="../assets/js/onboarding-demo.js"></script>
+        <!-- ETAPA 1: CONTEXTO DE NEGOCIO Y BENCHMARKS -->
+        <section class="cc-stage" id="etapa-1" aria-labelledby="etapa-1-titulo">
+            <h2 class="cc-stage__title" id="etapa-1-titulo">Etapa 1 — Contexto de Negocio y Benchmarks</h2>
+            <p class="cc-stage__desc">Toda la estructura y el contenido nacen de estos dos documentos canónicos:</p>
+            <div class="cc-benchmark-grid">
+                <a class="cc-benchmark-card" href="https://docs.google.com/document/d/1-EQ0JKP06vLcs28QQGMOfmJHf45lKHq4rMWAWjuR5fo/edit?usp=sharing" target="_blank" rel="noopener">
+                    <span class="cc-benchmark-card__name">Ficha de Levantamiento de Datos</span>
+                    <span class="cc-benchmark-card__purpose">Datos de sucursal, teléfonos, WhatsApp, horarios, catálogo inicial y 36 años de experiencia.</span>
+                </a>
+                <a class="cc-benchmark-card" href="https://docs.google.com/document/d/1XoORd8cc8pUcVh_fWqqtN2IwXSePJ7o32SG-aNfU-fQ/edit?usp=sharing" target="_blank" rel="noopener">
+                    <span class="cc-benchmark-card__name">Estrategia Omnicanal &amp; FODA</span>
+                    <span class="cc-benchmark-card__purpose">Documento maestro. Usa un asistente de IA para resumirlo (no hace falta leerlo completo) — enfócate en los 104 códigos postales y las líneas Speedhide, Manor Hall, Perma-Crete y Pitt-Glaze.</span>
+                </a>
+            </div>
+            <ul class="todo-list">
+                <li class="todo-item">
+                    <input type="checkbox" id="c1">
+                    <label for="c1">Lectura completada de la Ficha de Levantamiento (direcciones en Abasolo y Matamoros, teléfonos de atención).</label>
+                </li>
+                <li class="todo-item">
+                    <input type="checkbox" id="c2">
+                    <label for="c2">Resumen con IA de la Estrategia Omnicanal completado.</label>
+                </li>
+            </ul>
+
+            <h3 class="cc-stage__title cc-stage__title--sub">Benchmarks de referencia — cada uno con un propósito distinto</h3>
+            <div class="cc-benchmark-grid">
+                <a class="cc-benchmark-card" href="https://www.pittsburghpaintsco.com/" target="_blank" rel="noopener">
+                    <span class="cc-benchmark-card__name">The Pittsburgh Paints Co. (EE.UU.)</span>
+                    <span class="cc-benchmark-card__purpose"><strong>Propósito:</strong> identidad global, paleta oficial, presentación técnica y renders de producto.</span>
+                </a>
+                <a class="cc-benchmark-card" href="https://pinturaspevi.mx/" target="_blank" rel="noopener">
+                    <span class="cc-benchmark-card__name">Pinturas Pevi</span>
+                    <span class="cc-benchmark-card__purpose"><strong>Propósito:</strong> presencia de marca en México y catálogo de distribución peninsular.</span>
+                </a>
+                <a class="cc-benchmark-card" href="https://www.facebook.com/PinturaPittsburgh" target="_blank" rel="noopener">
+                    <span class="cc-benchmark-card__name">Facebook Oficial Sucursal</span>
+                    <span class="cc-benchmark-card__purpose"><strong>Propósito:</strong> imágenes reales de tienda, equipo y obras en La Paz.</span>
+                </a>
+                <a class="cc-benchmark-card" href="https://www.homedepot.com.mx/" target="_blank" rel="noopener">
+                    <span class="cc-benchmark-card__name">The Home Depot México (Pinturas)</span>
+                    <span class="cc-benchmark-card__purpose"><strong>Referencia EXCLUSIVA de UX/UI:</strong> categorización por sustrato/brillo/volumen, calculadoras de litros y claridad de búsqueda para clientes locales.</span>
+                </a>
+            </div>
+
+            <p class="cc-stage__desc cc-stage__desc--spaced">Renders oficiales 1:1 (Can-Cuts) y fichas técnicas PDF:</p>
+            <div class="creds-box">
+                Portal: <strong>Marketing Hub (The Pittsburgh Paints Co.)</strong><br>
+                URL: https://marketinghub.pittsburghpaintsco.com/LandingPages/LandingPageLayout4.aspx<br>
+                Usuario y contraseña: pídeselos a David Cabrera.
+            </div>
+            <ul class="todo-list">
+                <li class="todo-item">
+                    <input type="checkbox" id="c3">
+                    <label for="c3">Descarga de renders limpios (fondo transparente) guardados en <code>assets/img/</code> en WebP/AVIF.</label>
+                </li>
+            </ul>
+        </section>
+
+        <!-- ETAPA 2: REGLAS DE ORO -->
+        <section class="cc-stage" id="etapa-2" aria-labelledby="etapa-2-titulo">
+            <h2 class="cc-stage__title" id="etapa-2-titulo">Etapa 2 — Reglas de Oro Inquebrantables</h2>
+            <div class="cc-rule-grid">
+                <div class="cc-rule-card"><strong>ARF-Grid obligatorio</strong><code>display:flex; flex-wrap:wrap; justify-content:center;</code>, <code>aspect-ratio</code> en vez de alto fijo, mobile-first siempre.</div>
+                <div class="cc-rule-card"><strong>Cero inline, cero !important</strong>Ningún <code>style=""</code> en el HTML ni <code>!important</code> en ninguna regla CSS.</div>
+                <div class="cc-rule-card"><strong>Organización de archivos</strong>Todo CSS en <code>assets/css/</code>, todo JS en <code>assets/js/</code> — nunca <code>&lt;style&gt;</code>/<code>&lt;script&gt;</code> inline en tu entrega.</div>
+                <div class="cc-rule-card"><strong>Paleta y contraste</strong>"Ocean Breeze &amp; Pittsburgh Gold" con soporte nativo del toggle Día/Noche (<code>data-theme</code>) y WCAG mínimo 4.5:1.</div>
+            </div>
+            <ul class="todo-list">
+                <li class="todo-item">
+                    <input type="checkbox" id="c4">
+                    <label for="c4"><strong>Prompt Maestro en IA:</strong> inyectar <code>Colaboradores/Prompt_Maestro_Portable_Asistenes_IA_Colaboradores.txt</code> en Cursor/Copilot/ChatGPT.</label>
+                </li>
+                <li class="todo-item">
+                    <input type="checkbox" id="c11">
+                    <label for="c11"><strong>Favicon Responsivo:</strong> implementado en <code>&lt;head&gt;</code> (.ico y .svg).</label>
+                </li>
+                <li class="todo-item">
+                    <input type="checkbox" id="c12">
+                    <label for="c12"><strong>SEO Local La Paz:</strong> microdatos semánticos y encabezados geolocalizados ("La Paz, B.C.S.").</label>
+                </li>
+            </ul>
+        </section>
+
+        <!-- ETAPA 3: DATA CONTRACT Y 4 ESTADOS DE UI -->
+        <section class="cc-stage" id="etapa-3" aria-labelledby="etapa-3-titulo">
+            <h2 class="cc-stage__title" id="etapa-3-titulo">Etapa 3 — Data Contract y los 4 Estados de UI</h2>
+            <p class="cc-contract-note">Tú maquetas <strong>cascarones semánticos</strong> con <code>&lt;template&gt;</code> — nunca tocas SQL, PHP ni credenciales. El backend rellena tu HTML en tiempo real vía <code>fetch()</code>, siguiendo exactamente el patrón "Data → Template → Render" que ves funcionando en la Etapa 4.</p>
+            <div class="cc-state-grid">
+                <div class="cc-state-card">
+                    <p class="cc-state-card__label">Loading</p>
+                    <p class="cc-state-card__desc">Esqueleto visible, sin salto de layout (CLS).</p>
+                </div>
+                <div class="cc-state-card">
+                    <p class="cc-state-card__label">Empty</p>
+                    <p class="cc-state-card__desc">Lista vacía, mensaje amable — nunca una pantalla en blanco.</p>
+                </div>
+                <div class="cc-state-card">
+                    <p class="cc-state-card__label">Success</p>
+                    <p class="cc-state-card__desc">Datos reales clonados desde tu <code>&lt;template&gt;</code>.</p>
+                </div>
+                <div class="cc-state-card">
+                    <p class="cc-state-card__label">Error</p>
+                    <p class="cc-state-card__desc">Fallo de red controlado — nunca una pantalla rota.</p>
+                </div>
+            </div>
+            <p class="cc-stage__desc">Selectores exactos que debes implementar: <code>[data-banner-slider]</code> (+ <code>[data-banner-item]</code> por ítem), <code>[data-promo-section]</code> (+ <code>[data-promo-code]</code> por ítem), <code>[data-social-feed]</code>.</p>
+            <ul class="todo-list">
+                <li class="todo-item">
+                    <input type="checkbox" id="c10">
+                    <label for="c10"><strong>4 Estados de UI en cada bloque dinámico:</strong> nunca asumas que la API siempre responde con datos.</label>
+                </li>
+            </ul>
+        </section>
+
+        <!-- ETAPA 4: LABORATORIO DE PRUEBAS VIVAS Y AUTODIAGNÓSTICO -->
+        <section class="cc-stage" id="etapa-4" aria-labelledby="etapa-4-titulo">
+            <h2 class="cc-stage__title" id="etapa-4-titulo">Etapa 4 — Laboratorio de Pruebas Vivas y Autodiagnóstico</h2>
+            <p class="cc-stage__desc">Alterna la fuente de datos de la demo — útil si la BD de staging no responde o solo quieres ver el patrón rápido con datos de ejemplo:</p>
+            <div class="cc-mode-toggle" role="group" aria-label="Fuente de datos de la demo">
+                <button type="button" class="cc-mode-toggle__btn" data-mode-btn="real" aria-pressed="true">Modo API Real</button>
+                <button type="button" class="cc-mode-toggle__btn" data-mode-btn="mock" aria-pressed="false">Modo Mock Local</button>
+            </div>
+
+            <section data-banner-slider aria-labelledby="demo-banners-titulo">
+                <h3 class="cc-stage__title cc-stage__title--sub" id="demo-banners-titulo">Referencia Viva — Banners de Cabecera</h3>
+                <p class="cc-stage__desc">Consume <code>api/banners_listar.php</code> (Contrato 11).</p>
+                <p data-state="loading" class="demo-state">Cargando banners...</p>
+                <p data-state="empty" class="demo-state" hidden>No hay banners activos por ahora.</p>
+                <p data-state="error" class="demo-state demo-state--error" hidden>No fue posible cargar los banners.</p>
+                <div data-state="success" class="banner-track" hidden></div>
+                <template data-banner-template>
+                    <div class="banner-slide" data-banner-item>
+                        <p class="banner-slide__eyebrow" data-field="eyebrow"></p>
+                        <h4 class="banner-slide__titulo" data-field="titulo"></h4>
+                        <p class="banner-slide__descripcion" data-field="descripcion"></p>
+                        <img class="banner-slide__imagen" data-field="imagen_url" alt="" loading="lazy">
+                        <a class="banner-slide__cta" data-field="cta_texto" data-cta-link href="#"></a>
+                    </div>
+                </template>
+            </section>
+
+            <section data-promo-section aria-labelledby="demo-promos-titulo">
+                <h3 class="cc-stage__title cc-stage__title--sub" id="demo-promos-titulo">Referencia Viva — Promociones y Cupones</h3>
+                <p class="cc-stage__desc">Consume <code>api/promociones_listar.php</code> (Contrato 12).</p>
+                <p data-state="loading" class="demo-state">Cargando promociones...</p>
+                <p data-state="empty" class="demo-state" hidden>No hay promociones vigentes.</p>
+                <p data-state="error" class="demo-state demo-state--error" hidden>No fue posible cargar las promociones.</p>
+                <div data-state="success" class="promo-grid" hidden></div>
+                <template data-promo-template>
+                    <article class="promo-card" data-promo-code="">
+                        <span class="promo-card__badge" data-field="badge"></span>
+                        <p class="promo-card__descripcion" data-field="descripcion"></p>
+                        <p class="promo-card__vigencia">Vigente <span data-field="fecha_inicio"></span> – <span data-field="fecha_fin"></span></p>
+                    </article>
+                </template>
+            </section>
+
+            <section data-social-feed aria-labelledby="demo-feed-titulo">
+                <h3 class="cc-stage__title cc-stage__title--sub" id="demo-feed-titulo">Referencia Viva — Feed de Publicaciones</h3>
+                <p class="cc-stage__desc">Consume <code>api/publicaciones_listar.php</code> (Contrato 10, solo <code>estado='publicada'</code>, límite 6).</p>
+                <p data-state="loading" class="demo-state">Cargando publicaciones...</p>
+                <p data-state="empty" class="demo-state" hidden>Sin publicaciones recientes.</p>
+                <p data-state="error" class="demo-state demo-state--error" hidden>No fue posible cargar el feed.</p>
+                <div data-state="success" class="social-grid" hidden></div>
+                <template data-social-template>
+                    <article class="social-card">
+                        <img class="social-card__imagen" data-field="media_url" alt="" loading="lazy">
+                        <p class="social-card__texto" data-field="texto"></p>
+                        <p class="social-card__fecha" data-field="publicado_en"></p>
+                    </article>
+                </template>
+            </section>
+
+            <div class="cc-audit-panel">
+                <h3 class="cc-stage__title cc-stage__title--sub">Autocalificación (Frontend Audit Script)</h3>
+                <p class="cc-stage__desc">Pega la URL de tu propia previsualización (ya con tu <code>git push</code> hecho a <code>collab/moy</code>) y ejecuta el autodiagnóstico. Analiza hooks obligatorios, estilos inline, <code>!important</code> y proporción de imágenes.</p>
+                <div class="cc-audit-panel__input-row">
+                    <input type="text" id="audit-url-input" class="field" value="../preview-moy/index.html" placeholder="../preview-moy/index.html">
+                    <button type="button" id="audit-run-btn" class="btn btn--gold">Ejecutar Autodiagnóstico</button>
+                </div>
+                <p id="audit-status" class="brand-tagline" hidden></p>
+                <div class="cc-audit-score">
+                    <div class="cc-audit-score__ring" id="audit-score-ring">--</div>
+                    <p class="cc-audit-score__label" id="audit-score-label">Todavía no se ha ejecutado ningún análisis.</p>
+                </div>
+                <ul class="cc-audit-list" id="audit-results"></ul>
+            </div>
+        </section>
+
+        <!-- ETAPA 5: QUALITY GATES Y MÉTRICAS DE PRÁCTICAS PROFESIONALES -->
+        <section class="cc-stage" id="etapa-5" aria-labelledby="etapa-5-titulo">
+            <h2 class="cc-stage__title" id="etapa-5-titulo">Etapa 5 — Quality Gates y Evaluación de Prácticas Profesionales</h2>
+            <p class="cc-stage__desc">Tu entrega se califica con estos 4 criterios concretos:</p>
+            <div class="cc-benchmark-grid">
+                <div class="cc-benchmark-card"><span class="cc-benchmark-card__name">Originalidad</span><span class="cc-benchmark-card__purpose">Propuesta visual propia de la tienda web.</span></div>
+                <div class="cc-benchmark-card"><span class="cc-benchmark-card__name">Velocidad de carga</span><span class="cc-benchmark-card__purpose">Lighthouse ≥ 90.</span></div>
+                <div class="cc-benchmark-card"><span class="cc-benchmark-card__name">Limpieza de código</span><span class="cc-benchmark-card__purpose">Cero <code>!important</code>, cero inline.</span></div>
+                <div class="cc-benchmark-card"><span class="cc-benchmark-card__name">Experiencia móvil</span><span class="cc-benchmark-card__purpose">Mobile-first real, sin scroll horizontal.</span></div>
+            </div>
+            <p class="cc-stage__desc cc-stage__desc--spaced">Herramientas gratuitas para auto-evaluarte antes de entregar:</p>
+            <div class="cc-gate-grid">
+                <a class="cc-gate-card" href="https://validator.w3.org/" target="_blank" rel="noopener"><strong>W3C HTML Validator</strong><span>Meta: 0 errores de sintaxis.</span></a>
+                <a class="cc-gate-card" href="https://jigsaw.w3.org/css-validator/" target="_blank" rel="noopener"><strong>W3C CSS Validator</strong><span>Meta: 0 errores, sin propiedades obsoletas.</span></a>
+                <a class="cc-gate-card" href="https://www.deque.com/axe/devtools/" target="_blank" rel="noopener"><strong>axe DevTools</strong><span>Accesibilidad — 0 violaciones críticas.</span></a>
+                <a class="cc-gate-card" href="https://pagespeed.web.dev/" target="_blank" rel="noopener"><strong>Google Lighthouse</strong><span>Meta 90+ en Performance, A11y, Best Practices y SEO.</span></a>
+                <a class="cc-gate-card" href="https://stylelint.io/" target="_blank" rel="noopener"><strong>Stylelint</strong><span>Detecta <code>!important</code>, anchos fijos y otras violaciones.</span></a>
+                <a class="cc-gate-card" href="https://webaim.org/resources/contrastchecker/" target="_blank" rel="noopener"><strong>WebAIM Contrast Checker</strong><span>WCAG AA — mínimo 4.5:1.</span></a>
+            </div>
+            <ul class="todo-list">
+                <li class="todo-item">
+                    <input type="checkbox" id="c13">
+                    <label for="c13">Auditoría Lighthouse corrida con capturas de móvil y escritorio listas para adjuntar.</label>
+                </li>
+                <li class="todo-item">
+                    <input type="checkbox" id="c15">
+                    <label for="c15">Consola del navegador limpia: cero errores, cero advertencias.</label>
+                </li>
+            </ul>
+        </section>
+
+        <!-- CRONOGRAMA Y FIRMA -->
+        <section class="cc-stage" aria-labelledby="cronograma-titulo">
+            <h2 class="cc-stage__title" id="cronograma-titulo">Cronograma y Formalización de Entrega</h2>
+            <div class="cc-timeline-grid">
+                <div class="cc-timeline-item"><span>Fecha de Arranque</span><strong>12 Septiembre 2026</strong></div>
+                <div class="cc-timeline-item"><span>Entrega de Maquetación (PR)</span><strong id="date-deadline">15 Septiembre 2026</strong></div>
+                <div class="cc-timeline-item"><span>Revisión Técnica y QA</span><strong>17 Septiembre 2026</strong></div>
+            </div>
+            <div class="cc-signature">
+                <span class="cc-signature__label">Confirmación de Entrega</span>
+                <div class="todo-item">
+                    <input type="checkbox" id="c14">
+                    <label for="c14">Declaro que el código cumple ARF-Grid, no contiene estilos inline ni <code>!important</code>, está desacoplado (Data → Template → Render, 4 estados de UI) y alcanzó la calificación requerida.</label>
+                </div>
+                <input type="text" class="field" id="sig-name" placeholder="Escribe tu nombre completo como firma digital">
+            </div>
+        </section>
+
+    </main>
+
+    <button type="button" id="back-to-top-btn" class="back-to-top-btn" hidden aria-label="Volver arriba">↑</button>
+
+    <script src="../assets/js/admin-auth.js" defer></script>
+    <script src="../assets/js/colaborador-gate.js" defer></script>
+    <script src="../assets/js/onboarding-ui.js" defer></script>
+    <script src="../assets/js/onboarding-demo.js" defer></script>
+    <script src="../assets/js/theme-toggle.js" defer></script>
+    <script src="../assets/js/back-to-top.js" defer></script>
 </body>
 </html>
