@@ -339,3 +339,34 @@ html.admin-auth-pending body {
     font-size: 0.75rem;
     color: var(--color-text-muted);
 }
+
+/* ── PANELES DE DIAGNÓSTICO (test_db.php, Hito 15) — éxito/fallo ───────────── */
+.diag-panel--success {
+    border-color: var(--brand-teal);
+    background-color: rgba(13, 148, 136, 0.08);
+}
+
+.diag-panel--error {
+    border-color: #b91c1c;
+    background-color: rgba(230, 57, 70, 0.08);
+}
+
+.diag-panel__badge {
+    display: inline-block;
+    padding: 0.2rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: var(--space-xs);
+}
+
+.diag-panel--success .diag-panel__badge {
+    background-color: var(--brand-teal);
+    color: #ffffff;
+}
+
+.diag-panel--error .diag-panel__badge {
+    background-color: #b91c1c;
+    color: #ffffff;
+}

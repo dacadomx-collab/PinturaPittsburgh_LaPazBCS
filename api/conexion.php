@@ -6,8 +6,14 @@ declare(strict_types=1);
 // api/conexion.php — Conexión PDO Centralizada (AXON_DCD Security Standard)
 // Mandamiento #11: Arranque Blindado — TODA conexión pasa por aquí.
 // Mandamiento #12: Bóveda de Secretos — Lee credenciales SOLO desde .env
-// Mandamiento #13 / REGLA CERO: Aislamiento de Entornos — la BD NUNCA es
-// local. El fallback de DB_HOST jamás debe ser 'localhost' o '127.0.0.1'.
+// Mandamiento #13 / REGLA CERO: Aislamiento de Entornos — en LOCAL (XAMPP,
+// APP_ENV=local) la BD NUNCA cae a 'localhost'/'127.0.0.1' si el host
+// remoto falla: eso significaría leer/escribir silenciosamente en el MySQL
+// de XAMPP en vez de reportar el error real. En STAGING/PRODUCCIÓN sí se
+// activa ese fallback (Hito 15) — dentro de la misma cuenta de hosting,
+// 'localhost' es la ruta correcta (socket Unix local, sin firewall
+// perimetral), ver getConnection()/hostsDeFallback() más abajo y
+// knowledge/04_ARQUITECTURA_Y_BLINDAJE.md §5.
 // =============================================================================
 
 class Database
@@ -26,6 +32,7 @@ class Database
     private string $username;
     private string $password;
     private string $allowed_origins;
+    private string $appEnv;
     public ?PDO $conn = null;
 
     public function __construct()
@@ -37,6 +44,7 @@ class Database
         $this->username        = (string) ($env['DB_USER'] ?? '');
         $this->password        = (string) ($env['DB_PASS'] ?? '');
         $this->allowed_origins = (string) ($env['ALLOWED_ORIGINS'] ?? '');
+        $this->appEnv          = (string) ($env['APP_ENV'] ?? 'local');
     }
 
     // ── HELPERS ───────────────────────────────────────────────────────────────
@@ -93,25 +101,60 @@ class Database
 
     // ── CONEXIÓN PDO ──────────────────────────────────────────────────────────
 
+    /**
+     * Hosts de fallback cuando el DB_HOST configurado falla por red (SQLSTATE
+     * 2002/2003 — timeout o rechazo de conexión, ej. errno 10060). Nunca se
+     * activa si APP_ENV=local (Regla Cero, api/conexion.php §doc de cabecera):
+     * un desarrollador local con MySQL de XAMPP corriendo en su propia máquina
+     * NUNCA debe caer silenciosamente en esa BD ajena solo porque el host
+     * remoto no respondió — eso sería peor que el error original (datos
+     * inconsistentes sin ningún aviso). En staging/producción sí tiene
+     * sentido: dentro de la misma cuenta de hosting, MySQL habla por socket
+     * Unix local vía "localhost" (PDO/mysqlnd lo resuelve automáticamente al
+     * socket configurado en PHP — nunca se hardcodea una ruta de socket como
+     * /var/lib/mysql/mysql.sock, que varía entre proveedores y sería menos
+     * portable, no más).
+     */
+    private function hostsDeFallback(): array
+    {
+        if (($this->appEnv ?: 'local') === 'local') {
+            return [];
+        }
+        return ['localhost', '127.0.0.1'];
+    }
+
     public function getConnection(): PDO
     {
         if (empty($this->db_name) || empty($this->username)) {
             $this->jsonError('Error de BD: credenciales incompletas.');
         }
 
-        try {
-            $dsn        = "mysql:host={$this->host};dbname={$this->db_name};charset=utf8mb4";
-            $this->conn = new PDO($dsn, $this->username, $this->password, [
-                PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                PDO::ATTR_EMULATE_PREPARES   => false, // Previene SQL Injection
-            ]);
-        } catch (PDOException $e) {
-            // NUNCA exponer el mensaje real de PDO al frontend
-            error_log('[' . date('Y-m-d H:i:s') . '] [Database::getConnection] ' . $e->getMessage());
-            $this->jsonError('Error de conexión a la base de datos. Intente más tarde.');
+        $hosts = array_unique(array_merge([$this->host], $this->hostsDeFallback()));
+        $ultimaExcepcion = null;
+
+        foreach ($hosts as $host) {
+            try {
+                $dsn        = "mysql:host={$host};dbname={$this->db_name};charset=utf8mb4";
+                $this->conn = new PDO($dsn, $this->username, $this->password, [
+                    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                    PDO::ATTR_EMULATE_PREPARES   => false, // Previene SQL Injection
+                    PDO::ATTR_TIMEOUT            => 3, // No congelar la app 30s si el host no responde
+                ]);
+
+                if ($host !== $this->host) {
+                    error_log('[' . date('Y-m-d H:i:s') . "] [Database::getConnection] Fallback activado: '{$this->host}' no respondió, conectado vía '{$host}'.");
+                }
+
+                return $this->conn;
+            } catch (PDOException $e) {
+                $ultimaExcepcion = $e;
+                // Intenta el siguiente host de la lista, si queda alguno.
+            }
         }
 
-        return $this->conn;
+        // NUNCA exponer el mensaje real de PDO al frontend
+        error_log('[' . date('Y-m-d H:i:s') . '] [Database::getConnection] ' . ($ultimaExcepcion?->getMessage() ?? 'Sin excepción capturada.'));
+        $this->jsonError('Error de conexión a la base de datos. Intente más tarde.');
     }
 }
