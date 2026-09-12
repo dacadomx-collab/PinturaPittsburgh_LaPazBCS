@@ -97,7 +97,6 @@ jobs:
             knowledge/**
             database/**
             modulos/**
-            Colaboradores/**
             scripts/**
             .claude/**
             logs/**

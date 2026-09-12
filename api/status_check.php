@@ -81,16 +81,29 @@ function checkDatabase(): array
 
 function checkSmtp(): array
 {
-    $env  = parse_ini_file(dirname(__DIR__) . '/.env', false, INI_SCANNER_RAW) ?: [];
-    $host = (string) ($env['SMTP_HOST'] ?? '');
+    $env    = parse_ini_file(dirname(__DIR__) . '/.env', false, INI_SCANNER_RAW) ?: [];
+    $host   = (string) ($env['SMTP_HOST'] ?? '');
+    $port   = (int) ($env['SMTP_PORT'] ?? 465);
+    $secure = strtolower((string) ($env['SMTP_SECURE'] ?? ''));
 
     if ($host === '') {
         return ['ok' => false, 'detalle' => 'SMTP_HOST no configurado en .env.'];
     }
 
-    $socket = @fsockopen($host, 465, $errno, $errstr, 5);
+    // Puerto 465 = SSL implícito (SMTPS): el servidor negocia TLS ANTES de
+    // enviar el banner "220" en texto plano — un fsockopen() sin envoltura
+    // ssl:// nunca completa ese handshake y el banner nunca llega, aunque el
+    // servidor SMTP funcione perfectamente (falso negativo, detectado y
+    // corregido en Hito 17 con `openssl s_client` confirmando que el
+    // certificado y el handshake TLS sí son válidos). Puerto 587/25 con
+    // STARTTLS sí empiezan en texto plano, por eso solo se envuelve en ssl://
+    // cuando el puerto es 465 o SMTP_SECURE="ssl".
+    $envolverEnSsl = $port === 465 || $secure === 'ssl';
+    $destino       = ($envolverEnSsl ? 'ssl://' : '') . $host;
+
+    $socket = @fsockopen($destino, $port, $errno, $errstr, 5);
     if ($socket === false) {
-        return ['ok' => false, 'detalle' => "No se pudo conectar a {$host}:465 ({$errstr})."];
+        return ['ok' => false, 'detalle' => "No se pudo conectar a {$host}:{$port} ({$errstr})."];
     }
 
     $banner = fgets($socket, 256) ?: '';

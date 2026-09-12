@@ -136,11 +136,13 @@ composer.phar
 /modulos/
 /logs/
 
-# Colaboradores/ contiene material de onboarding para freelancers con
-# credenciales reales de portales de terceros (ej. Marketing Hub) en texto
-# plano — jamás debe llegar a Git ni al servidor. Se comparte con el
-# colaborador por un canal separado (correo, mensajería), nunca vía el repo.
-/Colaboradores/
+# Colaboradores/ (Hito 17, 2026-09-12): antes excluida por completo porque
+# onboarding_colaborador.html tenía una credencial real de Marketing Hub en
+# texto plano. Esa credencial ya se removió del archivo (se reemplazó por una
+# instrucción de solicitarla al Arquitecto por canal seguro) — el colaborador
+# externo necesita esta página accesible en staging, así que ya SÍ se sube a
+# Git y se despliega (ver deploy.yml). Si en el futuro se vuelve a poner una
+# credencial real aquí, hay que devolver esta carpeta a .gitignore de inmediato.
 
 # ── DIRECTIVA 0 (2026-09-11): Blindaje adicional — solo código fuente y ───────
 # estructura en GitHub. Ningún binario pesado se rastrea; se aloja en
