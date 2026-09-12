@@ -72,11 +72,21 @@ jobs:
           username:   ${{ secrets.FTP_USERNAME }}
           password:   ${{ secrets.FTP_PASSWORD }}
           # Solo 3 Secrets dados de alta (FTP_SERVER/USERNAME/PASSWORD) — no
-          # existe FTP_REMOTE_DIR. Ruta fija relativa a la raíz de la cuenta
-          # FTP de staging (/home/tourfindycom/), que apunta a
-          # /home/tourfindycom/public_html/pittsburgh/. Si el proveedor cambia
-          # el punto de montaje FTP, ajustar aquí (no requiere nuevo Secret).
-          server-dir: /public_html/pittsburgh/
+          # existe FTP_REMOTE_DIR.
+          #
+          # CORRECCIÓN (Hito 16, 2026-09-12): la cuenta FTP de este subdominio
+          # YA aterriza directamente en /home/tourfindycom/public_html/pittsburgh/
+          # al iniciar sesión (confirmado por inspección visual del Arquitecto
+          # en cPanel File Manager) — no en /home/tourfindycom/. El valor
+          # anterior (`/public_html/pittsburgh/`) asumía que la raíz FTP era la
+          # cuenta completa, y por eso cada deploy creaba una carpeta anidada
+          # `pittsburgh/public_html/pittsburgh/...` en vez de escribir en la
+          # raíz real del subdominio — causa confirmada del 403 (Apache no
+          # encontraba index.html/.htaccess donde los buscaba). `./` = raíz de
+          # donde sea que el login FTP ya aterriza, sin asumir una ruta
+          # absoluta. Si el proveedor cambia el punto de montaje FTP, ajustar
+          # aquí (no requiere nuevo Secret).
+          server-dir: ./
           # Exclusiones de seguridad — NO desplegar secretos ni herramientas internas
           exclude: |
             **/.git/**
