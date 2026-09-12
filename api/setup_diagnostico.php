@@ -15,9 +15,17 @@ declare(strict_types=1);
 // niega por completo si APP_ENV=production, sin importar el token.
 //
 // Uso (todo requiere ?token=<SETUP_TOKEN>):
-//   GET  api/setup_diagnostico.php?token=...                    → solo diagnóstico
-//   POST api/setup_diagnostico.php?token=...&action=migrate      → aplica 001 y 002
-//   POST api/setup_diagnostico.php?token=...&action=seed_admin   → crea/actualiza el admin
+//   GET  api/setup_diagnostico.php?token=...                            → solo diagnóstico
+//   POST api/setup_diagnostico.php?token=...&action=migrate              → aplica 001 y 002
+//   POST api/setup_diagnostico.php?token=...&action=seed_admin           → crea/actualiza el admin
+//   POST api/setup_diagnostico.php?token=...&action=seed_colaborador
+//        con body "password=..."                                        → crea/actualiza a Rafael (colaborador)
+//
+// NOTA seed_colaborador (Hito 13): la contraseña SIEMPRE se recibe por
+// POST en la propia llamada — nunca se hardcodea aquí ni en ningún archivo
+// versionado (Mandamiento #12, Bóveda de Secretos). El Arquitecto la escribe
+// directamente en su terminal/cliente HTTP al invocar esta acción; solo
+// existe en memoria durante esta petición y en el hash BCrypt final en BD.
 // =============================================================================
 
 require_once __DIR__ . '/cors.php';
@@ -25,7 +33,8 @@ require_once __DIR__ . '/conexion.php';
 require_once __DIR__ . '/../helpers/response.php';
 require_once __DIR__ . '/../helpers/asfl_logger.php';
 
-const SETUP_ADMIN_EMAIL = 'dacadomx@yahoo.com';
+const SETUP_ADMIN_EMAIL       = 'dacadomx@yahoo.com';
+const SETUP_COLABORADOR_EMAIL = 'armandocastillejos086@gmail.com';
 
 $envPath = dirname(__DIR__) . '/.env';
 if (!is_readable($envPath)) {
@@ -72,6 +81,7 @@ $resultado = [
     'conexion_pdo'             => false,
     'tablas_existentes'        => [],
     'admin_ya_existe'          => null,
+    'colaborador_ya_existe'    => null,
 ];
 
 if (!$socketOk) {
@@ -90,6 +100,10 @@ try {
         $stmt = $pdo->prepare('SELECT id FROM users WHERE email = :email LIMIT 1');
         $stmt->execute([':email' => SETUP_ADMIN_EMAIL]);
         $resultado['admin_ya_existe'] = $stmt->fetch(\PDO::FETCH_ASSOC) !== false;
+
+        $stmt = $pdo->prepare('SELECT id FROM users WHERE email = :email LIMIT 1');
+        $stmt->execute([':email' => SETUP_COLABORADOR_EMAIL]);
+        $resultado['colaborador_ya_existe'] = $stmt->fetch(\PDO::FETCH_ASSOC) !== false;
     }
 
     // ── action=migrate (solo POST — nunca por un GET accidental/crawler) ────
@@ -141,6 +155,38 @@ try {
         // Se muestra UNA sola vez en esta respuesta — nunca se guarda en texto plano.
         $resultado['password_temporal'] = $password;
         $resultado['admin_ya_existe'] = true;
+    }
+
+    // ── action=seed_colaborador (solo POST) — Rafael, rol fijo 'colaborador' ─
+    // La contraseña NUNCA se hardcodea aquí: se recibe por POST en cada
+    // invocación (ver nota de cabecera) y solo se usa para calcular el hash.
+    if ($accion === 'seed_colaborador' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+        $passwordRecibida = (string) ($_POST['password'] ?? '');
+
+        if (strlen($passwordRecibida) < 8) {
+            send_error('El campo "password" es requerido (mínimo 8 caracteres).', 422);
+        }
+
+        $hash = password_hash($passwordRecibida, PASSWORD_BCRYPT, ['cost' => 12]);
+
+        $stmt = $pdo->prepare('SELECT id FROM users WHERE email = :email LIMIT 1');
+        $stmt->execute([':email' => SETUP_COLABORADOR_EMAIL]);
+        $fila = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if ($fila !== false) {
+            $upd = $pdo->prepare("UPDATE users SET password_hash = :hash, role = 'colaborador', estatus = 'activo' WHERE id = :id");
+            $upd->execute([':hash' => $hash, ':id' => $fila['id']]);
+            $resultado['seed_colaborador'] = 'actualizado';
+        } else {
+            $ins = $pdo->prepare("INSERT INTO users (email, password_hash, role, estatus) VALUES (:email, :hash, 'colaborador', 'activo')");
+            $ins->execute([':email' => SETUP_COLABORADOR_EMAIL, ':hash' => $hash]);
+            $resultado['seed_colaborador'] = 'creado';
+        }
+
+        // Nunca se refleja la contraseña recibida en la respuesta — a
+        // diferencia de seed_admin (que SÍ genera y muestra una nueva), aquí
+        // el Arquitecto ya la conoce porque la escribió él mismo en la llamada.
+        $resultado['colaborador_ya_existe'] = true;
     }
 } catch (\PDOException $e) {
     error_log('[' . date('Y-m-d H:i:s') . '] [setup_diagnostico] ' . $e->getMessage());

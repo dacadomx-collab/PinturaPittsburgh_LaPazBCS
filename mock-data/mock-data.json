@@ -1,0 +1,87 @@
+{
+  "_nota": "Datos DEMO para desarrollo frontend sin depender de la BD local/remota (ver knowledge/07_UI_MODULOS_Y_PANTALLAS.md, sección 'Data Contract Frontend'). Misma forma exacta que las respuestas reales de api/banners_listar.php, api/promociones_listar.php y api/publicaciones_listar.php (Contratos 11, 12 y 10) — nunca se sube a producción ni se referencia desde código real, solo desde una fuente de datos local mientras Rafael desarrolla sin conexión a BD.",
+  "banners": [
+    {
+      "id": 1,
+      "titulo": "Speedhide para exteriores costeros",
+      "eyebrow": "Nueva línea",
+      "descripcion": "Resistencia a la salinidad y humedad del clima de La Paz, B.C.S.",
+      "imagen_url": "https://placehold.co/1200x480/0f172a/d97706?text=Speedhide+Exteriores",
+      "cta_texto": "Ver línea Speedhide",
+      "cta_url": "/index.html#catalogo",
+      "orden": 1
+    },
+    {
+      "id": 2,
+      "titulo": "Perma-Crete para pisos y fachadas",
+      "eyebrow": "Recomendado para obra",
+      "descripcion": "Recubrimiento de alto tráfico, ideal para locales comerciales y cocheras.",
+      "imagen_url": "https://placehold.co/1200x480/1e40af/ffffff?text=Perma-Crete",
+      "cta_texto": "Cotizar por mayoreo",
+      "cta_url": "/index.html#contacto",
+      "orden": 2
+    },
+    {
+      "id": 3,
+      "titulo": "Entrega a domicilio en La Paz",
+      "eyebrow": "Cobertura local",
+      "descripcion": "Despacho directo a los 104 códigos postales autorizados del municipio.",
+      "imagen_url": "https://placehold.co/1200x480/0d9488/ffffff?text=Entrega+La+Paz+BCS",
+      "cta_texto": "Validar mi código postal",
+      "cta_url": "/index.html#postal",
+      "orden": 3
+    }
+  ],
+  "promotions": [
+    {
+      "id": 1,
+      "codigo": "LAPAZ20",
+      "badge": "-20%",
+      "descripcion": "20% de descuento en la línea Manor Hall, solo esta quincena.",
+      "imagen_url": "https://placehold.co/600x400/d97706/0f172a?text=Manor+Hall+-20%25",
+      "url": "/index.html#catalogo",
+      "tipo_descuento": "porcentaje",
+      "valor_descuento": 20.0,
+      "fecha_inicio": "2026-09-01",
+      "fecha_fin": "2026-09-30"
+    },
+    {
+      "id": 2,
+      "codigo": "PITTGLAZE50",
+      "badge": "$50 MXN",
+      "descripcion": "Descuento fijo en cubetas de Pitt-Glaze al comprar 2 o más.",
+      "imagen_url": "https://placehold.co/600x400/1e40af/ffffff?text=Pitt-Glaze",
+      "url": "/index.html#catalogo",
+      "tipo_descuento": "monto_fijo",
+      "valor_descuento": 50.0,
+      "fecha_inicio": "2026-09-10",
+      "fecha_fin": "2026-10-10"
+    }
+  ],
+  "publications": [
+    {
+      "id": 1,
+      "plataforma": "facebook",
+      "producto_id": null,
+      "texto": "¡Nuevo horario de atención en nuestra tienda de Blvd. Agustín Olachea! Te esperamos. #LaPazBCS #PinturaPittsburgh",
+      "media_url": "https://placehold.co/600x600/0f172a/d97706?text=PinturaPittsburgh",
+      "publicado_en": "2026-09-08 12:00:00"
+    },
+    {
+      "id": 2,
+      "plataforma": "instagram",
+      "producto_id": null,
+      "texto": "Antes y después: fachada residencial con Speedhide en La Paz. Resiste el clima costero todo el año.",
+      "media_url": "https://placehold.co/600x600/1e40af/ffffff?text=Antes+y+Despues",
+      "publicado_en": "2026-09-05 17:30:00"
+    },
+    {
+      "id": 3,
+      "plataforma": "facebook",
+      "producto_id": null,
+      "texto": "Tip técnico: usa nuestra Calculadora de Pintura Costera antes de tu próximo proyecto para calcular rendimiento real por clima.",
+      "media_url": "https://placehold.co/600x600/0d9488/ffffff?text=Calculadora",
+      "publicado_en": "2026-09-02 10:15:00"
+    }
+  ]
+}
