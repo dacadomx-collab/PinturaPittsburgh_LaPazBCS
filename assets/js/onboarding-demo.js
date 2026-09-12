@@ -148,7 +148,12 @@
             endpoint: '../api/publicaciones_listar.php',
             dataKey: 'publicaciones',
             dataKeyMock: 'publications',
-            campos: ['media_url', 'texto', 'publicado_en']
+            campos: ['media_url', 'texto', 'publicado_en'],
+            posProceso: function (raiz, item) {
+                // Hito 21: por simetría con data-banner-item/data-promo-code
+                // (cada componente identifica su ítem individual igual).
+                raiz.setAttribute('data-social-item', String(item.id));
+            }
         }
     ];
 

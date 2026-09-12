@@ -173,7 +173,7 @@
                     <p class="cc-state-card__desc">Fallo de red controlado — nunca una pantalla rota.</p>
                 </div>
             </div>
-            <p class="cc-stage__desc">Selectores exactos que debes implementar: <code>[data-banner-slider]</code> (+ <code>[data-banner-item]</code> por ítem), <code>[data-promo-section]</code> (+ <code>[data-promo-code]</code> por ítem), <code>[data-social-feed]</code>.</p>
+            <p class="cc-stage__desc">Selectores exactos que debes implementar: <code>[data-banner-slider]</code> (+ <code>[data-banner-item]</code> por ítem), <code>[data-promo-section]</code> (+ <code>[data-promo-code]</code> por ítem), <code>[data-social-feed]</code> (+ <code>[data-social-item]</code> por ítem).</p>
             <ul class="todo-list">
                 <li class="todo-item">
                     <input type="checkbox" id="c10">
@@ -233,7 +233,7 @@
                 <p data-state="error" class="demo-state demo-state--error" hidden>No fue posible cargar el feed.</p>
                 <div data-state="success" class="social-grid" hidden></div>
                 <template data-social-template>
-                    <article class="social-card">
+                    <article class="social-card" data-social-item>
                         <img class="social-card__imagen" data-field="media_url" alt="" loading="lazy">
                         <p class="social-card__texto" data-field="texto"></p>
                         <p class="social-card__fecha" data-field="publicado_en"></p>

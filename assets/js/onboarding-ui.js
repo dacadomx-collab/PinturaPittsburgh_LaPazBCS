@@ -104,12 +104,23 @@
     // Es análisis estático de lo que SÍ se puede inspeccionar sin renderizar
     // un navegador real — no reemplaza Lighthouse/axe (Etapa 5), los
     // complementa con retroalimentación inmediata dentro de la misma página.
+    // Lista oficial de hooks del Data Contract (Hito 21) — ver
+    // knowledge/07_UI_MODULOS_Y_PANTALLAS.md §3 para el detalle de cada uno.
+    // data-social-item se agregó en este Hito por simetría con
+    // data-banner-item/data-promo-code (antes solo banners y promos tenían
+    // hook de ítem individual, publicaciones no).
     var HOOKS_OBLIGATORIOS = [
         '[data-banner-slider]',
+        '[data-banner-template]',
         '[data-banner-item]',
+        '[data-cta-link]',
         '[data-promo-section]',
+        '[data-promo-template]',
         '[data-promo-code]',
-        '[data-social-feed]'
+        '[data-social-feed]',
+        '[data-social-template]',
+        '[data-social-item]',
+        '[data-field]'
     ];
 
     function auditarDocumento(doc, cssCompleto) {
