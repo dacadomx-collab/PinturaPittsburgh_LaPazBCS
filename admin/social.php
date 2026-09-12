@@ -1,29 +1,19 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Publicador Social — PinturaPittsburgh Admin</title>
-    <meta name="robots" content="noindex, nofollow">
-    <link rel="icon" href="../favicon.ico">
-    <script src="../assets/js/theme-init.js"></script>
-    <link rel="stylesheet" href="../assets/css/main.css">
-    <link rel="stylesheet" href="../assets/css/admin.css">
-</head>
-<body>
-    <header class="site-header">
-        <div class="container site-header__bar admin-topbar">
-            <p class="site-header__value-prop">PinturaPittsburgh — Publicador Social Omnicanal</p>
-            <nav>
-                <a class="btn" href="catalogo.html">Catálogo</a>
-                <a class="btn" href="asistente.html">Asistente IA</a>
-                <button type="button" id="theme-toggle-btn" class="theme-toggle-btn" aria-label="Cambiar entre modo día y modo noche"></button>
-                <button type="button" id="admin-logout-btn" class="btn btn--gold">Cerrar sesión</button>
-            </nav>
-        </div>
-    </header>
+<?php
 
-    <main class="container">
+declare(strict_types=1);
+
+// =============================================================================
+// admin/social.php — Publicador Social Omnicanal (Hito 12/Directiva 2)
+// Migrado desde admin/social.html al shell unificado admin/layout/*.php.
+// Contenido interno y IDs sin cambios — mismo contrato con admin-social.js y
+// admin-social-page.js (Contrato 6/9).
+// =============================================================================
+
+$pageTitle = 'Publicador Social';
+$activeNav = 'social';
+require __DIR__ . '/layout/header.php';
+require __DIR__ . '/layout/topbar.php';
+?>
         <h1>Publicador Social Omnicanal</h1>
         <p class="brand-tagline">Redacta, previsualiza y publica en Facebook e Instagram desde un solo lugar. Instagram solo confirma la publicación final mediante un proceso asíncrono (fase 1 completada aquí).</p>
 
@@ -112,14 +102,7 @@
                 </table>
             </div>
         </section>
-    </main>
-
-    <button type="button" id="back-to-top-btn" class="back-to-top-btn" hidden aria-label="Volver arriba">↑</button>
-
-    <script src="../assets/js/admin-auth.js" defer></script>
-    <script src="../assets/js/admin-social.js" defer></script>
-    <script src="../assets/js/admin-social-page.js" defer></script>
-    <script src="../assets/js/theme-toggle.js" defer></script>
-    <script src="../assets/js/back-to-top.js" defer></script>
-</body>
-</html>
+<?php
+$pageScripts = ['../assets/js/admin-social.js', '../assets/js/admin-social-page.js'];
+require __DIR__ . '/layout/footer.php';
+?>

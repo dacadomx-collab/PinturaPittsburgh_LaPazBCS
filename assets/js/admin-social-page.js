@@ -1,5 +1,5 @@
 // assets/js/admin-social-page.js — PinturaPittsburgh_LaPazBCS
-// Wiring de admin/social.html: guarda de sesión, logout y arranque del módulo.
+// Wiring de admin/social.php: guarda de sesión, logout y arranque del módulo.
 document.addEventListener('DOMContentLoaded', function () {
     if (!window.PPAdminAuth) {
         return;

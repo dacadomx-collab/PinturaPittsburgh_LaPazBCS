@@ -1,5 +1,5 @@
 // assets/js/admin-asistente-page.js — PinturaPittsburgh_LaPazBCS
-// Wiring de admin/asistente.html: guarda de sesión, logout y arranque del módulo.
+// Wiring de admin/asistente.php: guarda de sesión, logout y arranque del módulo.
 document.addEventListener('DOMContentLoaded', function () {
     if (!window.PPAdminAuth) {
         return;

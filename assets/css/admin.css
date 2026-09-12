@@ -115,3 +115,227 @@ textarea.field {
 .estado-badge--programada { background-color: rgba(2, 132, 199, 0.15); color: var(--brand-vibrant-blue); }
 .estado-badge--publicada  { background-color: rgba(13, 148, 136, 0.15); color: var(--brand-teal); }
 .estado-badge--fallida    { background-color: rgba(230, 57, 70, 0.15); color: #b91c1c; }
+
+.estado-badge--pendiente  { background-color: rgba(217, 119, 6, 0.15); color: var(--brand-gold); }
+.estado-badge--confirmado { background-color: rgba(2, 132, 199, 0.15); color: var(--brand-vibrant-blue); }
+.estado-badge--en_ruta    { background-color: rgba(30, 64, 175, 0.15); color: var(--brand-royal-blue); }
+.estado-badge--entregado  { background-color: rgba(13, 148, 136, 0.15); color: var(--brand-teal); }
+.estado-badge--cancelado  { background-color: rgba(230, 57, 70, 0.15); color: #b91c1c; }
+
+/* =============================================================================
+   PANEL ADMINISTRATIVO UNIFICADO (admin/layout/*.php — Hito 12/Directiva 2)
+   Shell de dos columnas (sidebar + contenido) con sidebar off-canvas en
+   móvil. Depende únicamente de los tokens de main.css — cero px fijos salvo
+   anchos de sidebar (justificados: panel de navegación, no contenedor de
+   contenido) y áreas táctiles mínimas de 44px.
+   ============================================================================= */
+
+/* Guardia anti-parpadeo (assets/js/admin-guard.js) — oculta el chrome del
+   dashboard hasta confirmar que existe una sesión local en sessionStorage. */
+html.admin-auth-pending body {
+    visibility: hidden;
+}
+
+.admin-shell {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.admin-shell__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+    padding: var(--space-xs) var(--space-md);
+    background-color: var(--brand-navy);
+    color: #ffffff;
+    position: sticky;
+    top: 0;
+    z-index: 600;
+}
+
+.admin-shell__bar-group {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+}
+
+.admin-burger {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: var(--radius);
+    background-color: transparent;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+.admin-burger__line {
+    display: block;
+    width: 1.4rem;
+    height: 2px;
+    background-color: #ffffff;
+}
+
+.admin-profile-chip {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--brand-gold);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 14rem;
+}
+
+.admin-body {
+    display: flex;
+    flex: 1 1 auto;
+    position: relative;
+}
+
+.admin-sidebar {
+    position: fixed;
+    inset-block: 0;
+    left: 0;
+    width: min(80vw, 280px);
+    background-color: var(--color-bg-alt);
+    border-right: 1px solid var(--color-border);
+    padding: var(--space-md) var(--space-sm);
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform 0.2s ease;
+    z-index: 650;
+}
+
+.admin-shell--nav-open .admin-sidebar {
+    transform: translateX(0);
+}
+
+.admin-sidebar__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.admin-sidebar__link {
+    display: block;
+    padding: 0.7rem 0.8rem;
+    border-radius: var(--radius);
+    color: var(--color-text);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.admin-sidebar__link:hover,
+.admin-sidebar__link:focus-visible {
+    background-color: var(--color-bg);
+}
+
+.admin-sidebar__link--active {
+    background-color: var(--brand-navy);
+    color: #ffffff;
+}
+
+.admin-nav-backdrop {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(15, 23, 42, 0.5);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 640;
+}
+
+.admin-shell--nav-open .admin-nav-backdrop {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.admin-content {
+    flex: 1 1 auto;
+    min-width: 0;
+    width: 100%;
+}
+
+@media (min-width: 900px) {
+    .admin-burger {
+        display: none;
+    }
+
+    .admin-body {
+        flex-wrap: nowrap;
+    }
+
+    .admin-sidebar {
+        position: sticky;
+        top: 0;
+        left: auto;
+        transform: none;
+        width: 240px;
+        flex: 0 0 240px;
+        height: calc(100vh - 3rem);
+    }
+
+    .admin-nav-backdrop {
+        display: none;
+    }
+}
+
+/* ── JERARQUÍA POR WIDGETS (Acción → Estado → Historial, MODULO_01 §5.3.3) ── */
+.admin-quick-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-block: var(--space-md);
+}
+
+.admin-quick-links__item {
+    flex: 1 1 160px;
+}
+
+.admin-kpi-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-block: var(--space-md);
+}
+
+.admin-kpi-card {
+    flex: 1 1 180px;
+    background-color: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: var(--space-sm);
+}
+
+.admin-kpi-card__label {
+    margin: 0;
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.admin-kpi-card__value {
+    margin: 0.2rem 0 0;
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--brand-navy);
+}
+
+.admin-kpi-card__note {
+    margin: 0.2rem 0 0;
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+}

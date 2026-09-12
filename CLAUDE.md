@@ -1,8 +1,8 @@
 # CLAUDE.md — Manual Operativo del Agente IA
 ## PinturaPittsburgh_LaPazBCS | Distribuidor Autorizado The Pittsburgh Paints Company — La Paz, B.C.S.
-**Versión:** 7.0 | **Fecha:** 2026-09-12 | **Arquitecto:** [NOMBRE_ARQUITECTO — pendiente de confirmar]
+**Versión:** 8.0 | **Fecha:** 2026-09-12 | **Arquitecto:** [NOMBRE_ARQUITECTO — pendiente de confirmar]
 
-**Estado del proyecto:** Sitio público completo (landing, catálogo, PDP, checkout, banners, promociones, feed de publicaciones) y panel administrativo completo (login con redirección por rol, catálogo/precios, publicador social, asistente IA) implementados y verificados estructuralmente (`php -l`, `node --check`, pruebas HTTP en vivo). Colaboración externa Zero-Trust activa (rol `colaborador`, guarda de sesión real). Toggle Día/Noche y botón "Volver Arriba" en las 7 pantallas públicas/admin. Entorno de staging asignado (§6): `.env` local ya conecta hasta la capa PDO real. **Bloqueante para pruebas end-to-end completas:** falta la contraseña real de la BD y del SMTP (nunca se recibieron ni se inventaron), conectividad remota a MySQL sin confirmar, y ejecutar `database/001_schema_inicial.sql` + `database/002_banners_cupones_colaborador.sql` (en ese orden) contra el servidor de staging.
+**Estado del proyecto:** Sitio público completo (landing, catálogo, PDP, checkout, banners, promociones, feed de publicaciones) y panel administrativo completo — ahora como dashboard PHP unificado (`admin/index.php` + `admin/layout/*.php`: login con redirección por rol, catálogo/precios, pedidos, publicador social, asistente IA) — implementados y verificados estructuralmente (`php -l`, `node --check`, pruebas HTTP en vivo contra XAMPP local). Colaboración externa Zero-Trust activa (rol `colaborador`, guarda de sesión real). Toggle Día/Noche y botón "Volver Arriba" en todas las pantallas públicas/admin. `modulos/` adoptado formalmente como hoja de ruta de características (§14). Entorno de staging asignado (§6): `.env` local ya conecta hasta la capa PDO real. **Bloqueantes activos (diagnosticados en Hito 12, pendientes de acción del Arquitecto fuera de este entorno):** (1) puerto 3306 del host remoto no alcanzable en pruebas de red — la migración/seed del admin no puede ejecutarse hasta resolverlo (§6); (2) `https://pittsburgh.tourfindy.com/` devuelve 403 en toda ruta, incluida una inexistente — apunta a permisos de archivo o Document Root mal configurado en cPanel, no a un error en este código (§6); (3) faltan las contraseñas reales de BD y SMTP (nunca recibidas ni inventadas).
 
 ---
 
@@ -56,35 +56,45 @@ PinturaPittsburgh_LaPazBCS/
 │   ├── asistente_ia.php             ← Contrato 7 — Asistente de Contenido IA (admin)
 │   └── admin/
 │       ├── catalogo_admin.php       ← Contrato 8 — precio/stock (admin)
-│       └── social_historial.php     ← Contrato 9 — historial de publicaciones (admin)
+│       ├── social_historial.php     ← Contrato 9 — historial de publicaciones (admin)
+│       └── pedidos_listar.php       ← Contrato 13 — listado de pedidos (admin, Hito 12)
 │
-├── admin/                           ← Frontend del backoffice (Bearer JWT, sin cookies)
-│   ├── login.html
-│   ├── catalogo.html
-│   ├── social.html
-│   └── asistente.html
+├── admin/                           ← Dashboard PHP unificado del backoffice (Bearer JWT, sin cookies — Hito 12)
+│   ├── login.html                   ← Único punto de entrada sin shell (no requiere sesión previa)
+│   ├── index.php                    ← Panel central: acceso rápido + KPIs + pedidos recientes
+│   ├── catalogo.php
+│   ├── pedidos.php                  ← Nueva página (Hito 12) — Contrato 13
+│   ├── social.php
+│   ├── asistente.php
+│   └── layout/                      ← Partials reutilizables por cada página del dashboard
+│       ├── header.php               ← HEAD + apertura del shell (tema, guard anti-parpadeo)
+│       ├── sidebar.php               ← Menú colapsable (off-canvas en móvil, fijo en ≥900px)
+│       ├── topbar.php                ← Perfil activo, toggle día/noche, botón "Volver Arriba", logout
+│       └── footer.php                ← Cierre del shell + scripts
 │
 ├── workers/                         ← Scripts CLI/cron (bloqueados por HTTP en .htaccess)
 │   └── instagram_worker.php         ← Fases 2/3 del pipeline de Instagram
 │
 ├── database/                        ← Migraciones SQL versionadas (bloqueado por HTTP en .htaccess)
-│   └── 001_schema_inicial.sql       ← Las 8 tablas aprobadas + seed de 99 CP
+│   ├── 001_schema_inicial.sql       ← Las 8 tablas aprobadas + seed de 99 CP
+│   └── 002_banners_cupones_colaborador.sql ← rol `colaborador`, tablas `banners`/`cupones`
 │
 ├── helpers/                         ← input_sanitizer, response, asfl_logger, ai_runtime_factory, crypto_helper
 ├── validators/                      ← validator.php, proxy_tunnel_validator.php (capa opcional, inactiva)
 │
 ├── assets/                          ← CSS, JS, imágenes estáticas
 │   ├── css/main.css                 ← ARF-Grid + tokens de marca PinturaPittsburgh (sitio público + base admin)
-│   ├── css/admin.css                ← Estilos exclusivos del backoffice (depende de main.css)
+│   ├── css/admin.css                ← Estilos exclusivos del backoffice (depende de main.css) + shell del dashboard (Hito 12)
 │   ├── js/main.js, postal-coverage.js, catalog-render.js, paint-calculator.js
 │   ├── js/cart.js, producto-page.js, checkout-page.js
 │   ├── js/theme-init.js (sin defer, anti-parpadeo), theme-toggle.js, back-to-top.js
 │   ├── js/admin-auth.js, admin-login.js, admin-catalogo*.js, admin-social*.js, admin-asistente*.js
+│   ├── js/admin-guard.js (sin defer, anti-parpadeo de sesión), admin-topbar.js, admin-dashboard.js, admin-pedidos.js  ← Hito 12
 │   └── img/logo.svg
 │
 ├── logs/                            ← Logs del sistema (bloqueados en .htaccess)
 ├── scripts/                         ← bootstrap_project.sh, generate_env.php, generate_jwt_keys.php, seed_admin.php
-├── modulos/                         ← Blueprints genéricos reutilizables del holding DCD LABS (agnósticos — no editar con datos de PinturaPittsburgh)
+├── modulos/                         ← Hoja de ruta oficial de características (ver §14) — blueprints del holding DCD LABS, agnósticos, NUNCA editados con datos de PinturaPittsburgh ni subidos a Git
 │
 ├── .github/workflows/deploy.yml     ← Pipeline CI/CD automático
 │
@@ -199,7 +209,9 @@ Referencia completa: `knowledge/01_LEY_Y_PROTOCOLOS_DE_VUELO.md`
 | SMTP | `pittsburgh.tourfindy.com:465` (SSL implícito), usuario `hola@pittsburgh.tourfindy.com`, password pendiente |
 | `.env` local | ✅ Generado con `scripts/generate_env.php` + `scripts/generate_jwt_keys.php`, completado con estos datos. Verificado: la cadena de conexión llega hasta PDO (falla solo por password pendiente — confirmado con `api/status_check.php`). |
 | `.env` del servidor | ⬜ **Pendiente de crear manualmente en el servidor** (nunca se despliega por FTP/Git — Mandamiento 12). Mismo contenido que el local, pero con `APP_ENV="staging"` y `APP_URL`/`FRONTEND_URL` apuntando a `https://pittsburgh.tourfindy.com`. |
-| Remote MySQL (cPanel) | ⬜ **Pendiente de confirmar** que el host remoto acepta conexiones desde la IP dinámica de este equipo de desarrollo (comodín `%` temporal, Regla Cero — ver `knowledge/00_ADN_Y_FILOSOFIA.md` §5.1). |
+| Remote MySQL (cPanel) | ❌ **Diagnóstico 2026-09-12 (Hito 12):** aunque el Arquitecto confirmó que el wildcard `%` de Remote MySQL ya está autorizado en cPanel, la prueba de red cruda (`fsockopen($host, 3306)`) desde este entorno de desarrollo devuelve `errno 10060` (timeout) — el puerto 3306 no es alcanzable, independientemente de la contraseña (nunca recibida, tampoco inventada). Esto se distingue de un rechazo de credenciales (que sería una respuesta rápida, no un timeout de 8s). Hipótesis más probable: (a) el wildcard no se guardó realmente en cPanel → Remote MySQL, o (b) existe un firewall a nivel de servidor (ej. CSF) bloqueando 3306 independientemente de la ACL de Remote MySQL. **Acción pendiente del Arquitecto:** re-verificar en cPanel → Remote MySQL Access que el registro `%` exista y esté guardado; si persiste, solicitar a soporte del hosting que confirme el estado del firewall perimetral sobre el puerto 3306. |
+| Endpoint de arranque sin CLI | ✅ `api/setup_diagnostico.php` (protegido por `SETUP_TOKEN` en `.env`, nunca por sesión de usuario; se autoniega por completo si `APP_ENV=production`). `GET ?token=...` → diagnóstico de red+PDO+tablas+admin sin mutar nada. `POST ?token=...&action=migrate` → aplica `001`/`002` (idempotente). `POST ?token=...&action=seed_admin` → crea/actualiza `dacadomx@yahoo.com` como `admin` con password aleatoria devuelta una sola vez en la respuesta. **No ejecutable todavía** — depende de que se resuelva la conectividad de red de la fila anterior. **Eliminar este archivo y la variable `SETUP_TOKEN` en cuanto se use** (mismo patrón de auto-destrucción que `modulos/MODULO_01_LOGIN_Y_ACCESO.md` §8.4 "Auto-deshabilitación de la ruta" — ver §14). |
+| 403 "Acceso denegado" en `https://pittsburgh.tourfindy.com/` | ⚠️ **Diagnóstico 2026-09-12 (Hito 12):** el `.htaccess` de este repo SÍ llegó al servidor y está activo (el cuerpo de la respuesta 403 es exactamente el `ErrorDocument 403 "Acceso denegado."` de la línea 148 de este mismo `.htaccess`). Se revisó línea por línea y ninguna regla (`FilesMatch`, `RewriteRule` por carpeta) debería bloquear `/`, `/index.html` ni rutas inexistentes. Prueba decisiva: **hasta una ruta aleatoria e inexistente** (`esto-no-existe-de-verdad-12345.html`) devuelve 403 en vez de 404 — ninguna regla de este `.htaccess` puede producir eso. Esto apunta a un problema de **permisos de archivo/carpeta** (ej. directorios creados por FTP con modo `750`/`700` en vez de `755`, que impiden a Apache atravesar/leer nada bajo esa ruta) o a un **Document Root mal configurado** en cPanel para el subdominio (que no coincida con `/public_html/pittsburgh/`, la ruta asumida en `deploy.yml`). **No se modificó el `.htaccess`** (Mandamiento: nunca sin autorización explícita, y aquí no aplicaría de cualquier forma — el archivo ya es correcto). **Acción pendiente del Arquitecto:** en cPanel → Administrador de Archivos (o SSH, ver `modulos/MODULO_03_CONEXION_SSH_HOSTING.md` §Fase 4 "Matriz de Reconocimiento", adoptado en §14), verificar que `/public_html/pittsburgh/` y su contenido tengan permisos `755`/`644` y que el Document Root del subdominio apunte exactamente ahí. |
 
 > **Aclaración sobre el hallazgo `core/.env` del Hito 1:** aquel directorio no era de un proyecto ajeno filtrado — era la misma cuenta de hosting compartida de DCD LABS (`tourfindy.com`/`chir205.websitehostserver.net`) que ahora se usa, de forma explícita y autorizada, como staging de este proyecto. Se eliminó correctamente en su momento por ser un archivo huérfano sin autorización ni uso real — la eliminación fue la decisión correcta independientemente de este hallazgo posterior.
 
@@ -222,7 +234,9 @@ Referencia completa: `knowledge/01_LEY_Y_PROTOCOLOS_DE_VUELO.md`
 | `api/publicaciones_listar.php` | GET | Público | 10 | ✅ |
 | `api/banners_listar.php` | GET | Público | 11 | ✅ |
 | `api/promociones_listar.php` | GET | Público | 12 | ✅ |
+| `api/admin/pedidos_listar.php` | GET | Bearer JWT + admin | 13 | ✅ (Hito 12 — solo lectura) |
 | `api/status_check.php` | GET | Público | — | ✅ (Triple Handshake) |
+| `api/setup_diagnostico.php` | GET/POST | `SETUP_TOKEN` (nunca sesión de usuario) | — | ⚠️ Temporal — ver §6. Se niega en `APP_ENV=production`. Eliminar tras usarlo. |
 | `workers/instagram_worker.php` | CLI/cron únicamente | N/A | — | ✅ (fases 2/3 del pipeline de Instagram) |
 
 **Herramientas operativas activas:** `php -l` (lint), `node --check` (sintaxis JS), pruebas HTTP con `curl` contra el entorno local XAMPP — todas ejecutadas antes de cerrar cada hito.
@@ -290,6 +304,7 @@ Referencia completa: `knowledge/01_LEY_Y_PROTOCOLOS_DE_VUELO.md`
 | v5.0 | 2026-09-11 | Hito 5: `producto.html` (PDP) + `api/catalogo_detalle.php` (Contrato 3b); `checkout.html` + `api/pedido_crear.php` (Contrato 5, transacción atómica con decremento de stock); `assets/js/cart.js` (carrito de sesión); `REPORTE_TECNICO.md` eliminado por gobernanza (única fuente de verdad: `knowledge/` + `CLAUDE.md`). |
 | v6.0 | 2026-09-12 | Onboarding Zero-Trust para colaboradores externos (Rafael): `/gitignore` blindado con `/modulos/` y `/Colaboradores/` (hallazgo crítico: `Colaboradores/onboarding_colaborador.html` tenía una credencial real de terceros — Marketing Hub PPG — expuesta en texto plano, a un `git add` de llegar a GitHub; contenido, no la estructura de git). `deploy.yml` excluye también `modulos/**` y `Colaboradores/**`. Se registra el protocolo `/auditar-pr [rama]` (§13). |
 | v7.0 | 2026-09-12 | Rol `colaborador` (`database/002_banners_cupones_colaborador.sql`: `users.role` ampliado, tablas `banners`/`cupones` autorizadas y materializadas); endpoints públicos `api/publicaciones_listar.php`, `api/banners_listar.php`, `api/promociones_listar.php` (Contratos 10/11/12); redirección por rol en `assets/js/admin-login.js`; modal de contraseña falso de `Colaboradores/onboarding_colaborador.html` reemplazado por guarda de sesión JWT real (`assets/js/colaborador-gate.js`); `scripts/seed_admin.php` extendido para aceptar rol. |
+| v8.0 | 2026-09-12 | **Hito 12 (4 directivas):** (1) `api/setup_diagnostico.php` — endpoint temporal protegido por `SETUP_TOKEN` para health-check/migración/seed sin depender de CLI; diagnóstico de red confirmó bloqueo del puerto 3306 en el host remoto (ver §6) — migración y seed del admin `dacadomx@yahoo.com` quedan pendientes de que se resuelva la conectividad. (2) **Dashboard PHP unificado del backoffice** (`admin/layout/{header,sidebar,topbar,footer}.php`, `admin/index.php` nuevo, `admin/{catalogo,social,asistente}.html` migrados a `.php`, `admin/pedidos.php` nuevo + `api/admin/pedidos_listar.php` Contrato 13); guard anti-parpadeo `assets/js/admin-guard.js` (mismo patrón que `theme-init.js`) — se mantiene Bearer JWT/sessionStorage (Hito 2) en vez de sesión PHP, decisión razonada en §14. (3) `modulos/` adoptado formalmente como hoja de ruta de características (§14). (4) Diagnóstico del 403 en `pittsburgh.tourfindy.com` (ver §6) — causa raíz más probable: permisos de archivo o Document Root, pendiente de acceso a cPanel/SSH para confirmar y corregir. |
 
 ---
 
@@ -322,3 +337,27 @@ Cerrar siempre con uno de dos veredictos, citando archivo y línea exacta de cad
 - **`[CAMBIOS REQUERIDOS]`** — lista puntual de qué corregir, con ubicación exacta.
 
 La decisión final de fusionar (`Merge`) o solicitar cambios (`Request Changes`) en GitHub la toma siempre el Arquitecto — este protocolo produce el dictamen técnico, no ejecuta el merge.
+
+---
+
+## 14. `modulos/` — HOJA DE RUTA OFICIAL DE CARACTERÍSTICAS (vigente desde 2026-09-12)
+
+> El Arquitecto incorporó deliberadamente la carpeta `modulos/` como biblioteca de blueprints del holding DCD LABS. A partir del Hito 12, esta carpeta se adopta formalmente como **la guía de requerimientos a cumplir progresivamente** para este proyecto — nunca se descarta, y todo módulo nuevo que se agregue ahí debe evaluarse contra la tabla de esta sección. Los archivos son **agnósticos y genéricos** (usan `{{PLACEHOLDERS}}`) — nunca se editan con datos reales de PinturaPittsburgh ni se suben a Git (§9); se **adaptan** en el código real del proyecto, citando la sección de origen en el comentario del archivo consumidor.
+
+| Archivo | Contenido | Estado en este proyecto |
+| :--- | :--- | :--- |
+| `MODULO_01_LOGIN_Y_ACCESO.md` | Ley suprema de autenticación: schema de usuarios/bitácora/config de seguridad, patrón de 6 capas, JWT vs. token opaco, device binding, arquitectura del Dashboard Universal (§5), matriz de roles (§6), motor de política de contraseña (§7), first-run provisioning (§8), flujo de invitación (§9). | **Parcialmente adoptado.** §5 (estructura del Dashboard: shell, hamburguesa off-canvas, jerarquía Acción→KPIs→Historial) es la base directa de `admin/layout/*.php` y `admin/index.php` (Hito 12) — adaptado a Bearer JWT/sessionStorage en vez de cookies de sesión, ver justificación abajo. §6 (comparación de roles por nivel numérico, nunca un rol crea uno superior al propio) es el principio a aplicar si `users.role` crece más allá de `admin/staff/colaborador` — no se altera el ENUM ahora sin autorización (Mandamiento 9). §7/§8/§9 (motor de política de contraseña, first-run provisioning, invitación por correo) **no implementados** — no solicitados en este Hito, quedan como trabajo futuro explícito. |
+| `MODULO_02_REPORTES_Y_AUDITORIAS.md` | Guía de redacción de reportes técnicos/ejecutivos: "ninguna cifra sin medición real", checklist Zero-Trust de UI/UX para reportes HTML. | **Adoptado como estilo de trabajo**, no como código — ya es el criterio seguido en este mismo `CLAUDE.md` y en cada Informe de Operación (§5). No genera artefactos propios salvo que el Arquitecto pida un reporte HTML formal. |
+| `MODULO_03_CONEXION_SSH_HOSTING.md` | Gestión de llaves SSH (nunca despojarlas de passphrase) y una "Matriz de Reconocimiento" (Fase 4) de comandos de diagnóstico remoto. | **Adoptado y pendiente de ejecución.** Es el protocolo exacto que el Arquitecto debe correr (vía SSH o cPanel Terminal) para confirmar la causa raíz del 403 diagnosticado en §6 — permisos de archivo/carpeta y Document Root del subdominio. Esta IA no tiene credenciales SSH/File Manager, por eso no pudo ejecutarlo directamente. |
+| `MODULO_04_MARKETING_ORGANICO.md` | Growth Marketing / AdServer B2B White-Label para una plataforma de noticias/medios: viewability tracking, sitemaps, anti-fraude publicitario. | **No aplica (N/A).** El modelo de negocio de PinturaPittsburgh es e-commerce hiperlocal de pinturas, no una plataforma de noticias/medios con inventario publicitario propio. Se conserva el archivo (nunca se descarta), pero no genera trabajo en este proyecto. |
+| `MOD_CONCIERGE_COGNITIVO_OMNICANAL.md` | Arquitectura de Concierge Cognitivo Omnicanal (contrato OCMC, Proxy-Bridge, integración WhatsApp/Meta). | **No aplica (N/A).** Coincide con el patrón "Mapa B" (chatbot de IA expuesto a clientes externos) descartado explícitamente desde el Hito 1 — ver §1: "Nunca se expone un chatbot de IA a un cliente externo". El Asistente de Contenido IA de este proyecto (Contrato 7) es interno/administrativo únicamente. |
+| `MOD_OPERADOR_COGNITIVO_OMNICANAL.md` | Versión paralela/anterior de `MOD_CONCIERGE...` (mismo patrón OCMC/Proxy-Bridge/WhatsApp, incluye un worker CLI). | **No aplica (N/A)** — misma razón que el módulo anterior. |
+| `MOD_CONEXION_SATELLITE_AURA_M2M.md` | Conector M2M servidor-a-servidor hacia un servicio satélite LLM ("AURA"). | **No aplica (N/A)** — este proyecto no opera un servicio de IA expuesto a terceros ni un satélite M2M; el Asistente de Contenido IA es una integración directa (Claude/OpenAI) sin capa de proxy. |
+| `MOD_PROTOCOLO_COLABORACION_EXTERNA.md` | Protocolo de colaboración con freelancers externos (documento truncado — le faltan las secciones 2-4 respecto a una v1.0 previa). | **Ya implementado de forma independiente.** El modelo Zero-Trust de colaboradores externos (rol `colaborador`, `assets/js/colaborador-gate.js`, onboarding en `Colaboradores/`) construido en el Hito 6 cumple el espíritu de este archivo aunque se diseñó antes de leerlo a fondo. El archivo fuente sigue incompleto — no se completa aquí porque no es un blueprint agnóstico editable por esta IA (le falta contenido al propio holding), solo se deja constancia de la discrepancia. |
+
+### Decisión de diseño — por qué el Dashboard sigue usando Bearer JWT/sessionStorage y no "sesión PHP blindada"
+
+El Arquitecto dio libertad explícita entre "JWT/Bearer o sesión PHP blindada" (Hito 12, Directiva 2). Se mantuvo JWT/Bearer porque:
+1. Es el mecanismo ya construido, probado y documentado desde el Hito 2 (`api/auth_login.php`, `api/auth_refresh.php`, `assets/js/admin-auth.js`) — migrar a sesión PHP con cookies habría sido un cambio de arquitectura de autenticación completo, no solicitado explícitamente y con mayor superficie de riesgo que adaptarlo.
+2. Ninguna página `admin/*.php` embebe datos reales en el HTML inicial — todo dato sensible llega después vía `authFetch()` con el `Authorization: Bearer` real, que el servidor sí valida (`api/auth_middleware.php`). El único riesgo real de "renderizar sin autenticación" sería una fuga de datos, y esa fuga no existe en este diseño.
+3. El límite honesto de esta decisión (documentado también en `assets/js/admin-guard.js`): no es una validación server-side de sesión antes del primer byte de respuesta — es un guard cliente que oculta el *chrome* (estructura visual) hasta confirmar que existe una sesión local, mismo patrón anti-parpadeo que `theme-init.js`. Si en el futuro el Arquitecto requiere bloqueo server-side real (ej. para cumplir un requisito de auditoría externa), la migración a sesión PHP blindada de `MODULO_01_LOGIN_Y_ACCESO.md` §5.5 queda documentada aquí como el camino a seguir — no implementada todavía.

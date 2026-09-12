@@ -1,6 +1,6 @@
 // assets/js/admin-asistente.js — PinturaPittsburgh_LaPazBCS
-// Wiring de admin/asistente.html: consumo de api/asistente_ia.php (Contrato 7)
-// y transferencia del resultado hacia admin/social.html para revisión humana.
+// Wiring de admin/asistente.php: consumo de api/asistente_ia.php (Contrato 7)
+// y transferencia del resultado hacia admin/social.php para revisión humana.
 (function (global, document) {
     'use strict';
 
@@ -111,7 +111,7 @@
             producto_id: outputTexto.dataset.productoId
         };
         sessionStorage.setItem(TRANSFER_KEY, JSON.stringify(datos));
-        window.location.href = 'social.html';
+        window.location.href = 'social.php';
     }
 
     function init() {

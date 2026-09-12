@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (sesion.role === 'colaborador') {
                     window.location.href = '../Colaboradores/onboarding_colaborador.html';
                 } else {
-                    window.location.href = 'catalogo.html';
+                    window.location.href = 'index.php';
                 }
             })
             .catch(function (err) {

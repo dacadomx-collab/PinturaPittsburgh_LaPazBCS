@@ -1,5 +1,5 @@
 // assets/js/admin-social.js — PinturaPittsburgh_LaPazBCS
-// Wiring de admin/social.html: previsualizador en vivo, envío a
+// Wiring de admin/social.php: previsualizador en vivo, envío a
 // api/social_publicar.php (Contrato 6) y feed de historial.
 (function (global, document) {
     'use strict';

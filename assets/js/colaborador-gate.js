@@ -11,7 +11,7 @@
 // Verifica DOS condiciones: (1) existe una sesión con access_token — si no,
 // a login; (2) el rol de esa sesión es 'colaborador' — si es admin/staff,
 // también se redirige (esta página es exclusiva del rol colaborador; un
-// admin ya tiene su propio flujo en admin/catalogo.html).
+// admin ya tiene su propio flujo en admin/index.php).
 //
 // NOTA: no se usa api/status_check.php como verificación de sesión — ese
 // endpoint es un chequeo de salud del servidor (filesystem/BD/SMTP), no
