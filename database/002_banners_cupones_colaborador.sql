@@ -3,6 +3,14 @@
 -- Migración 002 — Autorizada por el Arquitecto (2026-09-12): rol 'colaborador',
 -- tabla `banners`, tabla `cupones`.
 --
+-- REVISIÓN 2026-09-12 (misma migración, corregida in-place): el Arquitecto
+-- ajustó las columnas de `banners` (agrega `eyebrow`, `descripcion`; quita
+-- `subtitulo`) y `cupones` (agrega `badge`, `imagen_url`, `url`; `codigo`
+-- pasa de opcional a obligatorio). Como esta migración NUNCA se ejecutó
+-- contra ningún servidor real (sin conectividad a chir205.websitehostserver.net
+-- en todo este proyecto), se corrige el mismo archivo en vez de encadenar un
+-- 003 que altere tablas que jamás llegaron a existir en ninguna BD.
+--
 -- REGLA DE ORO (Directiva 1): solo estructura (DDL). La alta del usuario
 -- Rafael NO vive en este script — se aprovisiona con `scripts/seed_admin.php`
 -- (ya diseñado para generar contraseñas seguras y nunca tocar Git), evitando
@@ -27,10 +35,11 @@ ALTER TABLE `users`
 CREATE TABLE IF NOT EXISTS `banners` (
     `id`          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     `titulo`      VARCHAR(150)    NOT NULL,
-    `subtitulo`   VARCHAR(255)    NULL,
+    `eyebrow`     VARCHAR(100)    NULL COMMENT 'Texto corto sobre el título (ej. "Nueva línea", "Exclusivo La Paz")',
+    `descripcion` TEXT            NULL,
     `imagen_url`  VARCHAR(500)    NOT NULL,
     `cta_texto`   VARCHAR(60)     NULL COMMENT 'Texto del botón de llamada a la acción',
-    `cta_url`     VARCHAR(255)    NULL COMMENT 'Destino del botón — puede ser un producto, categoría o promoción',
+    `cta_url`     VARCHAR(500)    NULL COMMENT 'Destino del botón — puede ser un producto, categoría o promoción',
     `orden`       INT UNSIGNED    NOT NULL DEFAULT 0 COMMENT 'Orden de aparición en el carrusel',
     `activo`      TINYINT(1)      NOT NULL DEFAULT 1,
     `created_at`  DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -44,8 +53,11 @@ CREATE TABLE IF NOT EXISTS `banners` (
 -- -----------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `cupones` (
     `id`              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `codigo`          VARCHAR(30)     NULL COMMENT 'NULL si es promo informativa sin código canjeable',
-    `descripcion`     VARCHAR(255)    NOT NULL,
+    `codigo`          VARCHAR(40)     NOT NULL COMMENT 'Toda promoción listada requiere código canjeable — ya no admite NULL',
+    `badge`           VARCHAR(60)     NULL COMMENT 'Etiqueta corta de la tarjeta (ej. "-20%", "2x1")',
+    `descripcion`     TEXT            NULL,
+    `imagen_url`      VARCHAR(500)    NULL,
+    `url`             VARCHAR(500)    NULL COMMENT 'Destino de la tarjeta de promoción (producto, categoría, landing)',
     `tipo_descuento`  ENUM('porcentaje','monto_fijo') NOT NULL,
     `valor_descuento` DECIMAL(10,2)   NOT NULL COMMENT 'Nunca debe resultar en precio final por debajo de productos.precio_minimo_map (regla MAP)',
     `fecha_inicio`    DATE            NOT NULL,

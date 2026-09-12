@@ -29,7 +29,7 @@ try {
     $pdo = (new Database())->getConnection();
 
     $stmt = $pdo->query(
-        "SELECT id, codigo, descripcion, tipo_descuento, valor_descuento, fecha_inicio, fecha_fin
+        "SELECT id, codigo, badge, descripcion, imagen_url, url, tipo_descuento, valor_descuento, fecha_inicio, fecha_fin
          FROM cupones
          WHERE activo = 1
            AND CURDATE() BETWEEN fecha_inicio AND fecha_fin
