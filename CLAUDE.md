@@ -410,3 +410,16 @@ El Arquitecto dio libertad explícita entre "JWT/Bearer o sesión PHP blindada" 
 1. Es el mecanismo ya construido, probado y documentado desde el Hito 2 (`api/auth_login.php`, `api/auth_refresh.php`, `assets/js/admin-auth.js`) — migrar a sesión PHP con cookies habría sido un cambio de arquitectura de autenticación completo, no solicitado explícitamente y con mayor superficie de riesgo que adaptarlo.
 2. Ninguna página `admin/*.php` embebe datos reales en el HTML inicial — todo dato sensible llega después vía `authFetch()` con el `Authorization: Bearer` real, que el servidor sí valida (`api/auth_middleware.php`). El único riesgo real de "renderizar sin autenticación" sería una fuga de datos, y esa fuga no existe en este diseño.
 3. El límite honesto de esta decisión (documentado también en `assets/js/admin-guard.js`): no es una validación server-side de sesión antes del primer byte de respuesta — es un guard cliente que oculta el *chrome* (estructura visual) hasta confirmar que existe una sesión local, mismo patrón anti-parpadeo que `theme-init.js`. Si en el futuro el Arquitecto requiere bloqueo server-side real (ej. para cumplir un requisito de auditoría externa), la migración a sesión PHP blindada de `MODULO_01_LOGIN_Y_ACCESO.md` §5.5 queda documentada aquí como el camino a seguir — no implementada todavía.
+
+
+## Excepción autorizada — base local de pruebas
+
+Por petición explícita del usuario en esta sesión, se habilita una base MariaDB
+local sin contraseña, aislada en 127.0.0.1:3307. La restricción histórica de usar
+solo BD remota no aplica a este entorno de prueba solicitado. No se cambian
+staging ni producción. Ver `database/LOCAL.md` y los scripts
+`local_database.sh` / `setup_local_database.php`. Las migraciones originales
+se reutilizan; `003_seed_local.sql` contiene únicamente ejemplos locales y
+nunca debe ejecutarse en una base comercial. `.env` y los archivos de datos
+permanecen excluidos de Git. El frontend normal consulta las APIs existentes;
+`?demo=1` conserva su comportamiento de fixtures JSON.

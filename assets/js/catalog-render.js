@@ -120,52 +120,30 @@
         return params.length ? '?' + params.join('&') : '';
     }
 
-    function render() {
+    var renderVersion = 0;
+    async function render() {
         var grid = document.getElementById('catalogo-grid');
-        if (!grid) {
-            return;
-        }
-
-        grid.innerHTML = '';
-        var loading = document.createElement('p');
-        loading.className = 'arf-col-4';
-        loading.textContent = 'Cargando catálogo...';
-        grid.appendChild(loading);
-
-        fetch('api/catalogo_listar.php' + buildQueryString())
-            .then(function (res) { return res.json(); })
-            .then(function (body) {
-                grid.innerHTML = '';
-
-                if (body.status !== 'success') {
-                    var errorMsg = document.createElement('p');
-                    errorMsg.className = 'arf-col-4';
-                    errorMsg.textContent = body.message || 'No fue posible cargar el catálogo.';
-                    grid.appendChild(errorMsg);
-                    return;
-                }
-
-                var productos = body.data.productos || [];
-
-                if (productos.length === 0) {
-                    var empty = document.createElement('p');
-                    empty.className = 'arf-col-4';
-                    empty.textContent = 'No hay productos con esa combinación de filtros por ahora.';
-                    grid.appendChild(empty);
-                    return;
-                }
-
-                productos.forEach(function (producto) {
-                    grid.appendChild(buildCard(producto));
-                });
-            })
-            .catch(function () {
-                grid.innerHTML = '';
-                var offline = document.createElement('p');
-                offline.className = 'arf-col-4';
-                offline.textContent = 'No fue posible conectar con el catálogo. Intenta de nuevo más tarde.';
-                grid.appendChild(offline);
+        var section = document.querySelector('[data-catalog-section]');
+        if (!grid || !section || !global.PPHomeData) return;
+        var version = ++renderVersion;
+        global.PPHomeData.setState(section, 'loading');
+        try {
+            var productos = await global.PPHomeData.read('api/catalogo_listar.php' + buildQueryString(), 'productos');
+            // Una respuesta anterior no puede sobrescribir el filtro más reciente.
+            if (version !== renderVersion) return;
+            var fragment = document.createDocumentFragment();
+            productos.forEach(function (producto) {
+                var card = buildCard(producto);
+                card.dataset.productId = String(producto.id);
+                fragment.appendChild(card);
             });
+            grid.replaceChildren(fragment);
+            global.PPHomeData.setState(section, productos.length ? 'success' : 'empty');
+        } catch (_) {
+            if (version !== renderVersion) return;
+            grid.replaceChildren();
+            global.PPHomeData.setState(section, 'error');
+        }
     }
 
     function buildFacetGroup(containerId, facetKey) {

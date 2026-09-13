@@ -1,135 +1,154 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PinturaPittsburgh — Distribuidor Autorizado en La Paz, B.C.S.</title>
-    <meta name="description" content="PinturaPittsburgh, Distribuidor Autorizado de The Pittsburgh Paints Company en La Paz, B.C.S. Speedhide, Manor Hall, Perma-Crete y Pitt-Glaze. Entrega a domicilio y despacho en obra exclusivo en la zona urbana de La Paz.">
-    <link rel="icon" href="favicon.ico">
-
-    <!-- Sin defer/async y ANTES del CSS: fija data-theme en <html> antes del
-         primer paint para evitar parpadeo de tema (Regla de Oro: JS en
-         assets/js/, nunca inline). -->
+    <meta name="description"
+        content="Banners y promociones en La Paz, B.C.S.. PinturaPittsburgh — Distribuidor Autorizado en La Paz. Consulta productos, promociones y asesoría local.">
+    <meta name="theme-color" content="#072757">
+    <title>Banners y promociones en La Paz, B.C.S. | PinturaPittsburgh</title>
+    <link rel="icon" href="favicon.ico" sizes="any">
+    <link rel="icon" href="assets/img/logo.svg" type="image/svg+xml" sizes="any">
     <script src="assets/js/theme-init.js"></script>
-
-    <!-- CSS crítico: preload + stylesheet (Mandamiento UX #90+: carga asíncrona) -->
-    <link rel="preload" href="assets/css/main.css" as="style">
+    <script src="assets/js/page-routes.js"></script>
+    <script src="assets/js/home-boot.js"></script>
     <link rel="stylesheet" href="assets/css/main.css">
 </head>
-<body>
-    <header class="site-header">
-        <div class="container site-header__bar">
-            <p class="site-header__value-prop">
-                The Pittsburgh Paints Company en La Paz, B.C.S. — Entrega a Domicilio y Despacho en Obra Exclusivo en Zona Urbana de La Paz
-            </p>
-            <button type="button" id="theme-toggle-btn" class="theme-toggle-btn" aria-label="Cambiar entre modo día y modo noche"></button>
+
+<body class="home">
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <div class="utility-bar">
+        <div class="home-container utility-bar__inner">
+            <span>Distribuidor Autorizado <span class="utility-location">· La Paz, B.C.S.</span></span>
+            <a href="cobertura.html">Entrega local. Consulta tu cobertura <span aria-hidden="true">↗</span></a>
+        </div>
+    </div>
+    <header class="home-header">
+        <div class="home-container home-nav">
+            <a class="home-brand" href="index.html"
+                aria-label="PinturaPittsburgh — Distribuidor Autorizado en La Paz. Inicio">
+                <picture>
+                    <source srcset="assets/img/logo_largo_avif.avif" type="image/avif"><img
+                        src="assets/img/logo_largo_webp.webp" alt="Pittsburgh Paints Co." width="500" height="183">
+                </picture>
+                <span>Distribuidor Autorizado en La Paz</span>
+            </a>
+            <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="home-navigation" hidden><span
+                    class="menu-toggle__lines" aria-hidden="true"></span><span>Menú</span></button>
+            <nav class="home-navigation" id="home-navigation" aria-label="Navegación principal">
+                <a href="index.html" aria-current="page">Inicio</a>
+                <a href="productos.html">Productos</a>
+                <a href="inspiracion.html">Color e inspiración</a>
+                <a href="nosotros.html">Nosotros</a>
+                <a href="calculadora.html">Calculadora</a>
+                <a href="cobertura.html">Cobertura</a>
+                <a class="nav-store" href="tienda.html">Encuentra tu tienda <span aria-hidden="true">↗</span></a>
+            </nav>
         </div>
     </header>
-
-    <main>
-        <div class="container arf-grid">
-            <section class="card arf-col-2">
-                <picture>
-                    <source srcset="assets/img/logo.avif" type="image/avif">
-                    <source srcset="assets/img/logo.webp" type="image/webp">
-                    <img src="assets/img/logo.svg" alt="PinturaPittsburgh - Distribuidor Autorizado en La Paz" loading="lazy" width="200" height="60">
-                </picture>
-                <h1>PinturaPittsburgh <span class="brand-accent">La Paz</span></h1>
-                <p class="brand-tagline">Distribuidor Autorizado de The Pittsburgh Paints Company — 150 años de respaldo técnico, entrega el mismo día en la ciudad de La Paz.</p>
-                <p class="brand-lines">Líneas disponibles: <strong>Speedhide</strong> · <strong>Manor Hall</strong> · <strong>Perma-Crete</strong> · <strong>Pitt-Glaze</strong></p>
-            </section>
-
-            <!-- Barra de Validación Postal (Directiva 2 §3) -->
-            <section class="card arf-col-2" aria-labelledby="postal-bar-titulo">
-                <h2 id="postal-bar-titulo">¿Entregamos en tu domicilio?</h2>
-                <p class="brand-tagline">La entrega a domicilio y el despacho en obra aplican exclusivamente dentro del municipio de La Paz, B.C.S.</p>
-                <form id="postal-bar-form" class="postal-bar">
-                    <div class="postal-bar__input-group">
-                        <label class="visually-hidden" for="postal-bar-input">Código Postal</label>
-                        <input class="field" type="text" inputmode="numeric" pattern="\d{5}" maxlength="5" id="postal-bar-input" name="cp" placeholder="Ej. 23000" required>
-                        <button type="submit" class="btn">Validar</button>
+    <main id="contenido">
+<div class="home-container page-intro"><p class="eyebrow">PINTURAPITTSBURGH · DISTRIBUIDOR AUTORIZADO</p><h1>Banners y promociones en La Paz, B.C.S.</h1></div>
+<section class="home-section home-container dynamic-section" data-banner-slider aria-labelledby="banners-title"
+            aria-busy="true">
+            <p class="eyebrow">NOVEDADES PARA TU PROYECTO</p>
+            <h2 id="banners-title">Lo que viene para <em>tu espacio.</em></h2>
+            <p class="demo-notice" data-demo-notice hidden>Vista de demostración: contenido de ejemplo, no constituye
+                una oferta vigente.</p>
+            <div aria-live="polite">
+                <p data-state="loading" class="data-message">Cargando novedades…</p>
+                <p data-state="empty" class="data-message" hidden>No hay novedades publicadas por ahora. Explora
+                    nuestras líneas de pintura.</p>
+                <p data-state="error" class="data-message" hidden>No pudimos cargar las novedades. Puedes consultar
+                    nuestros productos en tienda.</p>
+                <div data-state="success" hidden>
+                    <div class="banner-track" data-banner-track></div>
+                    <div class="banner-controls" data-banner-controls hidden>
+                        <button type="button" class="home-button" data-banner-prev aria-label="Banner anterior">←
+                            Anterior</button>
+                        <span data-banner-position></span>
+                        <button type="button" class="home-button" data-banner-next
+                            aria-label="Banner siguiente">Siguiente →</button>
                     </div>
-                    <p id="postal-bar-result" class="postal-bar__result" hidden></p>
-                </form>
-            </section>
-
-            <section class="card arf-col-3">
-                <h2>Tienda Física</h2>
-                <p>Bulevar Agustín Olachea e Indeco, La Paz, B.C.S.</p>
-            </section>
-            <section class="card arf-col-3">
-                <h2>Despacho Local</h2>
-                <p>Entregas en menos de 2 a 4 horas según zona, dentro de la mancha urbana de La Paz.</p>
-            </section>
-            <section class="card arf-col-3">
-                <h2>Asesoría Técnica</h2>
-                <p>Especialistas en protección contra salitre, radiación UV y corrosión marina para el microclima paceño.</p>
-                <p id="status-check"></p>
-            </section>
-        </div>
-
-        <!-- Calculadora de Pintura Costera (Directiva 2 §3) -->
-        <div class="container arf-grid">
-            <section class="card arf-col-2" aria-labelledby="calculadora-titulo">
-                <h2 id="calculadora-titulo">Calculadora de Pintura Costera</h2>
-                <p class="brand-tagline">Estima cuántos galones o cubetas necesitas según el área de tu muro, su textura y su exposición al ambiente marino.</p>
-                <form id="calculadora-pintura" class="calculator-grid">
-                    <div class="field-group">
-                        <label for="calc-area">Área a pintar (m²)</label>
-                        <input class="field" type="number" min="1" step="0.1" id="calc-area" name="area" required>
-                    </div>
-                    <div class="field-group">
-                        <label for="calc-textura">Textura del muro</label>
-                        <select class="field" id="calc-textura" name="textura">
-                            <option value="liso">Liso</option>
-                            <option value="enjarre_fino">Enjarre fino</option>
-                            <option value="estuco_rustico">Estuco rústico</option>
-                        </select>
-                    </div>
-                    <div class="field-group">
-                        <label for="calc-exposicion">Exposición ambiental</label>
-                        <select class="field" id="calc-exposicion" name="exposicion">
-                            <option value="interior">Interior</option>
-                            <option value="exterior_protegido">Exterior protegido</option>
-                            <option value="exterior_expuesto">Exterior expuesto a brisa marina</option>
-                        </select>
-                    </div>
-                    <div class="field-group">
-                        <button type="submit" class="btn btn--gold">Calcular</button>
-                    </div>
-                </form>
-                <div id="calculadora-resultado" class="calculator-result" hidden>
-                    <p id="calculadora-resultado-valor" class="calculator-result__value"></p>
-                    <p id="calculadora-resultado-nota" class="calculator-result__note"></p>
                 </div>
-            </section>
-        </div>
-
-        <!-- Catálogo de Productos Facetado (Directiva 2 §3) -->
-        <div class="container text-center">
-            <h2>Catálogo de Productos</h2>
-            <p class="brand-tagline">Filtra por sustrato y grado de brillo. Precios de referencia — consulta disponibilidad y precio vigente en tienda.</p>
-        </div>
-        <div id="facet-sustrato" class="facet-filters" role="group" aria-label="Filtrar por sustrato"></div>
-        <div id="facet-brillo" class="facet-filters" role="group" aria-label="Filtrar por grado de brillo"></div>
-        <div id="catalogo-grid" class="container arf-grid"></div>
+            </div>
+            <template data-banner-template>
+                <div class="banner-slide" data-banner-item>
+                    <img data-field="imagen_url" src="assets/img/personas_pintando_webp.webp" alt="" width="800"
+                        height="275" loading="lazy">
+                    <div class="banner-slide__copy">
+                        <p class="eyebrow" data-field="eyebrow"></p>
+                        <h3 data-field="titulo"></h3>
+                        <p data-field="descripcion"></p>
+                        <a class="home-button home-button--copper" data-cta-link href="productos.html"><span
+                                data-field="cta_texto"></span><span aria-hidden="true">↗</span></a>
+                    </div>
+                </div>
+            </template>
+        </section>
+<section class="home-section home-container dynamic-section" data-promo-section aria-labelledby="promos-title"
+            aria-busy="true">
+            <p class="eyebrow">MÁS PARA TU PRÓXIMO PROYECTO</p>
+            <h2 id="promos-title">Promociones <em>en La Paz.</em></h2>
+            <p class="demo-notice" data-demo-notice hidden>Vista de demostración: cupones de ejemplo, no canjeables.</p>
+            <div aria-live="polite">
+                <p data-state="loading" class="data-message">Cargando promociones…</p>
+                <p data-state="empty" class="data-message" hidden>No hay promociones vigentes por ahora.</p>
+                <p data-state="error" class="data-message" hidden>No pudimos consultar las promociones. Confirma las
+                    ofertas vigentes en tienda.</p>
+                <div class="promo-grid" data-state="success" hidden></div>
+            </div>
+            <template data-promo-template>
+                <article class="promo-card" data-promo-code>
+                    <img data-field="imagen_url" src="assets/img/brocha_webp.webp" alt="" width="500" height="500"
+                        loading="lazy">
+                    <div class="dynamic-card__copy">
+                        <span class="promo-badge" data-field="badge"></span>
+                        <h3 data-field="descripcion"></h3>
+                        <p>Código: <strong data-field="codigo"></strong></p>
+                        <p class="validity">Vigencia: <time data-field="fecha_inicio"></time> al <time
+                                data-field="fecha_fin"></time></p>
+                        <a class="text-link" data-cta-link href="tienda.html">Consultar promoción <span
+                                aria-hidden="true">↗</span></a>
+                    </div>
+                </article>
+            </template>
+        </section>
     </main>
-
-    <footer class="site-footer">
-        <div class="container">
-            <p>PinturaPittsburgh - Distribuidor Autorizado La Paz · Bulevar Agustín Olachea e Indeco, La Paz, B.C.S.</p>
+    <footer class="home-footer">
+        <div class="home-container footer-top">
+            <div class="footer-brand">
+                <picture>
+                    <source srcset="assets/img/logo_largo_avif.avif" type="image/avif"><img
+                        src="assets/img/logo_largo_webp.webp" alt="Pittsburgh Paints Co." width="500" height="183"
+                        loading="lazy">
+                </picture>
+                <p>PinturaPittsburgh — Distribuidor Autorizado en La Paz</p><span>El respaldo que conoces.<br>La
+                    atención que está cerca.</span>
+            </div>
+            <div class="footer-links">
+                <h2>Tu proyecto</h2><a href="productos.html">Nuestros productos</a><a href="inspiracion.html">Color e
+                    inspiración</a><a href="calculadora.html">Calculadora de pintura</a>
+            </div>
+            <div class="footer-links">
+                <h2>Estamos cerca</h2><a href="tienda.html">Encuentra tu tienda</a><a href="cobertura.html">Consulta tu
+                    cobertura</a><a href="nosotros.html">Conócenos</a>
+            </div>
+            <div class="footer-links">
+                <h2>Tu espacio</h2><a href="checkout.html">Ver mi carrito <span aria-hidden="true">↗</span></a><a
+                    href="admin/login.php">Acceso colaboradores</a><button type="button" id="theme-toggle-btn"
+                    class="theme-toggle-btn" aria-label="Cambiar entre modo día y modo noche">Cambiar tema</button>
+            </div>
+        </div>
+        <div class="home-container footer-bottom">
+            <p>© 2026 PinturaPittsburgh. Distribuidor Autorizado en La Paz, B.C.S.</p><span>Hecho para darle vida a tus
+                ideas.</span>
         </div>
     </footer>
-
     <button type="button" id="back-to-top-btn" class="back-to-top-btn" hidden aria-label="Volver arriba">↑</button>
-
-    <!-- defer: el JS no bloquea el render; cada módulo se expone en window.PP*
-         y main.js los inicializa al final, tras DOMContentLoaded. -->
-    <script src="assets/js/postal-coverage.js" defer></script>
-    <script src="assets/js/catalog-render.js" defer></script>
-    <script src="assets/js/paint-calculator.js" defer></script>
+    <script src="assets/js/home-data.js" defer></script>
     <script src="assets/js/theme-toggle.js" defer></script>
     <script src="assets/js/back-to-top.js" defer></script>
-    <script src="assets/js/main.js" defer></script>
+    <script src="assets/js/home.js" defer></script>
 </body>
 </html>
