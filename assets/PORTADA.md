@@ -492,3 +492,119 @@ estados y protección contra respuestas fuera de orden.
 Chromium a 390/1440 con respuestas controladas: coincidencia sin acento en
 producto 21 (segunda página), combinación con filtro que deja cero resultados,
 sin enlaces de ficha ni overflow, círculos transparentes. JS y diff correctos.
+
+## Famza como identidad principal y flotante centrado
+
+La instrucción expresa más reciente establece a Famza como cliente y marca
+principal, por encima de las pinturas Pittsburgh. Sustituye las pautas previas
+de denominación en la presentación pública. Se revisó `logoOriginal.webp` y
+se usó su par AVIF/WebP original en cabeceras/pies de las siete páginas; se
+actualizaron nombres y metadatos públicos, también la denominación en checkout.
+No se modificaron marcas o nombres comerciales de productos ni el backend.
+Nosotros destaca los 36 años de Famza en lugar de la antigüedad del fabricante.
+Se mantienen las ubicaciones/contactos confirmados y el perfil Facebook por
+ID; el nuevo enlace genérico de Facebook no sustituye el perfil correcto.
+
+Redes: posición fixed al 50% de altura de ventana, columna también en móvil,
+con carril reservado para evitar cubrir el contenido. Se suprime el anterior
+espacio inferior reservado. IntersectionObserver ajusta a blanco el trazo al
+coincidir con el pie azul; sin fondo ni listeners de scroll. Fondos grises de
+productos/feed y superficies de tarjetas pasan a la base clara del tema.
+
+Chromium: siete páginas a 390 y 1440, logo nuevo, flotante centrado y sin
+desbordamiento horizontal; capturas del pie generadas. Sintaxis JS y diff
+correctos. Los originales de assets/img siguen bajo la política existente
+de archivos ignorados: deben estar disponibles en el servidor al publicar.
+
+## Logo transparente y flotante sin carril móvil
+
+La edición generativa produjo cuadros dibujados, no alfa real, y fue descartada.
+`assets/icons/famza-transparent.svg` incorpora el WebP original sin redibujar
+la marca y usa feColorMatrix para eliminar el fondo casi blanco; viewBox acota
+el margen vacío. El original permanece intacto. Cabecera/pie usan este recurso
+local, conservando colores y tipografía. No hay cuadros simulados ni una nueva
+imagen generada en el sitio. Máscara fija, no animada.
+
+Se elimina el padding lateral móvil: el flotante ocupa solo sus iconos y queda
+sobre la página. Hover únicamente en puntero preciso, ligero movimiento y
+escala, sin el doble anillo anterior; outline reservado al teclado. Se respeta
+movimiento reducido. Contraste sobre footer se aplica también en móvil.
+
+Chromium 390/1440: sin padding lateral ni overflow; capturas generadas y logo
+transparente revisado visualmente en móvil. Diff correcto.
+
+## Nitidez, halo y nuevas campañas Famza
+
+Logo: contorno vectorial en el SVG contenedor sustituye la eliminación por
+color que producía halos. Mantiene los píxeles del WebP original y acota su
+presentación a 11rem; no es una reconstrucción HD ni un vector de la tipografía.
+Para más detalle a gran escala se requiere el original vectorial o una fuente
+más grande. Hover de redes: halo localizado con blur fijo de .4rem, animando
+solo opacidad; el símbolo se mantiene legible y movimiento reducido se respeta.
+
+Aplicado `database/006_banners_famza_local.sql` únicamente a la instancia propia
+verificada: cuatro banners idempotentes con color_collection, salvia, image_3
+y SpeedCryl. Textos de prueba y enlaces a asesoría/catálogo, sin precios ni
+ofertas inventadas. Ahora hay siete banners activos. Inspiración reutiliza el
+mismo endpoint, template y carrusel de Inicio (3.5s, puntos y cuatro estados),
+sin nueva columna ni contratos de API. Sin `?demo=1` se muestran los registros
+reales; el fixture de demo no incluye estas nuevas campañas.
+
+Chromium 390/1440: siete puntos, cuatro imágenes nuevas cargadas desde BD,
+sin overflow, capturas de logo/hover generadas y móvil revisado. Diff correcto.
+
+## Campos discretos y mascota Pitahaya
+
+Los campos `.field` del sitio público (incluidos búsqueda, selectores y
+checkout) usan borde cobre en hover y foco fino interior, sin sombra ni
+transformación. Se conserva un indicador de teclado visible sin la separación
+exagerada heredada del foco general.
+
+Nosotros incorpora una tarjeta adaptable de Pitahaya con los originales
+AVIF/WebP aportados, proporción 4:5, carga diferida y texto alternativo. Imagen
+completa sin recorte ni ampliación, texto breve y enlace a Inspiración.
+Pruebas Chromium a 390/1440: foco de campos visibles en Productos, Calculadora,
+Cobertura y Checkout sin sombra/desplazamiento, mascota cargada y Nosotros sin
+overflow. Capturas generadas; diff correcto. Backend intacto.
+
+## Tarjetas editoriales como banners en BD
+
+Por autorización expresa, ambas tarjetas de Nosotros y la tarjeta ilustrada
+de color pasan a la tabla banners. `007_ubicacion_banners.sql` añade ubicacion
+(VARCHAR, default inicio); `008_editoriales_famza_local.sql` carga los textos
+actuales, incluyendo «Pita, tu Pitahayita de confianza», sin duplicados.
+Pita tiene orden 1 y Famza orden 2 en ubicacion nosotros; color del año usa
+inspiracion. Los siete banners anteriores conservan inicio. La API agrega
+ubicacion a su respuesta y desempata por id. El frontend filtra por ubicación
+y comparte una petición por página; los banners editoriales son tarjetas
+estáticas, no un carrusel, y tienen Loading/Empty/Success/Error y template.
+
+La tarjeta de Pita está arriba, sin borde ni fondo propio. Se respeta el nombre
+ajustado por el usuario. Promociones/publicaciones ya se alimentan de sus tablas;
+se conservan sus contratos. Productos mantiene su excepción, y logotipos,
+iconos y mapas son identidad/navegación, no campañas editoriales.
+
+IMPORTANTE para publicar: aplicar 007 a la base destino ANTES de desplegar
+la API que selecciona ubicacion; 008 solo corresponde a pruebas locales.
+El fixture demo no contiene los nuevos editoriales y muestra Empty; revisar
+la base real local sin ?demo=1. No se realizaron escrituras remotas.
+Pruebas Chromium 390/1440: Pita primero, dos tarjetas Nosotros, una de color,
+siete campañas generales sin contaminación entre ubicaciones, sin overflow.
+Empty/Error interceptados verificados. Sintaxis PHP/JS y diff correctos.
+
+## Directiva vigente: sitio informativo, sin ventas en línea
+
+Por instrucción explícita del usuario, NO se realizan ventas desde esta página.
+Retirado el enlace al carrito de las siete páginas, formulario de compra y
+scripts cart.js, checkout-page.js y producto-page.js (ficha antigua). Eliminado
+CSS exclusivo de checkout y ajustados mensajes de calculadora/cobertura.
+La URL histórica checkout.html redirige a Tienda y tiene fallback informativo.
+
+La ruta pública api/pedido_crear.php responde 410 sin conexión a BD ni cambios
+de stock, para que antiguos clientes tampoco generen pedidos. Esta retirada
+sustituye los requisitos previos de compra pública. Se conservan catálogo,
+filtros, promociones informativas, contactos y herramientas. No se borraron
+tablas, registros históricos ni módulos internos administrativos.
+
+Validado POST local al endpoint: HTTP 410. Sintaxis PHP y diff correctos;
+sin referencias a carrito o sus scripts en páginas públicas ni JS activo.

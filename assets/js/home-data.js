@@ -6,6 +6,7 @@
     var isLocal = ['localhost', '127.0.0.1', '[::1]'].includes(window.location.hostname);
     var demo = isLocal && new URLSearchParams(window.location.search).get('demo') === '1';
     var mockPromise;
+    var bannerPromise;
     var mockKeys = { banners: 'banners', promociones: 'promotions', publicaciones: 'publications' };
     var demoImages = ['assets/img/personas_pintando_webp.webp', 'assets/img/brocha_webp.webp', 'assets/img/maya_manos_webp.webp'];
 
@@ -37,7 +38,11 @@
                 return copy;
             });
         }
-        var body = await fetchJson(endpoint);
+        var body;
+        if (key === 'banners') {
+            if (!bannerPromise) bannerPromise = fetchJson(endpoint);
+            body = await bannerPromise;
+        } else body = await fetchJson(endpoint);
         if (body.status !== 'success' || !body.data || !Array.isArray(body.data[key])) {
             throw new Error('Respuesta inválida');
         }
@@ -164,18 +169,21 @@
     }
 
     async function loadSection(config) {
-        var section = document.querySelector(config.selector);
+        var section = config.element || document.querySelector(config.selector);
         if (!section) return;
         var target = section.querySelector(config.target || '[data-state="success"]');
         var template = section.querySelector('template');
         setState(section, 'loading');
         try {
             var items = await read(config.endpoint, config.key);
+            if (config.key === 'banners') {
+                items = items.filter(function (item) { return (item.ubicacion || 'inicio') === (config.location || 'inicio'); });
+            }
             if (!items.length) { setState(section, 'empty'); return; }
             var fragment = document.createDocumentFragment();
             items.forEach(function (item) { fragment.appendChild(fillCard(template, item, config)); });
             target.replaceChildren(fragment);
-            if (config.key === 'banners' || config.key === 'promociones') {
+            if (!config.editorial && (config.key === 'banners' || config.key === 'promociones')) {
                 initSlider(section, target, config.key === 'banners' ? 'banner' : 'promo');
             }
             setState(section, 'success');
@@ -188,6 +196,9 @@
     window.PPHomeData = { read: read, setState: setState, demo: demo };
     document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('[data-demo-notice]').forEach(function (notice) { notice.hidden = !demo; });
+        document.querySelectorAll('[data-editorial-banners]').forEach(function (section) {
+            loadSection({ element: section, location: section.dataset.bannerLocation, editorial: true, key: 'banners', endpoint: 'api/banners_listar.php', linkKey: 'cta_url', required: ['titulo', 'descripcion', 'cta_texto'] });
+        });
         loadSection({ selector: '[data-banner-slider]', key: 'banners', endpoint: 'api/banners_listar.php', target: '[data-banner-track]', linkKey: 'cta_url', required: ['titulo', 'descripcion', 'cta_texto'] });
         loadSection({ selector: '[data-promo-section]', key: 'promociones', endpoint: 'api/promociones_listar.php', target: '[data-promo-track]', linkKey: 'url', required: ['codigo', 'badge', 'descripcion', 'fecha_inicio', 'fecha_fin'] });
         loadSection({ selector: '[data-social-feed]', key: 'publicaciones', endpoint: 'api/publicaciones_listar.php', required: ['texto', 'publicado_en'] });

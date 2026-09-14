@@ -426,43 +426,6 @@ video {
     gap: var(--space-xs);
 }
 
-/* ── CHECKOUT ──────────────────────────────────────────────────────────────── */
-.checkout-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-xs);
-}
-
-.checkout-item {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-xs);
-    padding: 0.6rem 0.8rem;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius);
-    font-size: 0.85rem;
-}
-
-.checkout-item__quitar {
-    border: none;
-    background: none;
-    color: var(--palette-b91c1c);
-    font-size: 0.78rem;
-    font-weight: 700;
-    cursor: pointer;
-    font-family: inherit;
-}
-
-.checkout-item__quitar:hover,
-.checkout-item__quitar:focus-visible {
-    text-decoration: underline;
-}
-
 /* ── BOTONES Y CAMPOS BASE (sin framework, resueltos desde la raíz) ───────── */
 .btn {
     display: inline-flex;
@@ -1218,7 +1181,7 @@ video {
 .home .footer-bottom { border-color: var(--home-line); }
 /* El fondo propio del logo mantiene legibles sus letras blancas sin alterarlo. */
 .home .home-brand picture, .home .footer-brand picture {
-    background: var(--home-navy); border-radius: .4rem; padding: .5rem;
+    background: transparent; border-radius: 0; padding: 0;
 }
 .home .home-navigation .nav-store, .home .menu-toggle,
 .home .theme-toggle-btn {
@@ -1231,7 +1194,7 @@ video {
 .home .home-navigation a:active { background: var(--home-panel); }
 .home .footer-links a:is(:hover, :focus-visible),
 .home .utility-bar a:is(:hover, :focus-visible) {
-    color: var(--home-ink); text-decoration: underline;
+    color: var(--palette-fff); text-decoration: underline;
     text-decoration-color: var(--home-copper); text-underline-offset: .3rem;
 }
 .home .color-section .home-button--light,
@@ -1285,13 +1248,13 @@ video {
 .home .utility-bar a:is(:hover, :focus-visible) { color: var(--palette-fff); }
 /* Categorías y noticias de la referencia → productos y publicaciones locales. */
 .home .products-section, .home [data-social-feed] {
-    background: var(--home-gray); color: var(--palette-fff);
+    background: var(--home-paper); color: var(--home-ink);
 }
 .home [data-social-feed] {
     width: 100%;
     padding-inline: max(1.25rem, calc((100% - 80rem) / 2));
 }
-.home .products-section .brand-lineup > span { color: var(--palette-fff); }
+.home .products-section .brand-lineup > span { color: var(--home-muted); }
 .home .products-section .catalog-panel, .home .social-card {
     color: var(--home-ink);
 }
@@ -1343,7 +1306,7 @@ video {
 .home :is(.hero, .home-footer, .utility-bar, .products-section) :is(.text-link,
     .hero__text-link, .hero__bottom a, .footer-links a, .product-card__link):is(:hover, :focus-visible),
 .home .utility-bar a:is(:hover, :focus-visible) {
-    color: var(--palette-f2bb91);
+    color: var(--palette-fff);
 }
 .home .products-section .catalog-panel .text-link:is(:hover, :focus-visible) {
     color: var(--home-ink);
@@ -1593,15 +1556,20 @@ video {
     .home .social-float > :nth-child(3) { --social-icon: url("../icons/tik-tok.png"); }
     .home .social-float > :nth-child(4) { --social-icon: url("../icons/whatsapp.png"); }
 }
-.home .social-float a { transition: transform .2s ease; }
-.home .social-float a:is(:hover, :focus-visible) { color: var(--home-copper); background: transparent; transform: translateY(-.125rem); outline: .125rem solid var(--home-copper); outline-offset: .0625rem; }
+.home .social-float a { transition: transform .18s ease; }
+.home .social-float a:focus-visible { outline: .125rem solid currentColor; outline-offset: .2rem; }
+@media (hover: hover) and (pointer: fine) {
+    .home .social-float a:hover { transform: translateX(-.15rem) scale(1.06); border-color: currentColor; }
+}
+.home .social-float a:active { transform: scale(.96); }
 .home .social-float__pending { opacity: .45; }
 @media (max-width: 49.999rem) {
-    /* Reservar un carril para que las redes no cubran texto ni formularios. */
-    .home { padding-inline-end: 3.75rem; }
     .home .social-float { right: max(.35rem, env(safe-area-inset-right)); gap: .4rem; }
 }
-@media (prefers-reduced-motion: reduce) { .home .social-float a { transition: none; } }
+@media (prefers-reduced-motion: reduce) {
+    .home .social-float a { transition: none; }
+    .home .social-float a:is(:hover, :active) { transform: none; }
+}
 
 /* Páginas editoriales compactas: imagen y texto próximos, escala compartida. */
 .home--editorial .page-intro { padding-block: clamp(1.5rem, 3vw, 2.5rem) .75rem; }
@@ -1655,3 +1623,72 @@ video {
 .home--products .product-card__quick-view { opacity: 1; visibility: visible; transform: none; position: static; }
 .home--products .product-card__quick-view p { margin-bottom: 0; }
 .home--products .catalog-media { display: none; }
+
+/* Famza es la identidad principal; Pittsburgh identifica las pinturas. */
+.home .home-brand picture, .home .footer-brand picture {
+    display: block; overflow: hidden; aspect-ratio: 363 / 112;
+}
+.home .home-brand picture img, .home .footer-brand picture img {
+    width: 100%; height: 100%; object-fit: contain; object-position: center;
+}
+.home .products-section .text-link,
+.home .products-section .text-link:is(:hover, :focus-visible) { color: var(--home-ink); }
+.home :is(.banner-slide, .promo-card, .social-card, .company-card, .store-card) { background: var(--home-paper); }
+.home.home--editorial .color-section,
+.home.home--editorial .color-section__copy { background: var(--home-paper); }
+.home .social-float { max-height: calc(100dvh - 2rem); }
+.home.social-over-footer .social-float > :is(a, span) { color: var(--palette-fff); border-color: var(--palette-fff); }
+
+/* Logo original sin extracción por color: contorno vectorial, sin halos. */
+.home .home-brand, .home .footer-brand picture { max-width: 11rem; }
+/* Blur localizado en halo; la silueta del icono permanece legible. */
+.home .social-float a::after {
+    content: ''; position: absolute; inset: .2rem; border-radius: 50%;
+    background: currentColor; filter: blur(.4rem); opacity: 0;
+    transition: opacity .2s ease; pointer-events: none; z-index: -1;
+}
+@media (hover: hover) and (pointer: fine) {
+    .home .social-float a:hover { transform: none; }
+    .home .social-float a:hover::after { opacity: .3; }
+}
+.home .social-float a:focus-visible::after { opacity: .3; }
+@media (prefers-reduced-motion: reduce) { .home .social-float a::after { transition: none; } }
+.home--editorial [data-banner-slider] { padding-block: 1.5rem 2rem; }
+.home--editorial [data-banner-slider] h2 { font-size: clamp(1.6rem, 2.5vw, 2.3rem); }
+.home--editorial [data-banner-track] > :not([hidden]) { animation: carousel-enter .5s ease both; }
+.home--editorial .banner-slide > img { max-height: 26rem; }
+@media (min-width: 40rem) {
+    .home--editorial .banner-slide > img { flex: 1 1 45%; max-width: 45%; }
+    .home--editorial .banner-slide__copy { flex: 1 1 50%; min-width: 0; padding: 1.5rem; }
+}
+@media (prefers-reduced-motion: reduce) { .home--editorial [data-banner-track] > :not([hidden]) { animation: none; } }
+
+/* Campos: borde discreto en hover y foco interior, sin elevación ni halo. */
+.field:hover { border-color: var(--palette-c86420); box-shadow: none; transform: none; }
+.field:focus, .home .field.field:focus {
+    border-color: var(--palette-c86420); outline: .0625rem solid var(--palette-c86420);
+    outline-offset: -.125rem; box-shadow: none; transform: none;
+}
+.home .field.field:hover { border-color: var(--home-copper); box-shadow: none; transform: none; }
+.home .mascot-section {
+    display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
+    gap: clamp(1.25rem, 3vw, 2.5rem); margin-block: 1rem 2rem;
+    padding: clamp(1rem, 3vw, 2rem); border: 1px solid var(--home-line);
+    border-radius: 1rem; background: var(--home-paper);
+}
+.home .mascot-section__image { flex: 0 1 18rem; min-width: 0; }
+.home .mascot-section__image img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: contain; border-radius: .7rem; }
+.home .mascot-section__copy { flex: 1 1 20rem; min-width: 0; max-width: 34rem; }
+.home .mascot-section__copy .eyebrow { margin-bottom: .65rem; color: var(--home-copper); }
+.home .mascot-section h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); margin-bottom: 1rem; }
+.home .mascot-section__copy > p:not(.eyebrow) { color: var(--home-muted); line-height: 1.7; }
+
+/* Banners editoriales desde BD: orden de registro, sin marco alrededor de Pita. */
+.home .editorial-banners { padding-block: 1rem 2rem; }
+.home .editorial-banner-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem; }
+.home .editorial-banner { flex: 1 1 100%; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: clamp(1rem, 3vw, 2.5rem); border: 0; background: transparent; }
+.home .editorial-banner > img { flex: 0 1 18rem; width: 100%; max-width: min(100%, 18rem); height: auto; aspect-ratio: auto; object-fit: contain; border-radius: .6rem; }
+.home .editorial-banner__copy { flex: 1 1 20rem; min-width: 0; max-width: 36rem; }
+.home .editorial-banner h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); margin-bottom: 1rem; }
+.home .editorial-banner .eyebrow { color: var(--home-copper); margin-bottom: .65rem; }
+.home .editorial-banner__copy > p:not(.eyebrow) { color: var(--home-muted); line-height: 1.7; }

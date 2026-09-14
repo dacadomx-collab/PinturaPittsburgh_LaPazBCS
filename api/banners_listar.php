@@ -24,10 +24,10 @@ try {
     $pdo = (new Database())->getConnection();
 
     $stmt = $pdo->query(
-        "SELECT id, titulo, eyebrow, descripcion, imagen_url, cta_texto, cta_url, orden
+        "SELECT id, titulo, eyebrow, descripcion, imagen_url, cta_texto, cta_url, orden, ubicacion
          FROM banners
          WHERE activo = 1
-         ORDER BY orden ASC"
+         ORDER BY orden ASC, id ASC"
     );
     $banners = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 

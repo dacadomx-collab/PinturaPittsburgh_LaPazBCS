@@ -423,3 +423,13 @@ se reutilizan; `003_seed_local.sql` contiene únicamente ejemplos locales y
 nunca debe ejecutarse en una base comercial. `.env` y los archivos de datos
 permanecen excluidos de Git. El frontend normal consulta las APIs existentes;
 `?demo=1` conserva su comportamiento de fixtures JSON.
+
+## Directiva del cliente — sitio público informativo (2026-09-14)
+
+El usuario indicó expresamente: «NO SE HARÁN VENTAS DESDE ESTA PÁGINA».
+Esta directiva sustituye los requisitos históricos de carrito/checkout en el
+sitio público. No reintroducir botones de compra, carrito, confirmación ni
+creación pública de pedidos. Catálogo y precios son informativos; contacto y
+atención ocurren en tienda. `api/pedido_crear.php` queda retirado con HTTP 410,
+y `checkout.html` remite a Tienda. No se borran datos históricos administrativos.
+Detalle y validación en `assets/PORTADA.md`.

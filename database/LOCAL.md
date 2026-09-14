@@ -116,3 +116,19 @@ Por corrección del usuario, se aplicó `005_imagenes_originales_local.sql`:
 los tres banners y dos cupones vuelven a las imágenes WebP originales de
 `assets/img`. La API sigue leyendo las rutas de MariaDB; los templates no
 imponen imágenes. Este ajuste sustituye la prueba externa de 004.
+
+## Nuevos banners de Famza
+
+`006_banners_famza_local.sql` aplicado: Color Collection 2026, Salvia,
+Pitt-Tech Plus EP y Speed Cryl. Usa las cuatro imágenes nuevas de assets/img
+por rutas almacenadas en banners. Evita duplicados por imagen_url. Las campañas
+se ven en Inicio e Inspiración por la API existente, sin modo demo.
+
+## Ubicación de banners editoriales
+
+Aplicados 007 y 008: campo ubicacion con valores inicio, nosotros, inspiracion.
+`orden` establece Pita primero en Nosotros. Imagen, título, descripción y CTA
+se editan en banners. La API incorpora ubicacion sin retirar campos existentes.
+Para otra instalación aplicar 007 antes de usar esta versión del endpoint.
+008 es seed exclusivamente local. Los registros nuevos no están en el fixture
+demo; abrir sin ?demo=1 para verlos.

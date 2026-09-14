@@ -42,4 +42,21 @@
     });
     window.addEventListener('hashchange', openCatalogFromHash);
     openCatalogFromHash();
+
+    // Contraste del flotante centrado al coincidir con el pie oscuro.
+    var footer = document.querySelector('.home-footer');
+    var social = document.querySelector('.social-float');
+    if (footer && social && 'IntersectionObserver' in window) {
+        var observer;
+        function observeFooter() {
+            if (observer) observer.disconnect();
+            var margin = Math.max(0, (window.innerHeight - social.offsetHeight) / 2);
+            observer = new IntersectionObserver(function (entries) {
+                document.body.classList.toggle('social-over-footer', entries[0].isIntersecting);
+            }, { rootMargin: '-' + margin + 'px 0px -' + margin + 'px 0px' });
+            observer.observe(footer);
+        }
+        observeFooter();
+        window.addEventListener('resize', observeFooter);
+    }
 })(document, window);

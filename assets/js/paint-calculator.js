@@ -87,7 +87,7 @@
 
             resultBox.hidden = false;
             resultValue.textContent = r.galones + ' galones (' + r.litros + ' L) ≈ ' + r.cubetas + ' cubetas de 19 L';
-            resultNote.textContent = 'Estimado con rendimiento de referencia de ' + r.rendimientoEfectivo + ' m²/galón según textura y exposición. Confirma el rendimiento real en la ficha técnica del producto antes de comprar.';
+            resultNote.textContent = 'Estimado con rendimiento de referencia de ' + r.rendimientoEfectivo + ' m²/galón según textura y exposición. Confirma el rendimiento real en la ficha técnica del producto con asesoría de Famza.';
         });
     }
 
