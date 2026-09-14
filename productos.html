@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="assets/css/main.css">
 </head>
 
-<body class="home">
+<body class="home home--products">
     <a class="skip-link" href="#contenido">Saltar al contenido</a>
     <div class="utility-bar">
         <div class="home-container utility-bar__inner">
@@ -112,6 +112,12 @@
                     <summary><span>Explora el catálogo disponible<small>Encuentra opciones por superficie y
                                 acabado.</small></span><span class="details-icon" aria-hidden="true">+</span></summary>
                     <div class="catalog-panel__content">
+                        <form id="catalog-search-form" class="catalog-search" role="search">
+                            <label class="visually-hidden" for="catalog-search">Buscar productos por nombre, línea o SKU</label>
+                            <input id="catalog-search" class="field" type="search" placeholder="¿Qué buscas hoy? Pintura, línea o SKU" autocomplete="off">
+                            <button type="submit" class="home-button home-button--copper">Buscar</button>
+                        </form>
+                        <p id="catalog-search-count" role="status"></p>
                         <p class="catalog-note">Precios de referencia. Confirma disponibilidad y precio vigente en
                             tienda.</p>
                         <div id="facet-sustrato" class="facet-filters" role="group" aria-label="Filtrar por sustrato">
@@ -122,8 +128,7 @@
                             contiene inventario.</p>
                         <div data-catalog-section aria-live="polite" aria-busy="true">
                             <p data-state="loading" class="data-message">Cargando catálogo…</p>
-                            <p data-state="empty" class="data-message" hidden>No hay productos con esa combinación de
-                                filtros por ahora.</p>
+                            <p data-state="empty" class="data-message" hidden>No encontramos productos con esa búsqueda y filtros. Prueba otro término o desactiva un filtro.</p>
                             <p data-state="error" class="data-message" hidden>El catálogo no está disponible en este
                                 momento. Consulta productos y disponibilidad en tienda.</p>
                             <div id="catalogo-grid" class="arf-grid" data-state="success" hidden></div>
@@ -161,9 +166,15 @@
         </div>
         <div class="home-container footer-bottom">
             <p>© 2026 PinturaPittsburgh. Distribuidor Autorizado en La Paz, B.C.S.</p><span>Hecho para darle vida a tus
-                ideas.</span>
+                ideas. Iconos de <a href="https://icons8.com/" target="_blank" rel="noopener noreferrer">Icons8<span class="visually-hidden"> (abre en otra pestaña)</span></a>.</span>
         </div>
     </footer>
+    <aside class="social-float" aria-label="Redes sociales y contacto">
+        <a href="https://www.facebook.com/profile.php?id=61593025600484" target="_blank" rel="noopener noreferrer" aria-label="Facebook de Famza (abre en otra pestaña)"><img src="assets/icons/facebook.png" alt="" width="96" height="96"></a>
+        <a href="https://www.instagram.com/famzathecolourboutique/" target="_blank" rel="noopener noreferrer" aria-label="Instagram de Famza (abre en otra pestaña)"><img src="assets/icons/instagram.png" alt="" width="96" height="96"></a>
+        <span class="social-float__pending" role="img" aria-label="TikTok: enlace pendiente" title="TikTok: enlace pendiente"><img src="assets/icons/tik-tok.png" alt="" width="96" height="96"></span>
+        <a href="https://wa.me/526121570249" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp de Famza (abre en otra pestaña)"><img src="assets/icons/whatsapp.png" alt="" width="96" height="96"></a>
+    </aside>
     <button type="button" id="back-to-top-btn" class="back-to-top-btn" hidden aria-label="Volver arriba">↑</button>
     <script src="assets/js/home-data.js" defer></script>
     <script src="assets/js/catalog-render.js" defer></script>

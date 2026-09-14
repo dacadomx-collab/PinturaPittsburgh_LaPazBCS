@@ -98,12 +98,6 @@
         pVol.textContent = 'Presentaciones: ' + volumenes;
         quickView.appendChild(pVol);
 
-        var verFicha = document.createElement('a');
-        verFicha.href = 'producto.html?id=' + encodeURIComponent(String(product.id));
-        verFicha.className = 'product-card__link';
-        verFicha.textContent = 'Ver ficha completa →';
-        quickView.appendChild(verFicha);
-
         card.appendChild(quickView);
 
         return card;
@@ -120,6 +114,26 @@
         return params.length ? '?' + params.join('&') : '';
     }
 
+    var searchTerm = '';
+    var catalogCache = new Map();
+    function normalize(value) {
+        return String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    }
+    async function readCatalog(query) {
+        if (!catalogCache.has(query)) {
+            var pending = (async function () {
+                var all = [], page = 1, batch;
+                do {
+                    batch = await global.PPHomeData.read('api/catalogo_listar.php' + query + (query ? '&' : '?') + 'page=' + page++, 'productos');
+                    all = all.concat(batch);
+                } while (batch.length === 20); // Tamaño del contrato actual de catálogo.
+                return all;
+            })();
+            catalogCache.set(query, pending);
+            pending.catch(function () { catalogCache.delete(query); });
+        }
+        return catalogCache.get(query);
+    }
     var renderVersion = 0;
     async function render() {
         var grid = document.getElementById('catalogo-grid');
@@ -127,10 +141,19 @@
         if (!grid || !section || !global.PPHomeData) return;
         var version = ++renderVersion;
         global.PPHomeData.setState(section, 'loading');
+        var statusCount = document.getElementById('catalog-search-count');
+        if (statusCount) statusCount.textContent = '';
         try {
-            var productos = await global.PPHomeData.read('api/catalogo_listar.php' + buildQueryString(), 'productos');
+            var productos = await readCatalog(buildQueryString());
             // Una respuesta anterior no puede sobrescribir el filtro más reciente.
             if (version !== renderVersion) return;
+            var words = normalize(searchTerm).trim().split(/\s+/).filter(Boolean);
+            productos = productos.filter(function (product) {
+                var text = normalize([product.nombre, LABELS.linea[product.linea], LABELS.sustrato[product.sustrato], LABELS.grado_brillo[product.grado_brillo]].concat((product.presentaciones || []).map(function (p) { return p.sku; })).join(' '));
+                return words.every(function (word) { return text.includes(word); });
+            });
+            var count = document.getElementById('catalog-search-count');
+            if (count) count.textContent = productos.length + (productos.length === 1 ? ' producto encontrado' : ' productos encontrados');
             var fragment = document.createDocumentFragment();
             productos.forEach(function (producto) {
                 var card = buildCard(producto);
@@ -181,6 +204,14 @@
         }
         buildFacetGroup('facet-sustrato', 'sustrato');
         buildFacetGroup('facet-brillo', 'grado_brillo');
+        var search = document.getElementById('catalog-search');
+        var searchForm = document.getElementById('catalog-search-form');
+        var debounce;
+        function searchNow() { clearTimeout(debounce); searchTerm = search.value; render(); }
+        if (search && searchForm) {
+            search.addEventListener('input', function () { clearTimeout(debounce); debounce = setTimeout(searchNow, 200); });
+            searchForm.addEventListener('submit', function (event) { event.preventDefault(); searchNow(); });
+        }
         render();
     }
 

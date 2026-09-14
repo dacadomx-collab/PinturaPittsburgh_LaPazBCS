@@ -308,3 +308,187 @@ estados Empty/Error mediante respuestas interceptadas de los cuatro bloques
 dinámicos. Banners, promociones, catálogo y publicaciones cargaron Success
 contra la base local. Se conservaron Loading y los templates originales.
 Sintaxis JS y `git diff --check` correctos. No se repitió Lighthouse.
+
+## Portada compacta (2026-09-14)
+
+La clase `home--landing` limita los ajustes a Inicio. Se redujeron el espaciado
+vertical de las secciones, la escala de títulos y el relleno de tarjetas y pie.
+El banner coloca imagen y texto lado a lado desde 40rem; en móvil se apilan.
+Las imágenes conservan su contenido completo con `object-fit: contain` y una
+altura máxima relativa. Promociones mantiene ARF-Grid, con separación de 1rem.
+Los controles conservan un alto mínimo de 2.75rem y los efectos existentes.
+Todo el estilo reside en `assets/css/main.css`, sin inline ni `!important`.
+
+Verificación con Chromium y datos demo locales en anchos 360, 390, 768, 1024
+y 1440: carga de banners, cambio de diapositiva y ausencia de desbordamiento
+horizontal. Inspección de captura completa en escritorio y `git diff --check`
+correctos. No se modificaron contratos de datos ni se repitió Lighthouse.
+
+## Carruseles automáticos (2026-09-14)
+
+Banners y promociones comparten `initSlider` en `home-data.js`, con avance
+cada seis segundos, anterior/siguiente, contador y Pausar/Reproducir.
+Se muestra una tarjeta por turno. Se conservan templates, hooks originales,
+ARF-Grid y los cuatro estados de datos. Con un solo elemento no hay rotación
+ni controles. El puntero pausa temporalmente; el foco pausa hasta Reproducir.
+Una pestaña oculta suspende el temporizador y la preferencia de movimiento
+reducido desactiva el arranque automático. Las actualizaciones automáticas no
+se anuncian por aria-live. Sin cambios de API ni esquema.
+
+Verificación Chromium con datos demo y reloj simulado a 390 y 1440: avance
+automático de ambos carruseles, pausa por foco, vuelta al inicio por control
+manual y ausencia de desbordamiento horizontal. Sintaxis JS y diff correctos.
+
+El esquema existente `database/001_schema_inicial.sql` define `productos`
+con imagen principal en `can_cut_url` (ruta/URL, no binario) y
+`producto_presentaciones` para SKU, volumen, precio y stock. No define una
+galería independiente de múltiples imágenes por producto.
+
+## Puntos de navegación (2026-09-14)
+
+Por petición del usuario, se sustituyen Anterior/Siguiente y Pausar/Reproducir
+por puntos seleccionables, con `aria-current`, nombres accesibles y área táctil
+de 2.75rem. Cada tarjeta entra mediante un fundido y desplazamiento de .4rem
+durante .5s. Sigue el avance cada seis segundos, suspendido con puntero, foco,
+pestaña oculta o movimiento reducido; al abandonar el carrusel se reanuda.
+Con movimiento reducido, selección manual y sin animación. Los cuatro estados
+y contratos siguen intactos. Verificados selección por puntos, una tarjeta
+visible e inexistencia de desbordamiento a 360, 390, 768, 1024 y 1440 con Chromium.
+Sintaxis JS y diff correctos.
+
+El esquema `002_banners_cupones_colaborador.sql` también incluye `banners`
+y `cupones`, ambos con `imagen_url`. Guardan rutas/URLs de imágenes, además
+de textos, destinos y configuración de orden o vigencia respectivamente.
+
+## Ritmo automático y fotos originales (2026-09-14)
+
+Ambos carruseles avanzan cada 3500 ms. Conservan puntos, transición suave y
+pausas por interacción, pestaña oculta y movimiento reducido. Las cinco rutas
+de anuncios se restauraron en la base local mediante 005; las imágenes son
+las originales de assets, seleccionadas por los registros de la API.
+Verificados en Chromium avance automático a 3.5 segundos y carga de las cinco
+imágenes originales desde las rutas recibidas; sintaxis JS y diff correctos.
+
+## Corrección de rotación y herramientas compactas
+
+Se retiró la pausa por hover de toda la sección: mantenía promociones detenidas
+con el puntero encima. Los puntos pulsados con ratón ya no bloquean la rotación;
+se conserva pausa por foco de teclado o enlaces del contenido. Ambos carruseles
+avanzan a 3500 ms cuando visibles. IntersectionObserver suspende sus timers
+fuera de pantalla; la pestaña oculta y movimiento reducido también los suspenden.
+La transición usa únicamente opacity/transform, sin filtros animados ni bucles
+por frame. No se añadieron dependencias ni capas will-change permanentes.
+
+Calculadora conserva un único título principal, retira el título editorial
+repetido y organiza el formulario en dos columnas desde 40rem. Cobertura y
+Calculadora usan `home--tool-page`: ancho máximo compartido, márgenes compactos
+y campos adaptables. Cobertura elimina blur de la tarjeta y hace visible el
+borde del campo postal. Todo CSS sigue en main.css, con los contratos intactos.
+
+Verificación Chromium a 390 y 1440: promociones avanza con el puntero encima,
+formularios funcionales (cobertura con respuesta controlada), un h1 por página,
+sin overflow ni excepciones JS. Capturas revisadas de móvil y escritorio.
+Sintaxis JS y diff correctos; no se hizo una medición Lighthouse nueva.
+
+## Información oficial de Famza y campos de herramientas
+
+Por instrucción explícita del usuario, Inicio incorpora el nombre comercial
+«Famza the colour boutique by Pittsburgh Paints», 36 años de experiencia,
+matriz en Mariano Abasolo 3114, Plaza Susana, Pueblo Nuevo, 23060, La Paz,
+y sucursal en Matamoros/Revolución de 1910, Ildefonso Green, 23470, Cabo San Lucas.
+Datos suministrados por el usuario; direcciones ampliadas a partir de los
+propios destinos Maps enviados, sin investigación externa. Enlaces Maps
+simplificados manteniendo los destinos. Actualizada la dirección antigua en
+Tienda y el mensaje de recogida del frontend para evitar contradicciones.
+
+El usuario confirmó WhatsApp 612 157 0249 y horarios L–V 08:00–16:30,
+S 08:00–13:00; domingo cerrado. Se publicaron teléfono 612 125 8171,
+ambos correos y el perfil Instagram indicado. Facebook aparece por nombre,
+sin inventar URL. No se publica TikTok, todavía no abierto, ni el RFC vacío
+ni la razón social truncada «Productos Famza…». Estos datos quedan pendientes.
+La información nueva sustituye la denominación anterior en Inicio por
+instrucción expresa; las otras páginas conservan sus encabezados actuales.
+
+Campo postal: foco interior fino sin sombra. Área: input decimal con patrón,
+filtro beforeinput/input para letras y pegado, admite punto o coma decimal;
+validación finita y positiva al calcular. Se preservan IDs y fórmula.
+Pruebas Chromium a 390/1440: cuatro tarjetas sin overflow, rechazo de letras
+y entrada inválida, cálculo con coma decimal y foco postal sin sombra exterior.
+Sintaxis JS y diff correctos. No se midió Lighthouse.
+
+## Redes flotantes e información de sucursales
+
+Flotante compartido en las siete páginas públicas, con PNG locales de Icons8
+(`assets/icons`, atribución en pie). Instagram y WhatsApp tienen destinos
+confirmados. El usuario eligió WhatsApp como cuarto elemento y enviará los
+enlaces pendientes: Facebook y TikTok se presentan atenuados, sin enlace
+inventado. En móvil el flotante es horizontal y se reserva espacio al pie.
+Foco visible, nombres accesibles y movimiento reducido respetados.
+
+Inicio: bloque institucional azul de marca, cifra de trayectoria destacada y
+tarjetas claras con acento cobre. Tienda: un título principal, dos tarjetas
+con direcciones oficiales y mapa adyacente; se apilan en móvil. Iframes lazy
+con título y enlaces alternativos para indicaciones. Se añadió a la CSP de
+`.htaccess` únicamente `frame-src 'self' https://www.google.com`, necesario
+para los mapas solicitados; las otras directivas permanecen intactas.
+
+Pruebas Chromium a 390/1440 en Inicio y Tienda: sin overflow, cuatro PNG
+cargados, un h1 y dos iframes lazy en Tienda. Se comprobó su marcado, no la
+precisión cartográfica ni la CSP bajo Apache (el servidor local es PHP).
+
+## Redes individuales sin fondo
+
+Se retiran fondo, borde y sombra del contenedor flotante. Cada acceso mantiene
+su área táctil de 2.75rem y foco visible; siluetas coloreadas en cobre de marca
+mediante máscaras CSS a partir de los PNG locales, con hover según el tema.
+No se animan filtros ni se añaden dependencias; movimiento reducido conserva
+su regla. Si el navegador no admite máscaras, se muestran los PNG originales.
+
+Los enlaces Flaticon enviados son categorías, no recursos individuales.
+Pendiente recibir PNG o enlaces individuales para reemplazar exactamente los
+logos elegidos. Se conservan por ahora los iconos Icons8 y su atribución real;
+no se atribuyen archivos existentes a autores distintos. Facebook/TikTok siguen
+pendientes de URL de perfil. Validación estática y diff correctos.
+
+## Facebook confirmado
+
+Se activó Facebook en el flotante de las siete páginas y en el bloque de
+contacto de Inicio, con el perfil proporcionado por el usuario:
+`https://www.facebook.com/profile.php?id=61593025600484`. Apertura en otra
+pestaña con nombre accesible y rel noopener noreferrer. TikTok sigue pendiente.
+
+## Círculos sociales y páginas editoriales compactas
+
+Los cuatro accesos sociales tienen círculo azul marino, borde cobre y silueta
+clara; los enlaces activos cambian a cobre con hover/foco. El contenedor sigue
+transparente. Se corrigieron referencias al nombre actual `tik-tok.png`.
+
+Nosotros e Inspiración usan `home--editorial`, con menor espaciado vertical,
+títulos proporcionados e imágenes acotadas. Inspiración agrupa color e imagen
+en una tarjeta, y reduce espacios del feed; Nosotros acerca imagen, texto y
+detalle. CSS centralizado, tokens existentes y ARF conservados.
+Validación Chromium a 390 y 1440 en ambas páginas: sin desbordamiento, cuatro
+PNG cargados, círculos y un h1 por página. Capturas generadas y revisión móvil.
+`git diff --check` correcto; sin medición Lighthouse nueva.
+
+## Catálogo compacto con búsqueda y redes sin fondo
+
+Iconos reducidos a 1.25rem, con círculos transparentes de borde cobre; se
+conserva área táctil de 2.75rem y foco visible. Sin fondo tampoco en hover.
+Productos usa `home--products` para reducir espacios, fotos de categorías y
+relleno de tarjetas. Eliminado «Ver ficha completa»; `producto.html` conserva
+solo redirección/fallback al catálogo, sin mostrar ficha individual.
+
+Buscador destacado inspirado en la entrada «¿Qué buscas hoy?» de la referencia
+Home Depot proporcionada. Busca nombre, línea, superficie, brillo y SKU;
+normaliza acentos y combina todos los términos con los filtros existentes.
+Usa las páginas de 20 productos del contrato actual de catálogo, sin cambiar
+PHP ni inventar parámetros de búsqueda. Cache por combinación de filtros
+durante la visita y debounce de 200ms, sin red por cada pulsación. La búsqueda
+carga las páginas completas del filtro seleccionado; para catálogos grandes
+convendrá ampliar el contrato con búsqueda en servidor. Se conservan cuatro
+estados y protección contra respuestas fuera de orden.
+
+Chromium a 390/1440 con respuestas controladas: coincidencia sin acento en
+producto 21 (segunda página), combinación con filtro que deja cero resultados,
+sin enlaces de ficha ni overflow, círculos transparentes. JS y diff correctos.

@@ -80,11 +80,14 @@
             var value = item[element.dataset.field];
             if (element.tagName === 'IMG') {
                 var fallback = element.getAttribute('src');
-                element.src = safeUrl(value) || fallback;
+                var source = safeUrl(value);
+                if (!source && !fallback) throw new Error('Imagen no disponible');
+                element.src = source || fallback;
                 // La información ya está en el texto adyacente; la imagen es decorativa.
                 element.alt = '';
                 element.addEventListener('error', function () {
-                    element.src = fallback;
+                    if (fallback) element.src = fallback;
+                    else element.hidden = true;
                 }, { once: true });
             } else if (element.tagName === 'TIME') {
                 displayDate(element, value);
@@ -102,26 +105,62 @@
         return card;
     }
 
-    function initSlider(section, track) {
+    function initSlider(section, track, kind) {
         var slides = Array.from(track.children);
         var index = 0;
-        var controls = section.querySelector('[data-banner-controls]');
+        var timer;
+        var motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+        var focused = false;
+        var visible = true;
+        var controls = section.querySelector('[data-' + kind + '-controls]');
+        var dots = [];
+        var live = track.closest('[aria-live]');
+        section.setAttribute('aria-roledescription', 'carrusel');
+        function schedule() {
+            window.clearTimeout(timer);
+            var running = !motion.matches && !focused && visible && !document.hidden && slides.length > 1;
+            live.setAttribute('aria-live', running ? 'off' : 'polite');
+            if (running) timer = window.setTimeout(function () { move(1); }, 3500);
+        }
         function show() {
             slides.forEach(function (slide, position) {
                 slide.hidden = position !== index;
+                dots[position].setAttribute('aria-current', position === index ? 'true' : 'false');
                 slide.setAttribute('role', 'group');
-                slide.setAttribute('aria-label', 'Banner ' + (position + 1) + ' de ' + slides.length);
+                slide.setAttribute('aria-label', (kind === 'banner' ? 'Banner ' : 'Promoción ') + (position + 1) + ' de ' + slides.length);
             });
-            section.querySelector('[data-banner-position]').textContent = (index + 1) + ' / ' + slides.length;
+        }
+        function move(step) {
+            index = (index + step + slides.length) % slides.length;
+            show(); schedule();
         }
         controls.hidden = slides.length < 2;
-        section.querySelector('[data-banner-prev]').addEventListener('click', function () {
-            index = (index - 1 + slides.length) % slides.length; show();
+        slides.forEach(function (slide, position) {
+            var dot = document.createElement('button');
+            dot.type = 'button';
+            dot.className = 'carousel-dot';
+            dot.setAttribute('aria-label', 'Ver ' + (kind === 'banner' ? 'banner ' : 'promoción ') + (position + 1) + ' de ' + slides.length);
+            dot.addEventListener('click', function () { index = position; show(); schedule(); });
+            controls.appendChild(dot);
+            dots.push(dot);
         });
-        section.querySelector('[data-banner-next]').addEventListener('click', function () {
-            index = (index + 1) % slides.length; show();
+        section.addEventListener('focusin', function (event) {
+            focused = event.target.matches(':focus-visible') || track.contains(event.target);
+            schedule();
         });
-        show();
+        section.addEventListener('focusout', function (event) {
+            focused = section.contains(event.relatedTarget); schedule();
+        });
+        // Suspender trabajo fuera de pantalla, sin listeners de scroll ni sondeo.
+        if ('IntersectionObserver' in window) {
+            var observer = new IntersectionObserver(function (entries) {
+                visible = entries[0].isIntersecting; schedule();
+            });
+            observer.observe(track);
+        }
+        document.addEventListener('visibilitychange', schedule);
+        motion.addEventListener('change', schedule);
+        show(); schedule();
     }
 
     async function loadSection(config) {
@@ -136,7 +175,9 @@
             var fragment = document.createDocumentFragment();
             items.forEach(function (item) { fragment.appendChild(fillCard(template, item, config)); });
             target.replaceChildren(fragment);
-            if (config.key === 'banners') initSlider(section, target);
+            if (config.key === 'banners' || config.key === 'promociones') {
+                initSlider(section, target, config.key === 'banners' ? 'banner' : 'promo');
+            }
             setState(section, 'success');
         } catch (_) {
             target.replaceChildren();
@@ -148,7 +189,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('[data-demo-notice]').forEach(function (notice) { notice.hidden = !demo; });
         loadSection({ selector: '[data-banner-slider]', key: 'banners', endpoint: 'api/banners_listar.php', target: '[data-banner-track]', linkKey: 'cta_url', required: ['titulo', 'descripcion', 'cta_texto'] });
-        loadSection({ selector: '[data-promo-section]', key: 'promociones', endpoint: 'api/promociones_listar.php', linkKey: 'url', required: ['codigo', 'badge', 'descripcion', 'fecha_inicio', 'fecha_fin'] });
+        loadSection({ selector: '[data-promo-section]', key: 'promociones', endpoint: 'api/promociones_listar.php', target: '[data-promo-track]', linkKey: 'url', required: ['codigo', 'badge', 'descripcion', 'fecha_inicio', 'fecha_fin'] });
         loadSection({ selector: '[data-social-feed]', key: 'publicaciones', endpoint: 'api/publicaciones_listar.php', required: ['texto', 'publicado_en'] });
     });
 })(window, document);

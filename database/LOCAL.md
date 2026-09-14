@@ -97,3 +97,22 @@ se ha configurado correo local, aunque las APIs de la portada funcionen.
 Verificación adicional en Chromium: portada sin modo demo, 3 banners, 2 cupones,
 3 publicaciones y 4 productos renderizados; cobertura confirmada para 23000;
 cero solicitudes a mock-data y todas las respuestas API comprobadas en HTTP 200.
+
+## Imágenes externas de portada (prueba, 2026-09-14)
+
+Aplicado `004_imagenes_externas_local.sql` a esta instancia local: tres banners
+y cupones LOCAL10/LOCAL50 usan fotografías genéricas de Picsum mediante HTTPS.
+No representan productos reales. La migración puede repetirse y solo actualiza
+los registros de prueba identificados; no modifica el esquema. Para aplicar
+la misma prueba a una instalación nueva, ejecutar este SQL después del seed.
+Abrir sin `?demo=1`: la API devuelve `imagen_url` desde MariaDB. Los templates
+de banners y promociones ya no incluyen un src local de respaldo; si la imagen
+externa falla, se oculta y se conserva el contenido textual del anuncio.
+Logotipos e imágenes institucionales siguen siendo assets del sitio.
+
+## Imágenes originales restauradas (2026-09-14)
+
+Por corrección del usuario, se aplicó `005_imagenes_originales_local.sql`:
+los tres banners y dos cupones vuelven a las imágenes WebP originales de
+`assets/img`. La API sigue leyendo las rutas de MariaDB; los templates no
+imponen imágenes. Este ajuste sustituye la prueba externa de 004.

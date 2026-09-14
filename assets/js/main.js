@@ -50,7 +50,7 @@ function initPostalBar() {
 
             if (!resultado.cubierto) {
                 resultEl.className = 'postal-bar__result postal-bar__result--blocked';
-                resultEl.textContent = 'La entrega a domicilio solo aplica dentro del municipio de La Paz, B.C.S. Puedes recoger tu pedido en tienda (Blvd. Agustín Olachea e Indeco) o llamarnos para cotizaciones de mayoreo.';
+                resultEl.textContent = 'La entrega a domicilio solo aplica dentro del municipio de La Paz, B.C.S. Puedes recoger tu pedido en tienda (Mariano Abasolo 3114, Plaza Susana) o llamarnos para cotizaciones de mayoreo.';
                 return;
             }
 
