@@ -99,7 +99,7 @@
         quickView.appendChild(pVol);
 
         var verFicha = document.createElement('a');
-        verFicha.href = 'producto.html?id=' + encodeURIComponent(String(product.id));
+        verFicha.href = 'producto.php?id=' + encodeURIComponent(String(product.id));
         verFicha.className = 'product-card__link';
         verFicha.textContent = 'Ver ficha completa →';
         quickView.appendChild(verFicha);

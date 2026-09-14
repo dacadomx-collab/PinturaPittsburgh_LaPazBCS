@@ -1,5 +1,5 @@
 // assets/js/cart.js — PinturaPittsburgh_LaPazBCS
-// Carrito mínimo de sesión (sessionStorage) — puente entre producto.html (PDP)
+// Carrito mínimo de sesión (sessionStorage) — puente entre producto.php (PDP)
 // y checkout.html. No persiste entre sesiones de navegador a propósito: el
 // pedido se confirma o se abandona en la misma visita.
 (function (global) {

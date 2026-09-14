@@ -5,7 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PinturaPittsburgh — Distribuidor Autorizado en La Paz, B.C.S.</title>
     <meta name="description" content="PinturaPittsburgh, Distribuidor Autorizado de The Pittsburgh Paints Company en La Paz, B.C.S. Speedhide, Manor Hall, Perma-Crete y Pitt-Glaze. Entrega a domicilio y despacho en obra exclusivo en la zona urbana de La Paz.">
+
+    <!-- Open Graph / Twitter Card — Hito 24, Módulo 04 §1. Estático por la
+         misma razón que el JSON-LD de abajo (índice sigue siendo HTML puro,
+         rama activa de Rafael). -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="PinturaPittsburgh">
+    <meta property="og:title" content="PinturaPittsburgh — Distribuidor Autorizado en La Paz, B.C.S.">
+    <meta property="og:description" content="The Pittsburgh Paints Company en La Paz, B.C.S. Speedhide, Manor Hall, Perma-Crete y Pitt-Glaze. Entrega a domicilio y despacho en obra.">
+    <meta property="og:image" content="https://pittsburgh.tourfindy.com/assets/img/logo.svg">
+    <meta property="og:url" content="https://pittsburgh.tourfindy.com/">
+    <meta property="og:locale" content="es_MX">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="PinturaPittsburgh — Distribuidor Autorizado en La Paz, B.C.S.">
+    <meta name="twitter:description" content="The Pittsburgh Paints Company en La Paz, B.C.S. Entrega a domicilio y despacho en obra.">
+    <meta name="twitter:image" content="https://pittsburgh.tourfindy.com/assets/img/logo.svg">
+
     <link rel="icon" href="favicon.ico">
+
+    <!-- JSON-LD institucional (LocalBusiness), Hito 24 — Módulo 04 §1. Estático
+         a propósito: index.html es la rama activa de Rafael (colaborador de
+         frontend) y NO se convierte a PHP para no generar conflictos de merge
+         en su rama. La definición canónica de este mismo bloque vive en
+         helpers/seo_helper.php::seoLocalBusinessJsonLd() — si el NAP cambia
+         (dirección, coordenadas), actualizar AMBOS lugares. -->
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"HardwareStore","name":"PinturaPittsburgh — Distribuidor Autorizado en La Paz","image":"https://pittsburgh.tourfindy.com/assets/img/logo.svg","url":"https://pittsburgh.tourfindy.com/","address":{"@type":"PostalAddress","streetAddress":"Bulevar Agustín Olachea e Indeco","addressLocality":"La Paz","addressRegion":"Baja California Sur","addressCountry":"MX"},"geo":{"@type":"GeoCoordinates","latitude":24.1426,"longitude":-110.3128},"areaServed":{"@type":"City","name":"La Paz, Baja California Sur"},"brand":{"@type":"Brand","name":"The Pittsburgh Paints Company"}}</script>
 
     <!-- Sin defer/async y ANTES del CSS: fija data-theme en <html> antes del
          primer paint para evitar parpadeo de tema (Regla de Oro: JS en
