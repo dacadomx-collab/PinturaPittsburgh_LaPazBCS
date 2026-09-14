@@ -17,6 +17,51 @@ require __DIR__ . '/layout/topbar.php';
         <h1>Publicador Social Omnicanal</h1>
         <p class="brand-tagline">Redacta, previsualiza y publica en Facebook e Instagram desde un solo lugar. Instagram solo confirma la publicación final mediante un proceso asíncrono (fase 1 completada aquí).</p>
 
+        <details class="meta-guide">
+            <summary class="meta-guide__summary">📋 Guía de Credenciales Requeridas para Meta Graph API</summary>
+            <div class="meta-guide__body">
+                <p class="brand-tagline">Antes de vincular una cuenta (tabla <code>social_tokens</code>), solicita al administrador de la marca en Meta Business Suite estos 4 accesos. Ninguno se captura en esta pantalla — se entregan de forma segura al equipo técnico para su cifrado y alta directa en base de datos.</p>
+
+                <div class="meta-guide__item">
+                    <span class="meta-guide__badge">1</span>
+                    <div>
+                        <h3 class="meta-guide__titulo">Página de Facebook (Page ID)</h3>
+                        <p>Identificador numérico de la Fan Page oficial.</p>
+                        <p class="meta-guide__ruta">Configuración de la Página → Información de la página</p>
+                    </div>
+                </div>
+
+                <div class="meta-guide__item">
+                    <span class="meta-guide__badge">2</span>
+                    <div>
+                        <h3 class="meta-guide__titulo">Instagram Business Account ID</h3>
+                        <p>Identificador de la cuenta profesional de Instagram vinculada a la Fan Page.</p>
+                        <p class="meta-guide__ruta">Meta Business Suite → Cuentas vinculadas</p>
+                    </div>
+                </div>
+
+                <div class="meta-guide__item">
+                    <span class="meta-guide__badge">3</span>
+                    <div>
+                        <h3 class="meta-guide__titulo">Meta App ID y App Secret</h3>
+                        <p>Credenciales de la aplicación tipo "Business" creada para este proyecto.</p>
+                        <p class="meta-guide__ruta">developers.facebook.com → Mis Apps → Configuración básica</p>
+                    </div>
+                </div>
+
+                <div class="meta-guide__item">
+                    <span class="meta-guide__badge">4</span>
+                    <div>
+                        <h3 class="meta-guide__titulo">System User Token (permanente)</h3>
+                        <p>Token de acceso de larga duración, con los permisos: <code>pages_manage_posts</code>, <code>pages_read_engagement</code>, <code>instagram_basic</code>, <code>instagram_content_publish</code>.</p>
+                        <p class="meta-guide__ruta">Meta Business Manager → Usuarios del sistema → Generar token</p>
+                    </div>
+                </div>
+
+                <p class="meta-guide__nota">⚠️ Ninguna de estas 4 credenciales se escribe jamás en código ni en este panel — se cifran con Envelope Encryption (AES-256-GCM) directo en la tabla <code>social_tokens</code> (ver <code>helpers/crypto_helper.php</code>).</p>
+            </div>
+        </details>
+
         <div class="arf-grid">
             <section class="card arf-col-2" aria-labelledby="social-form-titulo">
                 <h2 id="social-form-titulo">Nueva Publicación</h2>

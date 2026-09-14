@@ -1070,3 +1070,70 @@ html.admin-auth-pending body {
 .password-field__toggle:focus-visible {
     text-decoration: underline;
 }
+
+/* ── GUÍA DE CREDENCIALES META GRAPH API (admin/social.php, Hito 25) ───────── */
+.meta-guide {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background-color: var(--color-bg-alt);
+    padding: var(--space-sm) var(--space-md);
+    margin-block: var(--space-md);
+}
+
+.meta-guide__summary {
+    cursor: pointer;
+    font-weight: 700;
+    color: var(--brand-navy);
+    padding-block: var(--space-xs);
+}
+
+.meta-guide__body {
+    margin-top: var(--space-sm);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.meta-guide__item {
+    display: flex;
+    gap: var(--space-sm);
+    align-items: flex-start;
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: var(--space-sm);
+}
+
+.meta-guide__badge {
+    flex: 0 0 auto;
+    width: 1.8rem;
+    height: 1.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: var(--brand-royal-blue);
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+.meta-guide__titulo {
+    margin: 0 0 0.2rem;
+    font-size: 0.95rem;
+    color: var(--brand-navy);
+}
+
+.meta-guide__ruta {
+    margin-top: 0.3rem;
+    font-size: 0.78rem;
+    font-family: monospace;
+    color: var(--color-text-muted);
+}
+
+.meta-guide__nota {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    border-top: 1px dashed var(--color-border);
+    padding-top: var(--space-sm);
+}
