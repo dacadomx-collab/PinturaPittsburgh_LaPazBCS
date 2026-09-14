@@ -20,7 +20,7 @@ require_once __DIR__ . '/../auth_middleware.php'; // expone $authPayload
 require_once __DIR__ . '/../conexion.php';
 require_once __DIR__ . '/../../helpers/response.php';
 
-requireRole(['admin'], $authPayload);
+requireRole(ROLE_LEVEL_ADMIN, $authPayload);
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     send_error('Método no permitido.', 405);

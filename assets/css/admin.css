@@ -1018,3 +1018,34 @@ html.admin-auth-pending body {
     font-weight: 700;
     color: var(--brand-vibrant-blue);
 }
+
+/* ── TOGGLE DE VISIBILIDAD DE CONTRASEÑA (Módulo 01 §4.6, Hito 22) ─────────
+   admin/login.php. .field ya define ancho/alto/borde — aquí solo se agrega
+   el botón superpuesto, sin tocar los tokens del input. */
+.password-field {
+    position: relative;
+}
+
+.password-field .field {
+    padding-right: 4.5rem;
+}
+
+.password-field__toggle {
+    position: absolute;
+    top: 50%;
+    right: 0.4rem;
+    transform: translateY(-50%);
+    border: none;
+    background-color: transparent;
+    color: var(--color-primary);
+    font-size: 0.8rem;
+    font-weight: 600;
+    font-family: inherit;
+    padding: 0.3rem 0.5rem;
+    cursor: pointer;
+}
+
+.password-field__toggle:hover,
+.password-field__toggle:focus-visible {
+    text-decoration: underline;
+}

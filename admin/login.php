@@ -29,6 +29,7 @@ declare(strict_types=1);
     <script src="../assets/js/theme-init.js"></script>
     <script src="../assets/js/admin-login-guard.js"></script>
     <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/admin.css">
 </head>
 <body>
     <header class="site-header">
@@ -48,7 +49,10 @@ declare(strict_types=1);
                 </div>
                 <div class="field-group">
                     <label for="login-password">Contraseña</label>
-                    <input class="field" type="password" id="login-password" name="password" required autocomplete="current-password">
+                    <div class="password-field">
+                        <input class="field" type="password" id="login-password" name="password" required autocomplete="current-password">
+                        <button type="button" id="login-password-toggle" class="password-field__toggle" aria-pressed="false" aria-controls="login-password">Mostrar</button>
+                    </div>
                 </div>
                 <div class="field-group">
                     <button type="submit" class="btn">Entrar</button>

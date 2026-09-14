@@ -4,6 +4,20 @@ document.addEventListener('DOMContentLoaded', function () {
     var form = document.getElementById('admin-login-form');
     var statusEl = document.getElementById('login-status');
 
+    // Toggle de visibilidad de contraseña (Módulo 01 §4.6, Hito 22) —
+    // independiente de PPAdminAuth, se activa aunque el resto del wiring
+    // de abajo no aplique.
+    var passwordInput = document.getElementById('login-password');
+    var passwordToggle = document.getElementById('login-password-toggle');
+    if (passwordInput && passwordToggle) {
+        passwordToggle.addEventListener('click', function () {
+            var mostrando = passwordInput.type === 'text';
+            passwordInput.type = mostrando ? 'password' : 'text';
+            passwordToggle.textContent = mostrando ? 'Mostrar' : 'Ocultar';
+            passwordToggle.setAttribute('aria-pressed', String(!mostrando));
+        });
+    }
+
     if (!form || !window.PPAdminAuth) {
         return;
     }

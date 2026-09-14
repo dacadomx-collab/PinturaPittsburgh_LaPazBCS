@@ -24,7 +24,7 @@ require_once __DIR__ . '/../helpers/response.php';
 require_once __DIR__ . '/../helpers/input_sanitizer.php';
 require_once __DIR__ . '/../helpers/asfl_logger.php';
 
-requireRole(['admin'], $authPayload);
+requireRole(ROLE_LEVEL_ADMIN, $authPayload);
 
 $requestStartedAt = microtime(true);
 asfl_log('REQUEST', ['endpoint' => 'asistente_ia.php', 'method' => $_SERVER['REQUEST_METHOD']]);
