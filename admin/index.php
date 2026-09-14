@@ -25,6 +25,8 @@ require __DIR__ . '/layout/topbar.php';
                 <a class="btn admin-quick-links__item" href="pedidos.php">📦 Pedidos</a>
                 <a class="btn admin-quick-links__item" href="social.php">📣 Publicador Social</a>
                 <a class="btn admin-quick-links__item" href="asistente.php">🤖 Asistente IA</a>
+                <a class="btn admin-quick-links__item" href="usuarios.php">👥 Usuarios</a>
+                <a class="btn admin-quick-links__item" href="auditoria.php">🛡️ Auditoría</a>
             </div>
         </section>
 

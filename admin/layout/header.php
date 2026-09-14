@@ -8,7 +8,7 @@ declare(strict_types=1);
 // hacer el require, las variables:
 //   $pageTitle   (string) — título de pestaña, ej. "Catálogo y Precios"
 //   $activeNav   (string) — clave de admin/layout/sidebar.php para resaltar
-//                            el enlace activo: inicio|catalogo|pedidos|social|asistente
+//                            el enlace activo: inicio|catalogo|pedidos|social|asistente|usuarios|auditoria
 // Nunca se valida sesión aquí server-side: la autenticación de este proyecto
 // es Bearer JWT en sessionStorage (Hito 2), no cookies/sesión PHP — decisión
 // documentada en CLAUDE.md §14 y knowledge/04_ARQUITECTURA_Y_BLINDAJE.md. El

@@ -122,6 +122,27 @@ textarea.field {
 .estado-badge--entregado  { background-color: rgba(13, 148, 136, 0.15); color: var(--brand-teal); }
 .estado-badge--cancelado  { background-color: rgba(230, 57, 70, 0.15); color: #b91c1c; }
 
+/* Usuarios (admin/usuarios.php) y bitácora (admin/auditoria.php), Hito 23 —
+   reutilizan los mismos tonos que ya tienen significado en el resto del
+   panel (teal = bien, ámbar = atención, rojo = bloqueado/fallido). */
+.estado-badge--activo    { background-color: rgba(13, 148, 136, 0.15); color: var(--brand-teal); }
+.estado-badge--inactivo  { background-color: rgba(230, 57, 70, 0.15); color: #b91c1c; }
+
+/* ── admin/usuarios.php y admin/auditoria.php (Hito 23) ────────────────────── */
+.admin-table select.field {
+    max-width: 160px;
+    display: inline-block;
+}
+
+.admin-row-actions__btn {
+    margin-left: var(--space-xs);
+}
+
+.admin-quick-links__item:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 /* =============================================================================
    PANEL ADMINISTRATIVO UNIFICADO (admin/layout/*.php — Hito 12/Directiva 2)
    Shell de dos columnas (sidebar + contenido) con sidebar off-canvas en

@@ -36,7 +36,13 @@ function admin_nav_clase(string $clave, string $activo): string
             <a href="asistente.php" class="<?php echo admin_nav_clase('asistente', $activeNav); ?>">🤖 Asistente IA</a>
         </li>
         <li>
-            <span class="admin-sidebar__link" aria-disabled="true" title="Próximamente — matriz de roles y política de contraseña (ver modulos/MODULO_01_LOGIN_Y_ACCESO.md §6-7)">⚙️ Configuración</span>
+            <a href="usuarios.php" class="<?php echo admin_nav_clase('usuarios', $activeNav); ?>">👥 Usuarios</a>
+        </li>
+        <li>
+            <a href="auditoria.php" class="<?php echo admin_nav_clase('auditoria', $activeNav); ?>">🛡️ Auditoría</a>
+        </li>
+        <li>
+            <span class="admin-sidebar__link" aria-disabled="true" title="Próximamente — panel visual para la política de contraseña (api/configuracion_seguridad.php ya existe, sin UI dedicada todavía — ver modulos/MODULO_01_LOGIN_Y_ACCESO.md §7.3)">⚙️ Configuración</span>
         </li>
     </ul>
 </nav>

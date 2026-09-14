@@ -59,3 +59,24 @@ function obtenerPoliticaActiva(PDO $pdo): string
 
     return (string) ($fila['politica_password'] ?? 'media');
 }
+
+/**
+ * Genera una contraseña aleatoria criptográfica (random_int, CSPRNG) — usada
+ * por scripts/seed_admin.php y api/admin/usuarios_admin.php (acción
+ * resetear_password). Cumple de sobra el perfil 'fuerte' de la política
+ * (longitud 16, mezcla de mayúscula/minúscula/número/símbolo garantizada por
+ * el alfabeto). Se devuelve UNA sola vez en texto plano en la respuesta que
+ * la generó — nunca se persiste ni se loguea en texto plano.
+ */
+function generar_password_segura(int $longitud = 16): string
+{
+    $alfabeto = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#%&*';
+    $password = '';
+    $max      = strlen($alfabeto) - 1;
+
+    for ($i = 0; $i < $longitud; $i++) {
+        $password .= $alfabeto[random_int(0, $max)];
+    }
+
+    return $password;
+}

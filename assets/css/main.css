@@ -462,6 +462,15 @@ video {
     border: 1px solid #b91c1c;
 }
 
+/* Usada por admin/usuarios.php al revelar una contraseña temporal una sola
+   vez (Hito 23) — ni "ok" (no es una confirmación pasiva) ni "blocked" (no
+   es un error), amerita su propio tono de atención. */
+.postal-bar__result--warning {
+    background-color: rgba(217, 119, 6, 0.12);
+    color: var(--brand-gold);
+    border: 1px solid var(--brand-gold);
+}
+
 /* ── FILTROS FACETADOS DEL CATÁLOGO ────────────────────────────────────────── */
 .facet-filters {
     display: flex;
