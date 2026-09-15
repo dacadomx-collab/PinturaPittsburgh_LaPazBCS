@@ -168,6 +168,6 @@ ErrorDocument 500 "Error interno del servidor."
 # El HTML debe revalidarse para obtener las versiones actuales de CSS/JS/iconos.
 <IfModule mod_headers.c>
     <FilesMatch "\.html$">
-        Header always set Cache-Control "no-cache, must-revalidate"
+        Header always set Cache-Control "no-store, max-age=0"
     </FilesMatch>
 </IfModule>

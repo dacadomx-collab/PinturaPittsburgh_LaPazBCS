@@ -657,3 +657,18 @@ No se asume que la caché fuese la única causa observada en el navegador del
 usuario. Chromium local: dos recorridos por las siete rutas, 14 navegaciones,
 con estilos idénticos y PNG versionados. La directiva Apache requiere desplegar
 .htaccess; no se verificó bajo Apache con el servidor PHP local.
+
+## Diagnóstico en preview-rafa y navegación versionada
+
+El usuario reportó el fallo en https://pittsburgh.tourfindy.com/preview-rafa/.
+Se comparó CSS remoto: hash idéntico al local. Chromium en sesión nueva
+contra el servidor verificó Tienda/Calculadora/Inspiración en claro y oscuro:
+hover superior blanco y hover social cobre. No se reprodujo el síntoma;
+no se atribuye a una causa comprobada en la sesión del usuario.
+
+Se versionan también destinos HTML de navbar/pie y los CTAs resueltos desde
+API. Así las navegaciones salen de las URLs históricas susceptibles de tener
+HTML antiguo cacheado. page-routes.js conserva demo y v; JS versionado.
+HTML pasa a no-store/max-age=0, manteniendo caché de recursos versionados.
+Requiere el siguiente despliegue para aplicarse en preview; no se publicó desde
+esta sesión. Validación local de 14 navegaciones y sintaxis/diff correctos.

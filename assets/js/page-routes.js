@@ -21,6 +21,14 @@
             url.origin === base.origin && /\/(index|productos|inspiracion|nosotros|calculadora|cobertura|tienda)\.html$/.test(url.pathname)) {
             url.searchParams.set('demo', '1');
         }
+        // Mantener la misma edición al seguir CTAs devueltos por la API.
+        var currentVersion = new URLSearchParams(window.location.search).get('v');
+        var homeLink = document.querySelector('.home-brand[href]');
+        var version = currentVersion || (homeLink && new URL(homeLink.href).searchParams.get('v'));
+        if (version && url.origin === base.origin && url.pathname.startsWith(base.pathname) &&
+            /\/(index|productos|inspiracion|nosotros|calculadora|cobertura|tienda)\.html$/.test(url.pathname)) {
+            url.searchParams.set('v', version);
+        }
         return url.href;
     }
     window.PPPageRoutes = { resolve: resolve };
