@@ -608,3 +608,40 @@ tablas, registros históricos ni módulos internos administrativos.
 
 Validado POST local al endpoint: HTTP 410. Sintaxis PHP y diff correctos;
 sin referencias a carrito o sus scripts en páginas públicas ni JS activo.
+
+## Corrección persistente de hover y caché CSS (2026-09-15)
+
+La regla genérica de enlaces con :is(.text-link.text-link, ...) tenía mayor
+especificidad que la excepción de utility-bar y pintaba el enlace azul sobre
+azul. Se excluyó utility-bar de esa regla, manteniendo su hover/foco blanco.
+El flotante declara dimensiones max-content y sigue fijo/transparente sin
+padding lateral del body. La franja anterior no figura en el CSS vigente.
+Como Apache configura caché CSS de un mes, las páginas públicas incluyen ahora
+un identificador de contenido en la URL de main.css para invalidar copias viejas.
+
+Chromium 390/1440: hover/foco blanco al terminar la transición, body sin padding
+lateral, flotante de 44px y transparente, sin overflow. Diff correcto.
+
+## Relleno estable de redes (2026-09-15)
+
+Por petición del usuario, círculos azul marino con borde cobre y símbolo blanco.
+Se retiró el cambio por intersección con footer y su observer: causaba símbolos
+blancos sobre superficies claras cuando el pie coincidía parcialmente con el
+flotante. Ahora el contraste depende del propio círculo y no de la sección.
+Contenedor transparente, posición fija y halo blur conservados. Versionadas
+URLs CSS/JS para invalidar caché. Chromium 390/1440 en Cobertura y footer:
+colores constantes verificados. Sintaxis JS y diff correctos.
+
+## Redes sin borde (2026-09-15)
+
+Retirado el borde de los círculos por petición del usuario. Se conservan
+relleno azul, halo y foco de teclado. URL CSS actualizada para evitar caché.
+Validación estática y diff correctos.
+
+## Hover social con halo cobre
+
+Los enlaces sociales activos cambian a cobre y muestran halo desenfocado con
+leve desplazamiento/escala en puntero preciso. El símbolo permanece nítido.
+Blur fijo de .5rem, animación de opacidad sin bucles JS. Foco de teclado visible
+y movimiento reducido respetados. Sin bordes decorativos. Caché CSS renovada;
+validación estática y diff correctos.
