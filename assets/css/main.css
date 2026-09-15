@@ -1545,16 +1545,16 @@ video {
 .home .social-float > :is(a, span) { position: relative; color: var(--palette-fff); background: var(--home-navy); border: 0; display: flex; align-items: center; justify-content: center; width: 2.75rem; height: 2.75rem; border-radius: 50%; }
 .home .social-float img { width: 1.25rem; height: 1.25rem; object-fit: contain; }
 /* El PNG local aporta la silueta; el color se obtiene de los tokens de marca. */
-@supports (mask-image: url("../icons/instagram.png")) {
+@supports (mask-image: url("../icons/instagram.png?v=c63fb767f6ea")) {
     .home .social-float img { opacity: 0; }
     .home .social-float > :is(a, span)::before {
         content: ''; position: absolute; width: 1.25rem; height: 1.25rem;
         background: currentColor; mask: var(--social-icon) center / contain no-repeat;
     }
-    .home .social-float > :nth-child(1) { --social-icon: url("../icons/facebook.png"); }
-    .home .social-float > :nth-child(2) { --social-icon: url("../icons/instagram.png"); }
-    .home .social-float > :nth-child(3) { --social-icon: url("../icons/tik-tok.png"); }
-    .home .social-float > :nth-child(4) { --social-icon: url("../icons/whatsapp.png"); }
+    .home .social-float > :nth-child(1) { --social-icon: url("../icons/facebook.png?v=ed566db5af82"); }
+    .home .social-float > :nth-child(2) { --social-icon: url("../icons/instagram.png?v=c63fb767f6ea"); }
+    .home .social-float > :nth-child(3) { --social-icon: url("../icons/tik-tok.png?v=34c8e92d233c"); }
+    .home .social-float > :nth-child(4) { --social-icon: url("../icons/whatsapp.png?v=5361e02b7a53"); }
 }
 .home .social-float a { isolation: isolate; transition: transform .2s ease, background-color .2s ease; }
 .home .social-float a:focus-visible { outline: .125rem solid var(--home-copper); outline-offset: .2rem; }

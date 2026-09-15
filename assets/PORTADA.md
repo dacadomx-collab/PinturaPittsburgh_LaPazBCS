@@ -645,3 +645,15 @@ leve desplazamiento/escala en puntero preciso. El símbolo permanece nítido.
 Blur fijo de .5rem, animación de opacidad sin bucles JS. Foco de teclado visible
 y movimiento reducido respetados. Sin bordes decorativos. Caché CSS renovada;
 validación estática y diff correctos.
+
+## Consistencia del flotante entre páginas
+
+Las siete páginas ya compartían versión CSS, pero los PNG no tenían versión
+y Apache permitía un año de caché. Se versionaron por hash de contenido los
+PNG tanto en HTML como en las máscaras CSS; se recalcularon CSS y home.js.
+El HTML se configura con Cache-Control no-cache, must-revalidate para recoger
+referencias nuevas; la caché larga de recursos versionados se conserva.
+No se asume que la caché fuese la única causa observada en el navegador del
+usuario. Chromium local: dos recorridos por las siete rutas, 14 navegaciones,
+con estilos idénticos y PNG versionados. La directiva Apache requiere desplegar
+.htaccess; no se verificó bajo Apache con el servidor PHP local.
