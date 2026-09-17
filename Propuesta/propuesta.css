@@ -5,8 +5,11 @@
    contenedores — mismo criterio ARF-Grid del resto del sitio.
 
    Clases genéricas disponibles para ajustar el diseño libremente:
-   .proposal-header, .proposal-header__brand, .proposal-header__logo,
-   .proposal-header__eyebrow, .proposal-header__title, .proposal-header__meta,
+   .letterhead(__nombre, __tagline, __contacto) — membrete de ACADEP (emisor).
+   .quote-meta(__documento, __lista, __campo, __cliente, __cliente-logo,
+   __cliente-nombre, __cliente-detalle) — número/fecha/lugar de cotización y
+   datos del cliente (Famza). .proposal-header__title se reutiliza dentro de
+   .quote-meta__documento para el nombre del proyecto cotizado.
    .proposal-main, .proposal-section, .proposal-eyebrow, .proposal-lead,
    .proposal-nota, .proposal-grid (+ --4 variante), .proposal-card,
    .proposal-card__numero, .proposal-tier (+ --setup/--retainer),
@@ -34,51 +37,115 @@ body.proposal {
     padding-block: var(--space-lg);
 }
 
-/* ── ENCABEZADO ──────────────────────────────────────────────────────────── */
-.proposal-header {
+/* ── MEMBRETE ACADEP ─────────────────────────────────────────────────────── */
+.letterhead {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    background-color: var(--color-primary);
+    color: var(--color-bg);
+    border-bottom: 4px solid var(--color-text);
+}
+
+.letterhead__nombre {
+    margin: 0;
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+}
+
+.letterhead__tagline {
+    margin: 0.1rem 0 0;
+    font-size: 0.85rem;
+    opacity: 0.85;
+}
+
+.letterhead__contacto {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 0.8rem;
+    text-align: right;
+    opacity: 0.9;
+}
+
+.letterhead__contacto li {
+    margin: 0.1rem 0;
+}
+
+/* ── DATOS DE LA COTIZACIÓN (número, fecha, lugar, cliente) ─────────────── */
+.quote-meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
     gap: var(--space-md);
     padding: var(--space-md);
     background-color: var(--color-bg-alt);
     border-bottom: 1px solid var(--color-text-muted);
 }
 
-.proposal-header__brand {
-    display: flex;
-    align-items: center;
-    gap: var(--space-sm);
-    flex-wrap: wrap;
-}
-
-.proposal-header__logo {
-    height: 3.5rem;
-    width: auto;
-}
-
-.proposal-header__eyebrow {
-    margin: 0;
-    font-size: 0.8rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--color-text-muted);
+.quote-meta__documento {
+    flex: 1 1 320px;
 }
 
 .proposal-header__title {
-    margin: 0.2rem 0 0;
+    margin: 0.2rem 0 var(--space-sm);
     font-size: 1.4rem;
 }
 
-.proposal-header__meta {
-    font-size: 0.85rem;
+.quote-meta__lista {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    margin: 0;
+}
+
+.quote-meta__campo dt {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     color: var(--color-text-muted);
 }
 
-.proposal-header__meta p {
-    margin: 0.15rem 0;
+.quote-meta__campo dd {
+    margin: 0;
+    font-weight: 700;
+}
+
+.quote-meta__cliente {
+    flex: 0 1 220px;
+    text-align: center;
+    background-color: var(--color-bg);
+    border-radius: var(--radius);
+    padding: var(--space-sm);
+}
+
+.quote-meta__cliente-etiqueta {
+    margin: 0 0 0.4rem;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+}
+
+.quote-meta__cliente-logo {
+    height: 2.8rem;
+    width: auto;
+    margin-bottom: 0.4rem;
+}
+
+.quote-meta__cliente-nombre {
+    margin: 0;
+    font-weight: 800;
+}
+
+.quote-meta__cliente-detalle {
+    margin: 0.2rem 0 0;
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
 }
 
 /* ── SECCIONES GENERALES ─────────────────────────────────────────────────── */
@@ -332,12 +399,13 @@ body.proposal {
 
 /* ── RESPONSIVO: nunca scroll horizontal, ancho relativo siempre ─────────── */
 @media (max-width: 480px) {
-    .proposal-header {
+    .letterhead,
+    .quote-meta {
         flex-direction: column;
         align-items: flex-start;
     }
 
-    .proposal-header__meta {
+    .letterhead__contacto {
         text-align: left;
     }
 }
