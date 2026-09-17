@@ -100,7 +100,7 @@ ServerSignature Off
     Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
 
     # Content Security Policy — ajustar según CDNs y APIs externas del proyecto
-    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; font-src 'self' https: data:; connect-src 'self' https:; frame-ancestors 'self';"
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; font-src 'self' https: data:; connect-src 'self' https:; frame-src 'self' https://www.google.com; frame-ancestors 'self';"
 
     # Ocultar firma del servidor
     Header always unset X-Powered-By
@@ -174,3 +174,11 @@ ErrorDocument 401 "Autenticación requerida."
 ErrorDocument 403 "Acceso denegado."
 ErrorDocument 404 "Recurso no encontrado."
 ErrorDocument 500 "Error interno del servidor."
+
+# El HTML debe revalidarse para obtener las versiones actuales de CSS/JS/iconos
+# (Hito 27, adoptado de collab/rafa al promover su frontend a producción).
+<IfModule mod_headers.c>
+    <FilesMatch "\.html$">
+        Header always set Cache-Control "no-store, max-age=0"
+    </FilesMatch>
+</IfModule>

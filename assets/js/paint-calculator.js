@@ -53,6 +53,17 @@
             return;
         }
 
+        var areaInput = document.getElementById('calc-area');
+        var previousArea = '';
+        // Teclado decimal y filtro también para pegado, dictado y arrastrar texto.
+        areaInput.addEventListener('beforeinput', function (event) {
+            if (event.data && /[^0-9.,]/.test(event.data)) event.preventDefault();
+        });
+        areaInput.addEventListener('input', function () {
+            if (/^[0-9]*([.,][0-9]*)?$/.test(areaInput.value)) previousArea = areaInput.value;
+            else areaInput.value = previousArea;
+        });
+
         var resultBox = document.getElementById('calculadora-resultado');
         var resultValue = document.getElementById('calculadora-resultado-valor');
         var resultNote = document.getElementById('calculadora-resultado-nota');
@@ -60,11 +71,11 @@
         form.addEventListener('submit', function (event) {
             event.preventDefault();
 
-            var area = parseFloat(document.getElementById('calc-area').value);
+            var area = Number(areaInput.value.replace(',', '.'));
             var textura = document.getElementById('calc-textura').value;
             var exposicion = document.getElementById('calc-exposicion').value;
 
-            if (!area || area <= 0) {
+            if (!Number.isFinite(area) || area <= 0) {
                 resultBox.hidden = false;
                 resultBox.className = 'calculator-result';
                 resultValue.textContent = 'Ingresa un área válida en m².';
@@ -76,7 +87,7 @@
 
             resultBox.hidden = false;
             resultValue.textContent = r.galones + ' galones (' + r.litros + ' L) ≈ ' + r.cubetas + ' cubetas de 19 L';
-            resultNote.textContent = 'Estimado con rendimiento de referencia de ' + r.rendimientoEfectivo + ' m²/galón según textura y exposición. Confirma el rendimiento real en la ficha técnica del producto antes de comprar.';
+            resultNote.textContent = 'Estimado con rendimiento de referencia de ' + r.rendimientoEfectivo + ' m²/galón según textura y exposición. Confirma el rendimiento real en la ficha técnica del producto con asesoría de Famza.';
         });
     }
 

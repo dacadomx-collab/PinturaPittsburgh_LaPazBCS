@@ -3,85 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout — Famza</title>
-    <meta name="description" content="Finaliza tu pedido — Famza, Distribuidor Autorizado de The Pittsburgh Paints Company en La Paz, B.C.S.">
-    <link rel="icon" href="favicon.ico">
-
-    <script src="assets/js/theme-init.js"></script>
-    <link rel="preload" href="assets/css/main.css" as="style">
-    <link rel="stylesheet" href="assets/css/main.css">
+    <meta http-equiv="refresh" content="0;url=tienda.html">
+    <meta name="robots" content="noindex">
+    <title>Contacta a Famza</title>
+    <link rel="stylesheet" href="assets/css/main.css?v=7a8a5645fb77">
 </head>
-<body>
-    <header class="site-header">
-        <div class="container site-header__bar">
-            <p class="site-header__value-prop">
-                <a class="header-back-link" href="index.html">← Volver al catálogo</a>
-            </p>
-            <button type="button" id="theme-toggle-btn" class="theme-toggle-btn" aria-label="Cambiar entre modo día y modo noche"></button>
-        </div>
-    </header>
-
-    <main class="container arf-grid">
-        <section class="card arf-col-2" aria-labelledby="checkout-carrito-titulo">
-            <h1 id="checkout-carrito-titulo">Tu Pedido</h1>
-            <p id="checkout-vacio" class="brand-tagline">Tu carrito está vacío — agrega productos desde el catálogo.</p>
-            <ul id="checkout-items" class="checkout-list"></ul>
-            <p class="pdp-precio">Total: <span id="checkout-total"></span></p>
-        </section>
-
-        <section class="card arf-col-2" aria-labelledby="checkout-form-titulo">
-            <h2 id="checkout-form-titulo">Datos de Entrega</h2>
-            <form id="checkout-form" class="calculator-grid">
-                <div class="field-group field-group--full">
-                    <label for="checkout-nombre">Nombre completo</label>
-                    <input class="field" type="text" id="checkout-nombre" name="cliente_nombre" required>
-                </div>
-                <div class="field-group">
-                    <label for="checkout-telefono">Teléfono</label>
-                    <input class="field" type="tel" id="checkout-telefono" name="cliente_telefono" required>
-                </div>
-                <div class="field-group">
-                    <label for="checkout-email">Correo (opcional)</label>
-                    <input class="field" type="email" id="checkout-email" name="cliente_email">
-                </div>
-
-                <div class="field-group field-group--full">
-                    <label><input type="radio" name="modalidad" value="entrega_domicilio" checked> Entrega a domicilio (solo La Paz, B.C.S.)</label>
-                    <label><input type="radio" name="modalidad" value="recoleccion_tienda"> Recolección en tienda (Mariano Abasolo 3114, Pueblo Nuevo)</label>
-                </div>
-
-                <div id="checkout-domicilio-grupo" class="field-group field-group--full">
-                    <label for="checkout-cp">Código Postal</label>
-                    <div class="postal-bar__input-group">
-                        <input class="field" type="text" inputmode="numeric" maxlength="5" id="checkout-cp">
-                        <button type="button" id="checkout-validar-cp-btn" class="btn">Validar</button>
-                    </div>
-                    <p id="checkout-cp-resultado" class="postal-bar__result" hidden></p>
-
-                    <label for="checkout-direccion">Dirección completa</label>
-                    <input class="field" type="text" id="checkout-direccion" placeholder="Calle, número, colonia, referencias">
-                </div>
-
-                <div class="field-group">
-                    <button type="submit" id="checkout-submit-btn" class="btn btn--gold" disabled>Confirmar Pedido</button>
-                </div>
-            </form>
-            <p id="checkout-status" class="postal-bar__result" hidden></p>
-        </section>
-    </main>
-
-    <footer class="site-footer">
-        <div class="container">
-            <p>Famza — The Colour Boutique · Distribuidor Autorizado The Pittsburgh Paints Company · Mariano Abasolo 3114, Pueblo Nuevo, La Paz, B.C.S.</p>
-        </div>
-    </footer>
-
-    <button type="button" id="back-to-top-btn" class="back-to-top-btn" hidden aria-label="Volver arriba">↑</button>
-
-    <script src="assets/js/cart.js" defer></script>
-    <script src="assets/js/postal-coverage.js" defer></script>
-    <script src="assets/js/checkout-page.js" defer></script>
-    <script src="assets/js/theme-toggle.js" defer></script>
-    <script src="assets/js/back-to-top.js" defer></script>
-</body>
+<body class="home"><main class="home-container page-intro"><h1>Te atendemos en Famza</h1><p>Este sitio es informativo. Para conocer productos y disponibilidad, contacta a nuestras tiendas.</p><a class="home-button" href="tienda.html">Encuentra tu tienda</a></main></body>
 </html>
