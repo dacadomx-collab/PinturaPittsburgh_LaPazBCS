@@ -1,0 +1,343 @@
+/* =============================================================================
+   Propuesta/propuesta.css — Estilos de la Landing Page de Propuesta Comercial
+   Depende de los tokens definidos en assets/css/main.css (cargar SIEMPRE
+   main.css antes que este archivo). Cero !important, cero anchos fijos en
+   contenedores — mismo criterio ARF-Grid del resto del sitio.
+
+   Clases genéricas disponibles para ajustar el diseño libremente:
+   .proposal-header, .proposal-header__brand, .proposal-header__logo,
+   .proposal-header__eyebrow, .proposal-header__title, .proposal-header__meta,
+   .proposal-main, .proposal-section, .proposal-eyebrow, .proposal-lead,
+   .proposal-nota, .proposal-grid (+ --4 variante), .proposal-card,
+   .proposal-card__numero, .proposal-tier (+ --setup/--retainer),
+   .proposal-tier__header, .proposal-tier__subtitulo, .proposal-tier__body,
+   .proposal-feature-list(__item, --activo, --roadmap), .proposal-badge
+   (--activo, --roadmap), .proposal-price-card, .proposal-price-table
+   (__monto, __total), .proposal-acceptance(__opciones, __opcion, __firma,
+   __firma-linea, __firma-espacio), .proposal-footer, .proposal-print-btn.
+   ============================================================================= */
+
+body.proposal {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    line-height: 1.5;
+}
+
+.proposal-main {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    max-width: 960px;
+    margin-inline: auto;
+    padding-inline: var(--space-md);
+    padding-block: var(--space-lg);
+}
+
+/* ── ENCABEZADO ──────────────────────────────────────────────────────────── */
+.proposal-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    background-color: var(--color-bg-alt);
+    border-bottom: 1px solid var(--color-text-muted);
+}
+
+.proposal-header__brand {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+}
+
+.proposal-header__logo {
+    height: 3.5rem;
+    width: auto;
+}
+
+.proposal-header__eyebrow {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
+}
+
+.proposal-header__title {
+    margin: 0.2rem 0 0;
+    font-size: 1.4rem;
+}
+
+.proposal-header__meta {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+}
+
+.proposal-header__meta p {
+    margin: 0.15rem 0;
+}
+
+/* ── SECCIONES GENERALES ─────────────────────────────────────────────────── */
+.proposal-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    padding: var(--space-md);
+    border-radius: var(--radius);
+    background-color: var(--color-bg-alt);
+}
+
+.proposal-eyebrow {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-primary);
+}
+
+.proposal-lead {
+    font-size: 1.02rem;
+    max-width: 68ch;
+}
+
+.proposal-nota {
+    font-style: italic;
+    color: var(--color-text-muted);
+}
+
+/* ── GRID DE 4 TARJETAS (Sección 1) ──────────────────────────────────────── */
+.proposal-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    justify-content: center;
+}
+
+.proposal-grid--4 > .proposal-card {
+    flex: 1 1 200px;
+    max-width: 260px;
+}
+
+.proposal-card {
+    background-color: var(--color-bg);
+    border-radius: var(--radius);
+    padding: var(--space-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.proposal-card__numero {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--color-primary);
+    opacity: 0.5;
+}
+
+.proposal-card h3 {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.proposal-card p {
+    margin: 0;
+    font-size: 0.88rem;
+    color: var(--color-text-muted);
+}
+
+/* ── TIERS DE PROPUESTA (Secciones 2 y 3) ────────────────────────────────── */
+.proposal-tier__header {
+    text-align: center;
+}
+
+.proposal-tier__subtitulo {
+    margin: 0.2rem 0 0;
+    color: var(--color-text-muted);
+}
+
+.proposal-feature-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.proposal-feature-list__item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding: var(--space-sm);
+    background-color: var(--color-bg);
+    border-radius: var(--radius);
+    border-left: 4px solid var(--color-primary);
+}
+
+.proposal-feature-list__item span:last-child {
+    color: var(--color-text-muted);
+    font-size: 0.92rem;
+}
+
+.proposal-badge {
+    align-self: flex-start;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+}
+
+.proposal-badge--activo {
+    background-color: rgba(13, 148, 136, 0.15);
+    color: #0d9488;
+}
+
+.proposal-badge--roadmap {
+    background-color: rgba(217, 119, 6, 0.15);
+    color: #d97706;
+}
+
+.proposal-feature-list__item--roadmap {
+    border-left-color: #d97706;
+}
+
+/* ── TARJETA DE PRECIO ────────────────────────────────────────────────────── */
+.proposal-price-card {
+    align-self: center;
+    width: min(100%, 420px);
+    background-color: var(--color-bg);
+    border-radius: var(--radius);
+    padding: var(--space-md);
+    text-align: center;
+}
+
+.proposal-price-card__label {
+    margin: 0 0 var(--space-xs);
+    font-weight: 700;
+    color: var(--color-text-muted);
+}
+
+.proposal-price-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.proposal-price-table td {
+    padding: 0.4rem 0;
+    text-align: left;
+}
+
+.proposal-price-table__monto {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.proposal-price-table__total td {
+    border-top: 2px solid var(--color-primary);
+    font-weight: 800;
+    font-size: 1.15rem;
+    padding-top: var(--space-xs);
+}
+
+/* ── ACEPTACIÓN Y FIRMA ───────────────────────────────────────────────────── */
+.proposal-acceptance__opciones {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.proposal-acceptance__opcion {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.proposal-acceptance__firma {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-lg);
+    margin-top: var(--space-md);
+}
+
+.proposal-acceptance__firma-linea {
+    flex: 1 1 220px;
+}
+
+.proposal-acceptance__firma-espacio {
+    display: block;
+    height: 2.5rem;
+    border-bottom: 1px solid var(--color-text);
+}
+
+.proposal-acceptance__firma-linea p {
+    margin: 0.3rem 0 0;
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+}
+
+/* ── PIE Y BOTÓN DE IMPRESIÓN ─────────────────────────────────────────────── */
+.proposal-footer {
+    text-align: center;
+    padding: var(--space-md);
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+}
+
+.proposal-print-btn {
+    position: fixed;
+    right: var(--space-md);
+    bottom: var(--space-md);
+    z-index: 500;
+    padding: 0.8rem 1.2rem;
+    border: none;
+    border-radius: var(--radius);
+    background-color: var(--color-primary);
+    color: var(--color-bg);
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+}
+
+.proposal-print-btn:hover,
+.proposal-print-btn:focus-visible {
+    opacity: 0.9;
+}
+
+/* ── IMPRESIÓN: se ve como un documento formal, sin elementos de pantalla ─── */
+@media print {
+    .no-print {
+        display: none;
+    }
+
+    body.proposal {
+        background-color: #ffffff;
+        color: #000000;
+    }
+
+    .proposal-section,
+    .proposal-card,
+    .proposal-feature-list__item,
+    .proposal-price-card {
+        background-color: #ffffff;
+    }
+}
+
+/* ── RESPONSIVO: nunca scroll horizontal, ancho relativo siempre ─────────── */
+@media (max-width: 480px) {
+    .proposal-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .proposal-header__meta {
+        text-align: left;
+    }
+}
