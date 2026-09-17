@@ -326,27 +326,53 @@ body.proposal {
     gap: 0.5rem;
 }
 
-.proposal-acceptance__firma {
+/* ── FIRMA DIGITAL (nombre + fecha + canvas dibujable) ──────────────────── */
+.signature-pad {
     display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-lg);
+    flex-direction: column;
+    gap: var(--space-sm);
     margin-top: var(--space-md);
 }
 
-.proposal-acceptance__firma-linea {
-    flex: 1 1 220px;
+.signature-pad__campo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
 }
 
-.proposal-acceptance__firma-espacio {
-    display: block;
-    height: 2.5rem;
-    border-bottom: 1px solid var(--color-text);
-}
-
-.proposal-acceptance__firma-linea p {
-    margin: 0.3rem 0 0;
+.signature-pad__campo label {
     font-size: 0.85rem;
+    font-weight: 700;
     color: var(--color-text-muted);
+}
+
+.signature-pad__canvas {
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    aspect-ratio: 600 / 200;
+    background-color: #ffffff;
+    border: 1px dashed var(--color-text-muted);
+    border-radius: var(--radius);
+    touch-action: none;
+    cursor: crosshair;
+}
+
+.signature-pad__limpiar {
+    align-self: flex-start;
+    background: none;
+    border: 1px solid var(--color-text-muted);
+    color: var(--color-text-muted);
+    border-radius: var(--radius);
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+
+.signature-pad__limpiar:hover,
+.signature-pad__limpiar:focus-visible {
+    color: var(--color-text);
+    border-color: var(--color-text);
 }
 
 /* ── PIE Y BOTÓN DE IMPRESIÓN ─────────────────────────────────────────────── */

@@ -118,7 +118,7 @@
         <section class="proposal-section proposal-tier proposal-tier--setup" aria-labelledby="propuesta1-titulo">
             <div class="proposal-tier__header">
                 <p class="proposal-eyebrow">Servicio de Desarrollo</p>
-                <h2 id="propuesta1-titulo">Costo Definitivo de tu Página Web</h2>
+                <h2 id="propuesta1-titulo">Costo definitivo para el desarrollo de la plataforma operativa y página web</h2>
                 <p class="proposal-tier__subtitulo">Diseño y programación completa del sitio y sistema base</p>
             </div>
 
@@ -274,14 +274,21 @@
                 </label>
             </div>
 
-            <div class="proposal-acceptance__firma">
-                <div class="proposal-acceptance__firma-linea">
-                    <span class="proposal-acceptance__firma-espacio"></span>
-                    <p>Nombre y firma — Famza, The Colour Boutique</p>
+            <div class="signature-pad">
+                <div class="signature-pad__campo">
+                    <label for="firma-nombre">Nombre completo — Famza, The Colour Boutique</label>
+                    <input type="text" id="firma-nombre" class="field" placeholder="Nombre de quien autoriza">
                 </div>
-                <div class="proposal-acceptance__firma-linea">
-                    <span class="proposal-acceptance__firma-espacio"></span>
-                    <p>Fecha</p>
+
+                <div class="signature-pad__campo">
+                    <label for="firma-fecha">Fecha de autorización</label>
+                    <input type="date" id="firma-fecha" class="field">
+                </div>
+
+                <div class="signature-pad__campo signature-pad__campo--canvas">
+                    <label id="firma-canvas-label">Firma — dibuja con el mouse, el dedo o el lápiz óptico</label>
+                    <canvas id="firma-canvas" class="signature-pad__canvas" width="600" height="200" aria-labelledby="firma-canvas-label" role="img"></canvas>
+                    <button type="button" id="firma-limpiar-btn" class="signature-pad__limpiar no-print">Borrar y firmar de nuevo</button>
                 </div>
             </div>
         </section>
@@ -294,10 +301,12 @@
     </footer>
 
     <!-- Botón flotante de impresión — clase "no-print" para ocultarlo en el
-         propio PDF/impresión vía @media print en propuesta.css. -->
-    <button type="button" class="proposal-print-btn no-print" onclick="window.print()">
+         propio PDF/impresión vía @media print en propuesta.css. El manejo de
+         clic vive en propuesta.js (nunca inline), igual que la firma digital. -->
+    <button type="button" id="proposal-print-btn" class="proposal-print-btn no-print">
         🖨️ Imprimir y Firmar Autorización
     </button>
 
+    <script src="propuesta.js" defer></script>
 </body>
 </html>

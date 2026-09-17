@@ -1,6 +1,6 @@
 # CLAUDE.md — Manual Operativo del Agente IA
 ## Famza — The Colour Boutique | Distribuidor Autorizado The Pittsburgh Paints Company — La Paz, B.C.S.
-**Versión:** 24.0 | **Fecha:** 2026-09-17 | **Arquitecto:** [NOMBRE_ARQUITECTO — pendiente de confirmar]
+**Versión:** 24.1 | **Fecha:** 2026-09-17 | **Arquitecto:** David Cabrera
 
 > **Corrección de identidad (Hito 26, 2026-09-17):** el cliente real de este proyecto es **Famza — The Colour Boutique**, distribuidor autorizado de The Pittsburgh Paints Company en La Paz, B.C.S. — no "PinturaPittsburgh", el nombre de trabajo asumido en la instanciación del Hito 1 (2026-09-11) y nunca confirmado contra el cliente real hasta la "Ficha de Levantamiento de Información y Requisitos Operativos" (Septiembre 2026, `knowledge/`). El nombre técnico del repositorio/carpeta (`PinturaPittsburgh_LaPazBCS`) **no se renombra** en este Hito — es un identificador de infraestructura (Git, GitHub, ruta local), no la marca de cara al cliente; todo el contenido visible al público, metadatos SEO y textos institucionales sí se corrigieron. Ver §1 para el NAP real completo.
 
