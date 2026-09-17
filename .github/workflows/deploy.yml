@@ -5,10 +5,18 @@ name: Deploy FTP — PinturaPittsburgh_LaPazBCS (AXON_DCD CI/CD v2)
 # lista exacta de Secrets requeridos.
 
 # ── TRIGGER ────────────────────────────────────────────────────────────────────
-# Se activa en push a la rama principal Y a las 2 ramas de previsualización de
-# colaboradores externos (Hito 19) — nunca en cualquier otra rama de feature.
-# `collab/rafa` y `collab/moy` despliegan a subcarpetas aisladas (ver
-# server-dir más abajo), nunca a la raíz pública del cliente.
+# Se activa en push a la rama principal Y a las ramas de colaboradores externos
+# (Hito 19) — nunca en cualquier otra rama de feature.
+# Desde el Hito 28: `collab/rafa` despliega DIRECTO a la raíz pública (mismo
+# destino que `main`) por petición explícita del Arquitecto — Rafael ya es
+# quien construye el frontend real y se quiere que cada push suyo se refleje
+# de inmediato en https://pittsburgh.tourfindy.com/, sin esperar un PR. Esto
+# NO toca el Ruleset de GitHub (`main` sigue protegida a nivel de git/PR) —
+# es únicamente el destino FTP el que cambió. Contrapartida aceptada: ya no
+# hay una revisión previa a que su código llegue a producción, y cualquier
+# push a `main` (backend) debe traer primero lo último de `collab/rafa` antes
+# de subir, o lo pisará (ambas ramas escriben a la misma raíz remota).
+# `collab/moy` sigue aislada en su propia subcarpeta (ver server-dir abajo).
 on:
   push:
     branches:
@@ -107,16 +115,14 @@ jobs:
           # absoluta. Si el proveedor cambia el punto de montaje FTP, ajustar
           # aquí (no requiere nuevo Secret).
           #
-          # MULTI-STAGE (Hito 19): `main`/`master` siguen desplegando en la
-          # raíz real del subdominio (versión oficial del cliente). Las 2
-          # ramas de colaboradores externos despliegan en su propia
-          # subcarpeta aislada — nunca pisan la raíz ni entre ellas:
-          #   collab/rafa -> ./preview-rafa/  -> https://pittsburgh.tourfindy.com/preview-rafa/
-          #   collab/moy  -> ./preview-moy/   -> https://pittsburgh.tourfindy.com/preview-moy/
-          # Las subcarpetas ya existen en el servidor (creadas por SSH,
-          # Hito 19) — FTP-Deploy-Action también las crea solo si hicieran
-          # falta, así que esto funciona igual aunque se borren a mano.
-          server-dir: ${{ github.ref_name == 'collab/rafa' && './preview-rafa/' || github.ref_name == 'collab/moy' && './preview-moy/' || './' }}
+          # MULTI-STAGE (Hito 19, ajustado Hito 28): `main`/`master` y
+          # `collab/rafa` despliegan ambas a la raíz real del subdominio —
+          # Rafael construye el frontend en vivo, sus push se reflejan de
+          # inmediato. `collab/moy` sigue aislada en su propia subcarpeta,
+          # nunca pisa la raíz:
+          #   collab/rafa -> ./            -> https://pittsburgh.tourfindy.com/
+          #   collab/moy  -> ./preview-moy/ -> https://pittsburgh.tourfindy.com/preview-moy/
+          server-dir: ${{ github.ref_name == 'collab/moy' && './preview-moy/' || './' }}
           # Exclusiones de seguridad — NO desplegar secretos ni herramientas internas
           exclude: |
             **/.git/**
