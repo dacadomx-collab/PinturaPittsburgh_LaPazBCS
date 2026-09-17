@@ -16,7 +16,7 @@ require __DIR__ . '/layout/header.php';
 require __DIR__ . '/layout/topbar.php';
 ?>
         <h1>Bienvenido al Panel Administrativo</h1>
-        <p class="brand-tagline">PinturaPittsburgh — Distribuidor Autorizado en La Paz, B.C.S. Resumen operativo del día.</p>
+        <p class="brand-tagline">Famza — The Colour Boutique, Distribuidor Autorizado en La Paz, B.C.S. Resumen operativo del día.</p>
 
         <section aria-labelledby="admin-accion-rapida-titulo">
             <h2 id="admin-accion-rapida-titulo" class="text-center">Acceso Rápido</h2>

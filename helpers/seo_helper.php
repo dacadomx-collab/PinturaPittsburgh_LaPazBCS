@@ -12,7 +12,7 @@ declare(strict_types=1);
 // AdServer B2B White-Label para una plataforma de medios que vende espacio
 // publicitario a patrocinadores (viewability MRC, click-fraud, rate limiting
 // de telemetría de banners) — no existe ese modelo de negocio en
-// PinturaPittsburgh (e-commerce hiperlocal de pinturas, sin inventario
+// Famza (e-commerce hiperlocal de pinturas, sin inventario
 // publicitario propio). Se conserva únicamente §1: metadatos on-page,
 // sitemap dinámico y JSON-LD — adaptado al dominio real de este proyecto.
 //
@@ -60,10 +60,25 @@ function seoTruncar(string $texto, int $max): string
 }
 
 /**
- * JSON-LD institucional (LocalBusiness) — NAP real, coordenadas de La Paz,
- * B.C.S. a nivel de ciudad (aproximadas, no un pin exacto verificado — el
- * propio Módulo 04 pide "coordenadas aproximadas"). Estático: no depende de
- * ningún request, se imprime igual en cada carga de index.html.
+ * JSON-LD institucional (LocalBusiness) — NAP real (Hito 26, corrección de
+ * identidad: el cliente real es "Famza — The Colour Boutique", distribuidor
+ * autorizado de The Pittsburgh Paints Company en La Paz — "PinturaPittsburgh"
+ * fue el nombre de trabajo asumido desde el Hito 1, nunca confirmado con el
+ * cliente real hasta la Ficha de Levantamiento de Información, Septiembre
+ * 2026). Dirección y coordenadas tomadas del enlace de Google Maps de la
+ * sucursal matriz en esa Ficha — ya no son una aproximación de ciudad.
+ * Estático: no depende de ningún request, se imprime igual en cada carga de
+ * index.html.
+ *
+ * Pendiente de la Ficha (Mandamiento #4 — nunca se inventa): `telephone` usa
+ * solo el fijo de mostrador (confirmado, 10 dígitos); el número de
+ * WhatsApp/móvil que dio el cliente tiene un dígito de más ("612 612 157
+ * 0249") — probable error de captura, no se usa hasta confirmarlo. Perfiles
+ * de redes sociales (Facebook/Instagram) no se agregan como `sameAs` porque
+ * la Ficha dejó el campo de URL en blanco — no se adivina la URL a partir
+ * del nombre de usuario. Existe una segunda sucursal (Matamoros y
+ * Revolución) sin dirección completa verificada todavía — este schema
+ * representa solo la matriz (Mariano Abasolo).
  */
 function seoLocalBusinessJsonLd(): string
 {
@@ -72,22 +87,24 @@ function seoLocalBusinessJsonLd(): string
     $datos = [
         '@context'   => 'https://schema.org',
         '@type'      => 'HardwareStore',
-        'name'       => 'PinturaPittsburgh — Distribuidor Autorizado en La Paz',
-        'image'      => $base . '/assets/img/logo.svg',
+        'name'       => 'Famza — The Colour Boutique',
+        'image'      => $base . '/assets/img/logo.jpeg',
         'url'        => $base . '/',
+        'telephone'  => '+52 612 125 8171',
         'address'    => [
             '@type'           => 'PostalAddress',
-            'streetAddress'   => 'Bulevar Agustín Olachea e Indeco',
+            'streetAddress'   => 'Mariano Abasolo 3114, Pueblo Nuevo',
+            'postalCode'      => '23060',
             'addressLocality' => 'La Paz',
             'addressRegion'   => 'Baja California Sur',
             'addressCountry'  => 'MX',
         ],
-        // Coordenadas aproximadas del centro de La Paz, B.C.S. (dato público
-        // de ciudad, no un pin verificado de la sucursal exacta).
+        // Pin real de la sucursal matriz (Google Maps, Ficha de Levantamiento
+        // Sept. 2026) — ya no es una aproximación de centro de ciudad.
         'geo'        => [
             '@type'     => 'GeoCoordinates',
-            'latitude'  => 24.1426,
-            'longitude' => -110.3128,
+            'latitude'  => 24.1486569,
+            'longitude' => -110.3282455,
         ],
         'areaServed' => [
             '@type' => 'City',
@@ -113,7 +130,7 @@ function seoProductoJsonLd(array $producto, string $urlProducto): string
         '@context'    => 'https://schema.org',
         '@type'       => 'Product',
         'name'        => $producto['nombre'],
-        'description' => $producto['descripcion'] ?? ('Producto de la línea ' . $producto['linea_legible'] . ' — The Pittsburgh Paints Company, disponible en PinturaPittsburgh La Paz.'),
+        'description' => $producto['descripcion'] ?? ('Producto de la línea ' . $producto['linea_legible'] . ' — The Pittsburgh Paints Company, disponible en Famza La Paz.'),
         'image'       => $producto['imagen'],
         'url'         => $urlProducto,
         'brand'       => [
@@ -130,7 +147,7 @@ function seoProductoJsonLd(array $producto, string $urlProducto): string
                 : 'https://schema.org/OutOfStock',
             'seller'        => [
                 '@type' => 'HardwareStore',
-                'name'  => 'PinturaPittsburgh — Distribuidor Autorizado en La Paz',
+                'name'  => 'Famza — The Colour Boutique',
             ],
         ],
     ];
@@ -157,7 +174,7 @@ function seoOpenGraphTags(array $datos): string
 
     $tags = [
         '<meta property="og:type" content="' . $e($tipo) . '">',
-        '<meta property="og:site_name" content="PinturaPittsburgh">',
+        '<meta property="og:site_name" content="Famza — The Colour Boutique">',
         '<meta property="og:title" content="' . $e($titulo) . '">',
         '<meta property="og:description" content="' . $e($descripcion) . '">',
         '<meta property="og:image" content="' . $e($imagen) . '">',

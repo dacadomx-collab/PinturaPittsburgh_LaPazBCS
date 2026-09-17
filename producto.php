@@ -43,8 +43,8 @@ $urlBase     = seoUrlBase();
 $urlCanonica = $urlBase . '/producto.php' . ($productoId > 0 ? '?id=' . $productoId : '');
 
 if ($producto !== null) {
-    $tituloPagina = $producto['nombre'] . ' — ' . $producto['linea_legible'] . ' | PinturaPittsburgh';
-    $descripcion  = $producto['descripcion'] ?? ('Producto de la línea ' . $producto['linea_legible'] . ', The Pittsburgh Paints Company — disponible en PinturaPittsburgh, Distribuidor Autorizado en La Paz, B.C.S.');
+    $tituloPagina = $producto['nombre'] . ' — ' . $producto['linea_legible'] . ' | Famza';
+    $descripcion  = $producto['descripcion'] ?? ('Producto de la línea ' . $producto['linea_legible'] . ', The Pittsburgh Paints Company — disponible en Famza, Distribuidor Autorizado en La Paz, B.C.S.');
     $ogTags       = seoOpenGraphTags([
         'titulo'      => $tituloPagina,
         'descripcion' => $descripcion,
@@ -54,12 +54,12 @@ if ($producto !== null) {
     ]);
     $jsonLd = seoProductoJsonLd($producto, $urlCanonica);
 } else {
-    $tituloPagina = 'Producto — PinturaPittsburgh';
-    $descripcion  = 'Ficha técnica de producto — PinturaPittsburgh, Distribuidor Autorizado de The Pittsburgh Paints Company en La Paz, B.C.S.';
+    $tituloPagina = 'Producto — Famza';
+    $descripcion  = 'Ficha técnica de producto — Famza, Distribuidor Autorizado de The Pittsburgh Paints Company en La Paz, B.C.S.';
     $ogTags       = seoOpenGraphTags([
         'titulo'      => $tituloPagina,
         'descripcion' => $descripcion,
-        'imagen'      => $urlBase . '/assets/img/logo.svg',
+        'imagen'      => $urlBase . '/assets/img/logo.jpeg',
         'url'         => $urlCanonica,
         'tipo'        => 'website',
     ]);
@@ -131,7 +131,7 @@ if ($producto !== null) {
 
     <footer class="site-footer">
         <div class="container">
-            <p>PinturaPittsburgh - Distribuidor Autorizado La Paz · Bulevar Agustín Olachea e Indeco, La Paz, B.C.S.</p>
+            <p>Famza — The Colour Boutique · Distribuidor Autorizado The Pittsburgh Paints Company · Mariano Abasolo 3114, Pueblo Nuevo, La Paz, B.C.S.</p>
         </div>
     </footer>
 

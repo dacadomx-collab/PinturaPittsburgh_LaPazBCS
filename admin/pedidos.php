@@ -16,7 +16,7 @@ require __DIR__ . '/layout/header.php';
 require __DIR__ . '/layout/topbar.php';
 ?>
         <h1>Pedidos</h1>
-        <p class="brand-tagline">Entrega a domicilio y recolección en tienda — Blvd. Agustín Olachea e Indeco, La Paz, B.C.S.</p>
+        <p class="brand-tagline">Entrega a domicilio y recolección en tienda — Mariano Abasolo 3114, Pueblo Nuevo, La Paz, B.C.S.</p>
 
         <div class="admin-quick-links" role="group" aria-label="Filtrar por estatus">
             <button type="button" class="btn admin-quick-links__item" data-filtro-estatus="">Todos</button>

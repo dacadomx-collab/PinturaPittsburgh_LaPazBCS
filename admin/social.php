@@ -84,7 +84,7 @@ require __DIR__ . '/layout/topbar.php';
 
                     <div class="field-group field-group--full">
                         <label for="social-texto">Texto / Caption</label>
-                        <textarea class="field" id="social-texto" name="texto" required placeholder="Escribe el copy de la publicación. Incluye hashtags locales para Instagram (#LaPazBCS, #PinturaPittsburgh)."></textarea>
+                        <textarea class="field" id="social-texto" name="texto" required placeholder="Escribe el copy de la publicación. Incluye hashtags locales para Instagram (#LaPazBCS, #Famza)."></textarea>
                     </div>
 
                     <div class="field-group field-group--full">
@@ -115,13 +115,13 @@ require __DIR__ . '/layout/topbar.php';
                 <h2 id="social-preview-titulo">Previsualización en Vivo</h2>
                 <div class="preview-panels">
                     <div class="preview-card preview-card--facebook">
-                        <p class="preview-card__header">PinturaPittsburgh — Facebook</p>
+                        <p class="preview-card__header">Famza — Facebook</p>
                         <img id="preview-fb-media" class="preview-card__media" alt="Vista previa de imagen para Facebook" hidden>
                         <p id="preview-fb-caption" class="preview-card__caption"></p>
                         <p id="preview-fb-counter" class="char-counter"></p>
                     </div>
                     <div class="preview-card preview-card--instagram">
-                        <p class="preview-card__header">PinturaPittsburgh — Instagram</p>
+                        <p class="preview-card__header">Famza — Instagram</p>
                         <img id="preview-ig-media" class="preview-card__media" alt="Vista previa de imagen para Instagram" hidden>
                         <p id="preview-ig-caption" class="preview-card__caption"></p>
                         <p id="preview-ig-counter" class="char-counter"></p>

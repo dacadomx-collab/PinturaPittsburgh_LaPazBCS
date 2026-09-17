@@ -23,7 +23,7 @@ declare(strict_types=1);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acceso Administrativo — PinturaPittsburgh</title>
+    <title>Acceso Administrativo — Famza</title>
     <meta name="robots" content="noindex, nofollow">
     <link rel="icon" href="../favicon.ico">
     <script src="../assets/js/theme-init.js"></script>
@@ -34,7 +34,7 @@ declare(strict_types=1);
 <body>
     <header class="site-header">
         <div class="container site-header__bar">
-            <p class="site-header__value-prop">PinturaPittsburgh — Panel Administrativo</p>
+            <p class="site-header__value-prop">Famza — Panel Administrativo</p>
             <button type="button" id="theme-toggle-btn" class="theme-toggle-btn" aria-label="Cambiar entre modo día y modo noche"></button>
         </div>
     </header>

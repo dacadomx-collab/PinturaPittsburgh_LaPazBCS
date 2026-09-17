@@ -107,7 +107,7 @@ try {
         send_error('Producto no encontrado o inactivo. Verifica el producto_id contra el catálogo.', 404);
     }
 
-    $arquetipoDesc = ARQUETIPO_LABELS[$arquetipoObjetivo] ?? 'el cliente general de PinturaPittsburgh en La Paz, B.C.S.';
+    $arquetipoDesc = ARQUETIPO_LABELS[$arquetipoObjetivo] ?? 'el cliente general de Famza en La Paz, B.C.S.';
 
     $prompt = match ($tipo) {
         'copy_publicitario'      => promptCopyPublicitario($plataforma, $arquetipoDesc, $producto),
