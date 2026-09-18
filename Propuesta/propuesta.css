@@ -384,10 +384,8 @@ body.proposal {
 }
 
 .proposal-print-btn {
-    position: fixed;
-    right: var(--space-md);
-    bottom: var(--space-md);
-    z-index: 500;
+    display: block;
+    margin: var(--space-md) auto;
     padding: 0.8rem 1.2rem;
     border: none;
     border-radius: var(--radius);
@@ -407,12 +405,9 @@ body.proposal {
 /* ── BOTÓN "VOLVER ARRIBA" ────────────────────────────────────────────────
    Reutiliza el componente y el JS ya existentes en assets/css/main.css /
    assets/js/back-to-top.js (Mandamiento #10 — un solo componente, cero
-   duplicados). Aquí solo se reposiciona a la izquierda para no encimarse
-   con el botón de imprimir, que ya ocupa la esquina inferior derecha. */
-body.proposal .back-to-top-btn {
-    left: var(--space-md);
-    right: auto;
-}
+   duplicados) sin ningún ajuste extra: el botón de imprimir ya no es fijo
+   (vive arriba, debajo del membrete, en el flujo normal del documento), así
+   que no hay encimamiento posible con este botón fijo de abajo. */
 
 /* ── IMPRESIÓN: se ve como un documento formal, sin elementos de pantalla ─── */
 @media print {
