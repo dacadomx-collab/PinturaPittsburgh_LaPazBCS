@@ -1692,3 +1692,17 @@ video {
 .home .editorial-banner h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); margin-bottom: 1rem; }
 .home .editorial-banner .eyebrow { color: var(--home-copper); margin-bottom: .65rem; }
 .home .editorial-banner__copy > p:not(.eyebrow) { color: var(--home-muted); line-height: 1.7; }
+
+/* Sucursales y atención: grupos distintos, con jerarquía propia. */
+.home .company-locations { margin-top: 1.5rem; }
+.home .company-locations > h3, .home .company-contact > h3 { font-size: 1.35rem; margin-bottom: .5rem; }
+.home .company-locations > p { margin-bottom: 1rem; }
+.home .company-card h4, .home .company-contact-column h4 { font-size: 1rem; margin: 0 0 .75rem; }
+.home .company-locations .company-grid { margin-top: 0; }
+.home .company-contact { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--palette-ffffff50); }
+.home .company-contact-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.25rem 2rem; margin-top: 1.25rem; }
+.home .company-contact-column { flex: 1 1 15rem; min-width: 0; }
+.home .company-contact-column h4 { color: var(--palette-efb58b); }
+.home .company-contact-column p { font-size: .85rem; line-height: 1.75; overflow-wrap: anywhere; margin-bottom: .75rem; }
+.home .company-contact-column a,
+.home .company-contact-column .text-link:is(:hover, :focus-visible) { color: var(--palette-fff); }

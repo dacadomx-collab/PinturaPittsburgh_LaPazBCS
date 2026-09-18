@@ -87,7 +87,7 @@ jobs:
       # su disco local) — confirmado 1 a 1 contra `git ls-files` de su rama y
       # con curl directo al servidor (404 en cada uno). La solución real es
       # que Rafael haga `git add` de esos archivos y los suba — no un cambio
-      # de pipeline. `dangerous-clean-slug` se deja explícito en `false` de
+      # de pipeline. `dangerous-clean-slate` se deja explícito en `false` de
       # cualquier forma (identico al comportamiento por default de esta
       # acción): jamás se borra el directorio remoto completo antes de
       # subir, así que un asset subido a mano por FTP fuera de git nunca se
@@ -98,7 +98,7 @@ jobs:
           server:     ${{ secrets.FTP_SERVER }}
           username:   ${{ secrets.FTP_USERNAME }}
           password:   ${{ secrets.FTP_PASSWORD }}
-          dangerous-clean-slug: false
+          dangerous-clean-slate: false
           # Solo 3 Secrets dados de alta (FTP_SERVER/USERNAME/PASSWORD) — no
           # existe FTP_REMOTE_DIR.
           #
