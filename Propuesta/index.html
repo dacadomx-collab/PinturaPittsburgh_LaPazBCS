@@ -161,6 +161,11 @@
                         </tr>
                     </tbody>
                 </table>
+                <p class="proposal-nota proposal-price-card__condiciones">
+                    Se solicita el 50% de esta cantidad como anticipo ($8,700.00 MXN) para dar inicio
+                    al desarrollo, y el 50% restante ($8,700.00 MXN) contra entrega, ya autorizada por
+                    el cliente.
+                </p>
             </div>
         </section>
 
@@ -307,6 +312,12 @@
         🖨️ Imprimir y Firmar Autorización
     </button>
 
+    <!-- Botón "Volver arriba" — mismo componente ya usado en el resto del
+         sitio (assets/css/main.css + assets/js/back-to-top.js), reposicionado
+         a la izquierda en propuesta.css para no encimarse con el de imprimir. -->
+    <button type="button" id="back-to-top-btn" class="back-to-top-btn no-print" hidden aria-label="Volver arriba">↑</button>
+
+    <script src="../assets/js/back-to-top.js" defer></script>
     <script src="propuesta.js" defer></script>
 </body>
 </html>

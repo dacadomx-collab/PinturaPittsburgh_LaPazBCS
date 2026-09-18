@@ -404,6 +404,16 @@ body.proposal {
     opacity: 0.9;
 }
 
+/* ── BOTÓN "VOLVER ARRIBA" ────────────────────────────────────────────────
+   Reutiliza el componente y el JS ya existentes en assets/css/main.css /
+   assets/js/back-to-top.js (Mandamiento #10 — un solo componente, cero
+   duplicados). Aquí solo se reposiciona a la izquierda para no encimarse
+   con el botón de imprimir, que ya ocupa la esquina inferior derecha. */
+body.proposal .back-to-top-btn {
+    left: var(--space-md);
+    right: auto;
+}
+
 /* ── IMPRESIÓN: se ve como un documento formal, sin elementos de pantalla ─── */
 @media print {
     .no-print {
