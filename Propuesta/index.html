@@ -6,7 +6,12 @@
     <meta name="robots" content="noindex, nofollow">
     <title>Cotización COT-ACADEP-2026-001 — Famza</title>
     <meta name="description" content="Cotización ACADEP: desarrollo y mantenimiento de la plataforma digital de Famza — The Colour Boutique, La Paz, B.C.S.">
-    <link rel="icon" href="../favicon.ico">
+    <!-- Favicon exclusivo de esta página: monograma "A" de ACADEP (no existe
+         un logo oficial de ACADEP en el proyecto todavía — nunca se fabrica
+         uno pretendiendo ser el real, mismo criterio que Colaboradores/,
+         Hito 20). Si el Arquitecto consigue el logo real, colocarlo en
+         assets/img/acadep/logo.png (o .svg) y cambiar la ruta de abajo. -->
+    <link rel="icon" href="favicon-acadep.svg" type="image/svg+xml">
     <!-- Usa el logo real ya existente en el proyecto (assets/img/logo.jpeg).
          Si quieres una versión distinta solo para esta propuesta (mejor
          resolución para imprimir, fondo transparente, etc.), coloca ese
@@ -61,13 +66,17 @@
         </div>
     </section>
 
-    <!-- Botón de impresión — fijo justo debajo del membrete/datos de la
-         cotización (nunca los tapa), disponible sin tener que hacer scroll.
-         "no-print" lo oculta en el propio PDF/impresión vía @media print en
-         propuesta.css. El manejo de clic vive en propuesta.js (nunca inline). -->
-    <button type="button" id="proposal-print-btn" class="proposal-print-btn no-print">
-        🖨️ Imprimir y Firmar Autorización
-    </button>
+    <!-- Barra de impresión — vive justo debajo del membrete/datos de la
+         cotización y se queda pegada arriba de la pantalla (position: sticky)
+         en cuanto empiezas a bajar el scroll, siempre disponible sin tapar el
+         membrete. "no-print" la oculta en el propio PDF/impresión vía
+         @media print en propuesta.css. El clic vive en propuesta.js (nunca
+         inline). -->
+    <div class="proposal-print-bar no-print">
+        <button type="button" id="proposal-print-btn" class="proposal-print-btn">
+            🖨️ Imprimir y Firmar Autorización
+        </button>
+    </div>
 
     <main class="proposal-main">
 
