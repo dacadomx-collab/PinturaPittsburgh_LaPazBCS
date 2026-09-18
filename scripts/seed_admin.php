@@ -31,6 +31,7 @@ if (PHP_SAPI !== 'cli') {
 }
 
 require_once __DIR__ . '/../api/conexion.php';
+require_once __DIR__ . '/../helpers/password_policy.php'; // generar_password_segura() — Hito 22, única fuente de verdad
 
 function leer_env(): array
 {
@@ -41,19 +42,6 @@ function leer_env(): array
     }
 
     return parse_ini_file($envPath, false, INI_SCANNER_RAW) ?: [];
-}
-
-function generar_password_segura(int $longitud = 16): string
-{
-    $alfabeto = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#%&*';
-    $password = '';
-    $max      = strlen($alfabeto) - 1;
-
-    for ($i = 0; $i < $longitud; $i++) {
-        $password .= $alfabeto[random_int(0, $max)];
-    }
-
-    return $password;
 }
 
 $env = leer_env();

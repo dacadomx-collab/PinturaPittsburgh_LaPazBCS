@@ -10,7 +10,7 @@ declare(strict_types=1);
 // El Contrato 3 original (knowledge/03_CONTRATOS_API_Y_RUTAS.md) ya mencionaba
 // `api/catalogo_detalle.php` desde el Hito 2 pero solo se implementó
 // `catalogo_listar.php`. Este endpoint completa esa promesa para dar soporte
-// real a producto.html (PDP) — mismo blindaje que catalogo_listar.php.
+// real a producto.php (PDP) — mismo blindaje que catalogo_listar.php.
 //
 // PROHIBIDO exponer `precio_minimo_map` — no se selecciona en el SQL.
 // =============================================================================

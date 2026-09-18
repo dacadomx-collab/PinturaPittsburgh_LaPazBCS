@@ -24,7 +24,7 @@ require_once __DIR__ . '/../helpers/response.php';
 require_once __DIR__ . '/../helpers/input_sanitizer.php';
 require_once __DIR__ . '/../helpers/asfl_logger.php';
 
-requireRole(['admin'], $authPayload);
+requireRole(ROLE_LEVEL_ADMIN, $authPayload);
 
 $requestStartedAt = microtime(true);
 asfl_log('REQUEST', ['endpoint' => 'asistente_ia.php', 'method' => $_SERVER['REQUEST_METHOD']]);
@@ -107,7 +107,7 @@ try {
         send_error('Producto no encontrado o inactivo. Verifica el producto_id contra el catálogo.', 404);
     }
 
-    $arquetipoDesc = ARQUETIPO_LABELS[$arquetipoObjetivo] ?? 'el cliente general de PinturaPittsburgh en La Paz, B.C.S.';
+    $arquetipoDesc = ARQUETIPO_LABELS[$arquetipoObjetivo] ?? 'el cliente general de Famza en La Paz, B.C.S.';
 
     $prompt = match ($tipo) {
         'copy_publicitario'      => promptCopyPublicitario($plataforma, $arquetipoDesc, $producto),
@@ -135,13 +135,24 @@ try {
 }
 
 // ── Dispatcher de proveedor único (sin failover — ver knowledge/06 §2) ───────
+// Hito 25: AI_PROVIDER="aura_m2m" en .env desvía TODO el tráfico de este
+// endpoint al satélite AURA (helpers/aura_satellite_client.php) en vez del
+// dispatcher directo a Anthropic/OpenAI de abajo — sin AI_PROVIDER definido
+// (el caso de todos los entornos existentes hoy), el comportamiento es
+// idéntico al de antes de este Hito, byte por byte.
 
 /** @return array{ok:bool,contenido?:string,modelo?:string,error?:string} */
 function dispatchAiProvider(string $prompt): array
 {
     // NOTA: este proyecto lee `.env` con parse_ini_file() (ver api/auth_login.php),
     // NO con getenv() — parse_ini_file() nunca hace putenv().
-    $env          = parse_ini_file(dirname(__DIR__) . '/.env', false, INI_SCANNER_RAW) ?: [];
+    $env      = parse_ini_file(dirname(__DIR__) . '/.env', false, INI_SCANNER_RAW) ?: [];
+    $provider = (string) ($env['AI_PROVIDER'] ?? '');
+
+    if ($provider === 'aura_m2m') {
+        return dispatchViaAura($prompt, $env);
+    }
+
     $anthropicKey = (string) ($env['ANTHROPIC_API_KEY'] ?? '');
     $openaiKey    = (string) ($env['OPENAI_API_KEY'] ?? '');
     $model        = (string) ($env['AI_MODEL'] ?? '');
@@ -155,6 +166,54 @@ function dispatchAiProvider(string $prompt): array
     }
 
     return ['ok' => false, 'error' => 'Ninguna API Key de IA configurada (ANTHROPIC_API_KEY / OPENAI_API_KEY en .env).'];
+}
+
+/**
+ * Despacha vía el satélite AURA M2M (modulos/MOD_CONEXION_SATELLITE_AURA_M2M.md,
+ * Hito 25) en vez de llamar directo a un proveedor de IA externo.
+ *
+ * agent_id: el blueprint distingue agent_id de tenant, pero este proyecto no
+ * tiene más de un agente por tenant todavía — se usa AURA_TENANT también como
+ * agent_id (sin una variable AURA_AGENT_ID separada, no solicitada). Separar
+ * ambos es tan simple como agregar esa variable el día que AURA exponga más
+ * de un agente para este tenant.
+ *
+ * user_session: fresca en cada request — este endpoint es de generación de
+ * contenido de un solo turno (sin conversación de ida y vuelta que rastrear),
+ * así que nunca reutiliza una sesión entre llamadas.
+ *
+ * @return array{ok:bool,contenido?:string,modelo?:string,error?:string}
+ */
+function dispatchViaAura(string $prompt, array $env): array
+{
+    require_once __DIR__ . '/../helpers/aura_satellite_client.php';
+
+    $tenant = (string) ($env['AURA_TENANT'] ?? '');
+
+    $client = AuraSatelliteClient::fromConfig([
+        'base_url'         => (string) ($env['AURA_BASE_URL'] ?? ''),
+        'gateway_endpoint' => (string) ($env['AURA_GATEWAY_ENDPOINT'] ?? ''),
+        'api_key'          => (string) ($env['AURA_KEY'] ?? ''),
+        'tenant'           => $tenant,
+        'fallback_url'     => $env['AURA_FALLBACK_URL'] ?? null,
+    ]);
+
+    $sesionEfimera = 'asistente-ia-' . bin2hex(random_bytes(6));
+    $resultado     = $client->dispatch($tenant, $sesionEfimera, $prompt);
+
+    if ($resultado['success'] !== true) {
+        return [
+            'ok'    => false,
+            'error' => 'AURA (' . $resultado['channelUsed'] . ', HTTP ' . $resultado['httpCode'] . '): '
+                . ($resultado['errorMessage'] ?? 'error desconocido'),
+        ];
+    }
+
+    return [
+        'ok'        => true,
+        'contenido' => (string) $resultado['response'],
+        'modelo'    => (string) ($resultado['model'] ?? 'aura_m2m'),
+    ];
 }
 
 /** @return array{ok:bool,contenido?:string,modelo?:string,error?:string} */

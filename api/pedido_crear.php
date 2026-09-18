@@ -2,9 +2,16 @@
 
 declare(strict_types=1);
 
-// Retirado por instrucción del cliente: Famza es un sitio informativo.
-// Conservar la ruta con 410 para bloquear también clientes antiguos.
-// No abrir conexión ni crear pedidos o modificar existencias.
+// =============================================================================
+// api/pedido_crear.php — Contrato 5, RETIRADO (Hito 27)
+// Directiva del cliente real (Famza — The Colour Boutique, 2026-09-14,
+// documentada por Rafael en collab/rafa): el sitio público es informativo,
+// no se hacen ventas en línea — la compra ocurre en tienda física. Se
+// conserva la ruta con 410 (en vez de eliminarla) para responder de forma
+// explícita a cualquier cliente/integración antigua que aún la invoque, sin
+// abrir conexión a BD ni tocar existencias.
+// =============================================================================
+
 require_once __DIR__ . '/cors.php';
 require_once __DIR__ . '/../helpers/response.php';
 
