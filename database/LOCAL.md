@@ -1,5 +1,9 @@
 # Base de pruebas local
 
+> Desde el 17 de septiembre de 2026, esta instalación utiliza la base remota
+> de preview mediante SSH. Consulta [PRUEBAS_REMOTAS.md](PRUEBAS_REMOTAS.md).
+> Las instrucciones siguientes se conservan para la instancia local anterior.
+
 Excepción autorizada explícitamente por el usuario: base local sin contraseña.
 Esta instrucción sustituye la restricción histórica de BD remota únicamente
 para esta instalación de pruebas. Staging y producción no se modifican.

@@ -672,3 +672,13 @@ HTML antiguo cacheado. page-routes.js conserva demo y v; JS versionado.
 HTML pasa a no-store/max-age=0, manteniendo caché de recursos versionados.
 Requiere el siguiente despliegue para aplicarse en preview; no se publicó desde
 esta sesión. Validación local de 14 navegaciones y sintaxis/diff correctos.
+
+## Sucursales separadas de contacto (2026-09-17)
+
+El bloque institucional próximo al footer de Inicio distingue dos grupos:
+«Visita nuestras sucursales», con dos tarjetas de ubicación, y «Contacto y
+atención», separado por espacio/línea y tres columnas sin tarjetas para
+contacto, horarios y redes. Mantiene datos, enlaces y microdatos existentes,
+con jerarquía de encabezados y Flex ARF. CSS versionado en todas las páginas.
+Chromium a 390/1440: dos ubicaciones, tres columnas de atención, sin overflow;
+capturas generadas y diff correcto.
