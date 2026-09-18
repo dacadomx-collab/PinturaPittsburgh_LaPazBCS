@@ -1,0 +1,36 @@
+Instrucciones para Rafael — antes de tu próximo push (2026-09-17)
+==================================================================
+
+Qué pasó: el sitio ya quedó igual al de tu link de pruebas
+(https://pittsburgh.tourfindy.com/preview-rafa/) — ya se ve en la
+página principal (https://pittsburgh.tourfindy.com/). De nuestro lado
+agregamos código de backend (paneles internos, SEO, etc.) directo a tu
+misma rama en GitHub para que todo quede completo en un solo lugar.
+
+Qué necesitas hacer tú (una sola vez, antes de tu próximo push):
+
+    git pull origin collab/rafa
+
+Vas a ver que aparecen varios archivos nuevos en carpetas como admin/,
+api/, helpers/ y Propuesta/ — son del equipo de backend, no son tuyos,
+no necesitas abrirlos ni tocarlos. Es normal y esperado.
+
+Después de ese pull, sigue trabajando exactamente igual que siempre:
+
+    git add assets/ index.html   (o los archivos que hayas modificado)
+    git commit -m "descripcion del cambio"
+    git push origin collab/rafa
+
+Por qué es importante hacer el pull primero: si intentas hacer push sin
+haber hecho ese pull, Git te va a rechazar el push con un mensaje de
+"rejected - non-fast-forward" — no te preocupes, no perdiste nada, solo
+significa que hay cambios nuevos en el servidor que tu copia local
+todavía no tiene. Simplemente haz el "git pull origin collab/rafa" que
+se indica arriba y vuelve a intentar el push.
+
+Nota técnica (por si acaso): ya configuramos GitHub para que un
+"git push --force" no pueda sobrescribir por accidente el trabajo del
+otro lado — así que aunque algo salga mal, no hay forma de perder
+información sin querer.
+
+Cualquier duda, con confianza.
