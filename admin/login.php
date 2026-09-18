@@ -23,17 +23,18 @@ declare(strict_types=1);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acceso Administrativo — PinturaPittsburgh</title>
+    <title>Acceso Administrativo — Famza</title>
     <meta name="robots" content="noindex, nofollow">
     <link rel="icon" href="../favicon.ico">
     <script src="../assets/js/theme-init.js"></script>
     <script src="../assets/js/admin-login-guard.js"></script>
     <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/admin.css">
 </head>
 <body>
     <header class="site-header">
         <div class="container site-header__bar">
-            <p class="site-header__value-prop">PinturaPittsburgh — Panel Administrativo</p>
+            <p class="site-header__value-prop">Famza — Panel Administrativo</p>
             <button type="button" id="theme-toggle-btn" class="theme-toggle-btn" aria-label="Cambiar entre modo día y modo noche"></button>
         </div>
     </header>
@@ -48,7 +49,10 @@ declare(strict_types=1);
                 </div>
                 <div class="field-group">
                     <label for="login-password">Contraseña</label>
-                    <input class="field" type="password" id="login-password" name="password" required autocomplete="current-password">
+                    <div class="password-field">
+                        <input class="field" type="password" id="login-password" name="password" required autocomplete="current-password">
+                        <button type="button" id="login-password-toggle" class="password-field__toggle" aria-pressed="false" aria-controls="login-password">Mostrar</button>
+                    </div>
                 </div>
                 <div class="field-group">
                     <button type="submit" class="btn">Entrar</button>

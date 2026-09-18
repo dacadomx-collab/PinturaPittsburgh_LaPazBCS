@@ -26,7 +26,7 @@ require_once __DIR__ . '/../helpers/input_sanitizer.php';
 require_once __DIR__ . '/../helpers/crypto_helper.php';
 require_once __DIR__ . '/../helpers/asfl_logger.php';
 
-requireRole(['admin'], $authPayload);
+requireRole(ROLE_LEVEL_ADMIN, $authPayload);
 
 asfl_log('REQUEST', ['endpoint' => 'social_publicar.php', 'method' => $_SERVER['REQUEST_METHOD']]);
 

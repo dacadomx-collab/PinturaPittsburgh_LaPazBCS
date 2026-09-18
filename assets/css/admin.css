@@ -122,6 +122,27 @@ textarea.field {
 .estado-badge--entregado  { background-color: rgba(13, 148, 136, 0.15); color: var(--brand-teal); }
 .estado-badge--cancelado  { background-color: rgba(230, 57, 70, 0.15); color: #b91c1c; }
 
+/* Usuarios (admin/usuarios.php) y bitácora (admin/auditoria.php), Hito 23 —
+   reutilizan los mismos tonos que ya tienen significado en el resto del
+   panel (teal = bien, ámbar = atención, rojo = bloqueado/fallido). */
+.estado-badge--activo    { background-color: rgba(13, 148, 136, 0.15); color: var(--brand-teal); }
+.estado-badge--inactivo  { background-color: rgba(230, 57, 70, 0.15); color: #b91c1c; }
+
+/* ── admin/usuarios.php y admin/auditoria.php (Hito 23) ────────────────────── */
+.admin-table select.field {
+    max-width: 160px;
+    display: inline-block;
+}
+
+.admin-row-actions__btn {
+    margin-left: var(--space-xs);
+}
+
+.admin-quick-links__item:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 /* =============================================================================
    PANEL ADMINISTRATIVO UNIFICADO (admin/layout/*.php — Hito 12/Directiva 2)
    Shell de dos columnas (sidebar + contenido) con sidebar off-canvas en
@@ -369,4 +390,750 @@ html.admin-auth-pending body {
 .diag-panel--error .diag-panel__badge {
     background-color: #b91c1c;
     color: #ffffff;
+}
+
+/* =============================================================================
+   COMMAND CENTER DE ONBOARDING (Colaboradores/onboarding_*.html) — Hito 20
+   Antes vivía como <style> inline en cada HTML con una paleta oscura fija
+   propia (violaba la Regla de Oro que el propio documento le exige al
+   colaborador, y no tenía toggle Día/Noche real). Migrado aquí, retemado
+   100% con los tokens de main.css — así SÍ responde a data-theme.
+   ============================================================================= */
+
+.cc-header {
+    position: sticky;
+    top: 0;
+    z-index: 500;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    background-color: var(--brand-navy);
+    color: #ffffff;
+}
+
+.cc-header__brand {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+/* ── Distintivo ACADEP (monograma tipográfico, no un logo real ajeno) ────── */
+.cc-acadep-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.cc-acadep-badge__mark {
+    width: 2.5rem;
+    height: 2.5rem;
+    flex-shrink: 0;
+    border-radius: 50%;
+    color: var(--brand-gold);
+}
+
+.cc-acadep-badge__text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.cc-acadep-badge__name {
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    font-size: 0.95rem;
+}
+
+.cc-acadep-badge__subtitle {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.cc-header__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+/* ── Navegación ágil entre etapas (ancla + scroll suave, sin JS) ─────────── */
+.cc-shell {
+    scroll-behavior: smooth;
+}
+
+.cc-nav {
+    position: sticky;
+    top: 3.75rem;
+    z-index: 490;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.5rem var(--space-md);
+    background-color: var(--color-bg-alt);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.cc-nav__link {
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 0.35rem 0.7rem;
+    border-radius: 999px;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    border: 1px solid transparent;
+}
+
+.cc-nav__link:hover,
+.cc-nav__link:focus-visible {
+    border-color: var(--brand-gold);
+    color: var(--color-text);
+}
+
+.cc-main {
+    padding: var(--space-md);
+    max-width: 1040px;
+    margin-inline: auto;
+}
+
+/* ── Tarjetas genéricas de etapa (reemplaza el .step oscuro fijo) ────────── */
+.cc-stage {
+    background-color: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: var(--space-md);
+    margin-bottom: var(--space-md);
+    scroll-margin-top: 7rem; /* dos barras sticky encima (.cc-header + .cc-nav) */
+}
+
+.cc-stage__title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin: 0 0 var(--space-xs);
+}
+
+.cc-stage__desc {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin: 0 0 var(--space-sm);
+}
+
+.cc-stage__title--sub {
+    font-size: 0.95rem;
+    margin-top: var(--space-sm);
+}
+
+.cc-stage__desc--spaced {
+    margin-top: var(--space-sm);
+}
+
+/* ── Saludo, progreso, cronograma, firma (retemados) ─────────────────────── */
+.cc-greeting {
+    background-color: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: var(--space-md);
+    margin-bottom: var(--space-md);
+}
+
+.cc-greeting__title {
+    font-size: 1.4rem;
+    margin: 0 0 0.2rem;
+    color: var(--color-text);
+}
+
+.cc-greeting__meta {
+    font-size: 0.82rem;
+    color: var(--brand-vibrant-blue);
+    margin-bottom: 0.6rem;
+}
+
+.cc-greeting__quote {
+    border-left: 3px solid var(--brand-gold);
+    padding-left: 0.85rem;
+    font-style: italic;
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+}
+
+.cc-progress {
+    background-color: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 0.85rem var(--space-md);
+    margin-bottom: var(--space-md);
+}
+
+.cc-progress__labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.82rem;
+    margin-bottom: 0.4rem;
+}
+
+.cc-progress__percent {
+    font-weight: 700;
+    color: var(--brand-vibrant-blue);
+}
+
+.cc-progress__track {
+    background-color: var(--color-bg);
+    height: 10px;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.cc-progress__fill {
+    background: linear-gradient(90deg, var(--brand-vibrant-blue), var(--brand-teal));
+    height: 100%;
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+/* ── Etapa 1: Benchmarks con propósito explícito (evita mezclar alcances) ── */
+.cc-benchmark-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-sm);
+    margin-top: var(--space-sm);
+}
+
+.cc-benchmark-card {
+    flex: 1 1 260px;
+    max-width: 340px;
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: var(--space-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    text-decoration: none;
+    color: var(--color-text);
+}
+
+.cc-benchmark-card:hover,
+.cc-benchmark-card:focus-visible {
+    border-color: var(--brand-vibrant-blue);
+}
+
+.cc-benchmark-card__name {
+    font-weight: 700;
+    color: var(--color-primary);
+    font-size: 0.95rem;
+}
+
+.cc-benchmark-card__purpose {
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+}
+
+.cc-benchmark-card__purpose strong {
+    color: var(--brand-gold);
+}
+
+/* ── Etapa 2: Reglas de Oro como rejilla ARF ─────────────────────────────── */
+.cc-rule-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-sm);
+}
+
+.cc-rule-card {
+    flex: 1 1 220px;
+    max-width: 280px;
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: var(--space-sm);
+    font-size: 0.85rem;
+}
+
+.cc-rule-card strong {
+    display: block;
+    color: var(--color-primary);
+    margin-bottom: 0.3rem;
+}
+
+/* ── Etapa 3: explicación del Data Contract ──────────────────────────────── */
+.cc-contract-note {
+    background-color: rgba(2, 132, 199, 0.08);
+    border: 1px solid var(--brand-vibrant-blue);
+    border-radius: var(--radius);
+    padding: var(--space-sm);
+    font-size: 0.85rem;
+    margin-bottom: var(--space-sm);
+}
+
+.cc-state-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-sm);
+    margin: var(--space-sm) 0;
+}
+
+.cc-state-card {
+    flex: 1 1 200px;
+    max-width: 240px;
+    background-color: var(--color-bg);
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius);
+    padding: 0.75rem;
+    text-align: center;
+}
+
+.cc-state-card__label {
+    font-weight: 700;
+    font-size: 0.82rem;
+    color: var(--color-primary);
+}
+
+.cc-state-card__desc {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    margin-top: 0.2rem;
+}
+
+/* ── Demo en vivo ARF-Grid: banners / promos / social (retemados) ────────── */
+.demo-state {
+    background-color: var(--color-bg);
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius);
+    padding: var(--space-sm);
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    text-align: center;
+}
+
+.demo-state--error {
+    border-color: #b91c1c;
+    color: #b91c1c;
+}
+
+.demo-state[hidden] {
+    display: none;
+}
+
+.banner-track,
+.promo-grid,
+.social-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-sm);
+}
+
+.banner-track[hidden],
+.promo-grid[hidden],
+.social-grid[hidden] {
+    display: none;
+}
+
+.banner-slide {
+    flex: 1 1 260px;
+    max-width: 320px;
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: var(--space-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.banner-slide__eyebrow {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--brand-gold);
+}
+
+.banner-slide__titulo {
+    font-size: 1rem;
+    color: var(--color-text);
+}
+
+.banner-slide__descripcion {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+}
+
+.banner-slide__imagen {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: var(--radius);
+    background-color: var(--color-bg-alt);
+}
+
+.banner-slide__cta {
+    color: var(--brand-vibrant-blue);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.promo-card {
+    flex: 1 1 220px;
+    max-width: 260px;
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: var(--space-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.promo-card__badge {
+    align-self: flex-start;
+    background-color: var(--brand-gold);
+    color: var(--brand-navy);
+    font-weight: 800;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+}
+
+.promo-card__descripcion {
+    font-size: 0.85rem;
+    color: var(--color-text);
+}
+
+.promo-card__vigencia {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+}
+
+.social-card {
+    flex: 1 1 220px;
+    max-width: 260px;
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.social-card__imagen {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: var(--radius);
+    background-color: var(--color-bg-alt);
+}
+
+.social-card__texto {
+    font-size: 0.8rem;
+    color: var(--color-text);
+}
+
+.social-card__fecha {
+    font-size: 0.7rem;
+    color: var(--color-text-muted);
+}
+
+/* ── Etapa 4: Toggle Modo API Real / Modo Mock Local ─────────────────────── */
+.cc-mode-toggle {
+    display: inline-flex;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    padding: 0.2rem;
+    margin-bottom: var(--space-sm);
+    background-color: var(--color-bg);
+}
+
+.cc-mode-toggle__btn {
+    border: none;
+    background: transparent;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.cc-mode-toggle__btn[aria-pressed="true"] {
+    background-color: var(--brand-vibrant-blue);
+    color: #ffffff;
+}
+
+/* ── Etapa 4: Suite de Autodiagnóstico ───────────────────────────────────── */
+.cc-audit-panel {
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: var(--space-sm);
+}
+
+.cc-audit-panel__input-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-sm);
+}
+
+.cc-audit-panel__input-row input.field {
+    flex: 1 1 260px;
+}
+
+.cc-audit-score {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-sm);
+}
+
+.cc-audit-score__ring {
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.1rem;
+    background-color: var(--color-bg-alt);
+    border: 4px solid var(--color-border);
+    flex-shrink: 0;
+}
+
+.cc-audit-score__ring--pass {
+    border-color: var(--brand-teal);
+    color: var(--brand-teal);
+}
+
+.cc-audit-score__ring--warn {
+    border-color: var(--brand-gold);
+    color: var(--brand-gold);
+}
+
+.cc-audit-score__ring--fail {
+    border-color: #b91c1c;
+    color: #b91c1c;
+}
+
+.cc-audit-score__label {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+}
+
+.cc-audit-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+}
+
+.cc-audit-list__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.cc-audit-list__icon {
+    flex-shrink: 0;
+    font-weight: 800;
+}
+
+.cc-audit-list__item--pass .cc-audit-list__icon {
+    color: var(--brand-teal);
+}
+
+.cc-audit-list__item--fail .cc-audit-list__icon {
+    color: #b91c1c;
+}
+
+/* ── Etapa 5: Quality Gates externos ─────────────────────────────────────── */
+.cc-gate-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-sm);
+}
+
+.cc-gate-card {
+    flex: 1 1 220px;
+    max-width: 260px;
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: var(--space-sm);
+    text-decoration: none;
+    color: var(--color-text);
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.cc-gate-card:hover,
+.cc-gate-card:focus-visible {
+    border-color: var(--brand-gold);
+}
+
+.cc-gate-card strong {
+    color: var(--brand-vibrant-blue);
+    font-size: 0.9rem;
+}
+
+.cc-gate-card span {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+}
+
+/* ── Cronograma y firma (retemados) ───────────────────────────────────────── */
+.cc-timeline-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-sm);
+    margin-top: var(--space-sm);
+}
+
+.cc-timeline-item {
+    flex: 1 1 200px;
+    max-width: 260px;
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 0.85rem;
+}
+
+.cc-timeline-item span {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+}
+
+.cc-timeline-item strong {
+    color: var(--brand-gold);
+    font-size: 0.95rem;
+}
+
+.cc-signature {
+    background-color: var(--color-bg);
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius);
+    padding: var(--space-sm);
+    margin-top: var(--space-sm);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.cc-signature__label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--brand-vibrant-blue);
+}
+
+/* ── TOGGLE DE VISIBILIDAD DE CONTRASEÑA (Módulo 01 §4.6, Hito 22) ─────────
+   admin/login.php. .field ya define ancho/alto/borde — aquí solo se agrega
+   el botón superpuesto, sin tocar los tokens del input. */
+.password-field {
+    position: relative;
+}
+
+.password-field .field {
+    padding-right: 4.5rem;
+}
+
+.password-field__toggle {
+    position: absolute;
+    top: 50%;
+    right: 0.4rem;
+    transform: translateY(-50%);
+    border: none;
+    background-color: transparent;
+    color: var(--color-primary);
+    font-size: 0.8rem;
+    font-weight: 600;
+    font-family: inherit;
+    padding: 0.3rem 0.5rem;
+    cursor: pointer;
+}
+
+.password-field__toggle:hover,
+.password-field__toggle:focus-visible {
+    text-decoration: underline;
+}
+
+/* ── GUÍA DE CREDENCIALES META GRAPH API (admin/social.php, Hito 25) ───────── */
+.meta-guide {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background-color: var(--color-bg-alt);
+    padding: var(--space-sm) var(--space-md);
+    margin-block: var(--space-md);
+}
+
+.meta-guide__summary {
+    cursor: pointer;
+    font-weight: 700;
+    color: var(--brand-navy);
+    padding-block: var(--space-xs);
+}
+
+.meta-guide__body {
+    margin-top: var(--space-sm);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.meta-guide__item {
+    display: flex;
+    gap: var(--space-sm);
+    align-items: flex-start;
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: var(--space-sm);
+}
+
+.meta-guide__badge {
+    flex: 0 0 auto;
+    width: 1.8rem;
+    height: 1.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: var(--brand-royal-blue);
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+.meta-guide__titulo {
+    margin: 0 0 0.2rem;
+    font-size: 0.95rem;
+    color: var(--brand-navy);
+}
+
+.meta-guide__ruta {
+    margin-top: 0.3rem;
+    font-size: 0.78rem;
+    font-family: monospace;
+    color: var(--color-text-muted);
+}
+
+.meta-guide__nota {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    border-top: 1px dashed var(--color-border);
+    padding-top: var(--space-sm);
 }

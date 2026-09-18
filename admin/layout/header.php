@@ -8,7 +8,7 @@ declare(strict_types=1);
 // hacer el require, las variables:
 //   $pageTitle   (string) — título de pestaña, ej. "Catálogo y Precios"
 //   $activeNav   (string) — clave de admin/layout/sidebar.php para resaltar
-//                            el enlace activo: inicio|catalogo|pedidos|social|asistente
+//                            el enlace activo: inicio|catalogo|pedidos|social|asistente|usuarios|auditoria
 // Nunca se valida sesión aquí server-side: la autenticación de este proyecto
 // es Bearer JWT en sessionStorage (Hito 2), no cookies/sesión PHP — decisión
 // documentada en CLAUDE.md §14 y knowledge/04_ARQUITECTURA_Y_BLINDAJE.md. El
@@ -24,7 +24,7 @@ $activeNav = $activeNav ?? '';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8'); ?> — PinturaPittsburgh Admin</title>
+    <title><?php echo htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8'); ?> — Famza Admin</title>
     <meta name="robots" content="noindex, nofollow">
     <link rel="icon" href="../favicon.ico">
     <script src="../assets/js/theme-init.js"></script>

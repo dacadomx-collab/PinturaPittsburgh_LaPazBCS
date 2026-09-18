@@ -127,6 +127,16 @@ ServerSignature Off
     RewriteRule (^|/)validators(/|$)          - [F,L,NC]
     RewriteRule (^|/)workers(/|$)             - [F,L,NC]
 
+    # ── NIVEL 3bis: SITEMAP DINÁMICO (Hito 24, Módulo 04 §1) ──────────────────
+    # /sitemap.xml (URL limpia, la que se declara ante buscadores) resuelve al
+    # generador real en api/sitemap.php. Reescritura interna (sin R=301): un
+    # redirect externo aquí requeriría RewriteBase, que difiere entre el
+    # subdirectorio local de XAMPP y la raíz del dominio en staging/producción
+    # (la misma clase de problema que causó el 403 real del Hito 16) — sin
+    # necesidad real todavía (el dominio público ni se ha registrado, no hay
+    # enlaces externos que migrar), se evita esa fragilidad.
+    RewriteRule ^sitemap\.xml$ api/sitemap.php [L,QSA]
+
     # ── NIVEL 4: RUTAS FÍSICAS (assets, api) pasan sin reescritura ────────────
     RewriteCond %{REQUEST_FILENAME} -f [OR]
     RewriteCond %{REQUEST_FILENAME} -d
@@ -165,7 +175,8 @@ ErrorDocument 403 "Acceso denegado."
 ErrorDocument 404 "Recurso no encontrado."
 ErrorDocument 500 "Error interno del servidor."
 
-# El HTML debe revalidarse para obtener las versiones actuales de CSS/JS/iconos.
+# El HTML debe revalidarse para obtener las versiones actuales de CSS/JS/iconos
+# (Hito 27, adoptado de collab/rafa al promover su frontend a producción).
 <IfModule mod_headers.c>
     <FilesMatch "\.html$">
         Header always set Cache-Control "no-store, max-age=0"

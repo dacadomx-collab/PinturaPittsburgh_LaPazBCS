@@ -15,7 +15,7 @@ require __DIR__ . '/layout/header.php';
 require __DIR__ . '/layout/topbar.php';
 ?>
         <h1>Control de Catálogo y Precios</h1>
-        <p class="brand-tagline">Actualiza precio y stock por presentación (cuarto de galón, galón, cubeta). Disponibilidad de piso de venta: Blvd. Agustín Olachea e Indeco.</p>
+        <p class="brand-tagline">Actualiza precio y stock por presentación (cuarto de galón, galón, cubeta). Disponibilidad de piso de venta: Mariano Abasolo 3114, Pueblo Nuevo.</p>
         <p id="catalogo-admin-status" class="brand-tagline"></p>
 
         <div class="table-scroll">
