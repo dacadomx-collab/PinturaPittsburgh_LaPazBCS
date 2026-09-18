@@ -6,6 +6,18 @@
 
 > ⚠️ **Mandamiento de Secuencia SQL→PHP:** ningún endpoint de este módulo se escribe en un proyecto consumidor sin que el Schema Maestro (Sección 1) exista primero, palabra por palabra, como script `.sql` versionado en `/database` de ese proyecto. Ningún nombre de columna se traduce libremente — el Codex del proyecto consumidor es la única fuente de verdad para el mapeo final `{{PLACEHOLDER}}` → nombre real.
 
+> 📐 **Mapa de conformidad (auditoría 2026-08-04):** este documento antecede el formato estándar
+> de 5 secciones de `MODULO_02`/`MODULO_03`. Se mantiene su estructura original (más detallada, con
+> referencias cruzadas por número de sección que no conviene renumerar) y se mapea así:
+> **1. Objetivo** → párrafo "Alcance" arriba. **2. Arquitectura/Especificación técnica** →
+> Secciones 1–2, 4–8, 10 (schema, endpoints, UI, roles, políticas). **3. Checklist paso a paso**
+> → Sección 8 (First-Run Provisioning) y Sección 9 (alta de usuarios). **4. Seguridad Zero
+> Trust** → Sección 2.2 (fuerza bruta/timing attacks), Sección 3 completa (tokens/JWT/device
+> binding/reset), Sección 1.1 (BCrypt cost=12). **5. Definición de Hecho** → Sección 11
+> (Validación de Consistencia del Flujo) + Anexo final. Verificado sin huecos en los tres puntos
+> de seguridad más comunes (BCrypt, rate limiting, JWT) — cubiertos en 1.1, 2.2 y 3.1.1
+> respectivamente.
+
 > 📎 **Módulos relacionados:** [`MODULO_02_CMS_EDICION_VISUAL.md`](MODULO_02_CMS_EDICION_VISUAL.md) (Motor de Edición Visual en Caliente) y [`MODULO_03_CRM_EVENTOS_EN_VIVO.md`](MODULO_03_CRM_EVENTOS_EN_VIVO.md) (Captación de Interesados y Orquestación de Sesiones en Vivo) dependen de la sesión, roles y Mapeo Dinámico de Permisos definidos aquí (§3, §6, §6.1) — viven en archivos propios porque resuelven problemas distintos al de autenticación.
 
 ---
@@ -207,6 +219,7 @@ transaccional (§9.4), nunca la respuesta de la API.
 ### 2.2 Prevención de fuerza bruta y timing attacks (transversal a Capas 4-6)
 
 - **Anti-enumeración:** si el email no existe, ejecutar igualmente `password_verify()` contra un hash BCrypt "dummy" precalculado — el tiempo de respuesta debe ser indistinguible entre "usuario no existe" y "contraseña incorrecta". Mensaje de error siempre: `"Credenciales inválidas."`.
+- **Doctrina Zero Enumeration extendida a `estatus`:** una cuenta con `estatus = 'suspendido'` (Capa 2) responde con el **mismo** `401 "Credenciales inválidas."` que una contraseña incorrecta — nunca un mensaje distintivo tipo "cuenta suspendida". Revelar el motivo exacto del rechazo es en sí mismo un canal de enumeración (confirma que el email existe). Si el negocio necesita que el usuario suspendido entienda por qué no puede entrar, ese aviso viaja por un canal fuera de banda (correo, soporte humano), nunca en la respuesta del endpoint de login.
 - **Tarpitting progresivo:** cada `login_fallido` incrementa `intentos_fallidos`; al superar el umbral (`{{MAX_INTENTOS}}`, ej. 5), se escribe `bloqueado_hasta = NOW() + INTERVAL {{MINUTOS_BLOQUEO}} MINUTE` y se retorna 429 con mensaje genérico, sin revelar el umbral exacto.
 - **Rate limiting multivectorial:** el límite se evalúa por `device_hash` **y** por `ip_hash` de forma independiente — un atacante rotando IP sigue frenado por el device hash, y viceversa.
 - **Reset de contador:** `intentos_fallidos = 0` únicamente tras un `login_exitoso` verificado en Capa 5.
@@ -248,6 +261,23 @@ Todo correo transaccional saliente del holding — sin excepción de plantilla n
 ```php
 $token = bin2hex(random_bytes(32)); // 256 bits, criptográficamente seguro — nunca uniqid(), rand() ni md5(time())
 ```
+
+### 3.1.1 Variante JWT — RBAC de roles múltiples (`role` primario + `roles[]`)
+
+Cuando un proyecto consumidor elige la columna JWT de la tabla anterior y su modelo de datos usa RBAC normalizado (`{{TABLE_PREFIX}}usuario_roles` many-to-many, en vez del `rol` ENUM plano de la Sección 1.1), el token debe emitir **ambos** claims — nunca solo uno:
+
+```php
+$claims = [
+    'sub'   => (int) $usuario['id'],
+    'email' => (string) $usuario['email'],
+    'role'  => $roles[0], // rol de mayor jerarquía (primer id de la tabla de roles) — compat. con middleware de un solo rol
+    'roles' => $roles,    // set completo — consumido por middleware RBAC granular cuando exista
+];
+```
+
+- **Motivo de emitir ambos:** permite introducir RBAC de múltiples roles por usuario sin romper un middleware `requireRole()` preexistente que solo lee `payload['role']` — el consumo granular de `roles[]` se activa cuando el middleware del proyecto se actualice, sin requerir un segundo `login` para invalidar tokens viejos.
+- Si el usuario no tiene ningún rol asignado en la tabla de mapeo, el login **falla** con `403` genérico (nunca se emite un token sin rol) — un usuario sin rol no es un caso de "rol por defecto silencioso".
+- El orden de `roles[]` es el de la jerarquía declarada en la tabla `{{TABLE_PREFIX}}roles` (id ascendente = mayor privilegio primero), consistente con la Sección 6 (Matriz de Roles).
 
 ### 3.2 Cookies de sesión
 
