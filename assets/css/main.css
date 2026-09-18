@@ -1706,3 +1706,22 @@ video {
 .home .company-contact-column p { font-size: .85rem; line-height: 1.75; overflow-wrap: anywhere; margin-bottom: .75rem; }
 .home .company-contact-column a,
 .home .company-contact-column .text-link:is(:hover, :focus-visible) { color: var(--palette-fff); }
+
+/* Control de tema en navbar, separado del enlace de tienda. */
+.home .home-navigation .theme-toggle-btn {
+    flex: 0 0 auto;
+    margin: .35rem 0 0;
+    min-height: 2.75rem;
+    padding: .45rem .85rem;
+    color: var(--palette-fff);
+    border-color: var(--palette-8092ab);
+    background: transparent;
+    font-size: .75rem;
+    line-height: 1.2;
+}
+@media (min-width: 50rem) {
+    .home .home-navigation .theme-toggle-btn {
+        margin-block-start: 0;
+        margin-inline-start: clamp(.75rem, 2vw, 2rem);
+    }
+}

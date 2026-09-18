@@ -101,6 +101,7 @@ $RECYCLE.BIN/
 *.sw?
 
 # ── BACKUPS Y TEMPORAL ────────────────────────────────────────────────────────
+/Llave_SSH_Rafa
 /backups/
 /backups_y_pruebas/
 *.tmp
