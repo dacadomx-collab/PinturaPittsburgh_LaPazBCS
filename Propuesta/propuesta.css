@@ -326,6 +326,27 @@ body.proposal {
     gap: 0.5rem;
 }
 
+/* ── AUTORIZAR Y GUARDAR (registro real en BD + aviso a ACADEP) ─────────── */
+.signature-pad__enviar {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-xs);
+    margin-top: var(--space-md);
+}
+
+.proposal-nota--ok {
+    color: #0d9488;
+    font-style: normal;
+    font-weight: 700;
+}
+
+.proposal-nota--error {
+    color: #dc2626;
+    font-style: normal;
+    font-weight: 700;
+}
+
 /* ── FIRMA DIGITAL (nombre + fecha + canvas dibujable) ──────────────────── */
 .signature-pad {
     display: flex;

@@ -313,6 +313,17 @@
                     <button type="button" id="firma-limpiar-btn" class="signature-pad__limpiar no-print">Borrar y firmar de nuevo</button>
                 </div>
             </div>
+
+            <!-- Autorizar y guardar: es la acción que de verdad deja constancia —
+                 guarda el registro en la base de datos y notifica a ACADEP por
+                 correo. Imprimir (arriba) es solo para que el cliente se quede
+                 con su copia; por sí solo no deja ningún rastro en el servidor. -->
+            <div class="signature-pad__enviar no-print">
+                <button type="button" id="autorizar-guardar-btn" class="proposal-print-btn">
+                    ✅ Autorizar y Guardar
+                </button>
+                <p id="autorizar-estado" class="proposal-nota" role="status" aria-live="polite" hidden></p>
+            </div>
         </section>
 
     </main>
